@@ -1,3 +1,4 @@
+import { AppUtil } from './../common/app-util';
 import { Injectable } from '@angular/core';
 import { AppConsts } from '../common/app-consts';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -23,7 +24,7 @@ export class ClientDataServiceService {
     // this.createAuthorizationHeader(headers);
     return this.http.get(this.url, { headers: headers })
       .pipe(map( (response: string) => JSON.parse(response)))
-      .pipe(catchError(this.handleError));
+      .pipe(catchError(AppUtil.handleError));
   }
 
   delete(id: string) {
@@ -31,23 +32,11 @@ export class ClientDataServiceService {
     // this.createAuthorizationHeader(headers);
     return this.http.delete(this.url + id, { headers: headers })
       .pipe(map((response: string) => JSON.parse(response)))
-      .pipe(catchError(this.handleError));
+      .pipe(catchError(AppUtil.handleError));
   }
 
   create(resource) {
     return this.http.post(this.url, resource.json())
-    .pipe(catchError(this.handleError));
-  }
-
-  private handleError(error: Response) {
-    if (error.status === 400) {
-      return Observable.throw(new BadInputError(error.json()));
-    }
-
-    if (error.status === 404) {
-      return Observable.throw(new NotFoundError());
-    }
-
-    return Observable.throw(new AppError(error.json()));
+    .pipe(catchError(AppUtil.handleError));
   }
 }

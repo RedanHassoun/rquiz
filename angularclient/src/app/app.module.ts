@@ -34,7 +34,6 @@ export function appTokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: appTokenGetter,
-        throwNoTokenError: true,
         whitelistedDomains: [AppConsts.BASE_URL]
       }
     })
