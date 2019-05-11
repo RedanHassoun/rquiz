@@ -24,9 +24,8 @@ export class LoginComponent implements OnInit {
         AppUtil.extractAndSaveToken(response);
         this.router.navigate(['/users']);
       }, (err: AppError) => {
-        this.invalidLogin = true;
         if (err instanceof AccessDeniedError) {
-          alert('Access denied');
+          this.invalidLogin = true;
           return;
         }
         alert('Something went wrong...');
