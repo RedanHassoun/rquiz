@@ -27,7 +27,7 @@ export class AppUtil {
         localStorage.setItem(AppConsts.KEY_USER_TOKEN, authorizationValue);
     }
 
-    public static handleError(error: Response) {
+    public static handleError(error: Response): Observable<never> {
         if (error.status === 400) {
             return throwError(new BadInputError(error.json()));
         }
