@@ -36,9 +36,4 @@ public class DemoApplication {
 			userRepository.findAll().forEach(System.out::println);
 		};
 	}
-
-//	@Bean
-//	public UserDetailsService userDetailsService () {
-//		return new UserDetailsServiceImpl(new);
-//	}
 }
