@@ -1,8 +1,8 @@
-import { AccessDeniedError } from './../../common/access-denied-error';
-import { AppError } from './../../common/app-error';
-import { LoginMessage } from './../../models/login-message';
-import { AppUtil } from './../../common/app-util';
-import { AuthenticationService } from './../../services/authentication.service';
+import { AppError } from './../../../shared/app-errors/app-error';
+import { AccessDeniedError } from './../../../shared/app-errors/access-denied-error';
+import { LoginMessage } from '../../../shared/models/login-message';
+import { AppUtil } from '../../../shared/util/app-util';
+import { AuthenticationService } from '../../services/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 

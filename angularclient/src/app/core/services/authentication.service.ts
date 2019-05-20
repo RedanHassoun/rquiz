@@ -1,8 +1,8 @@
-import { AppUtil } from './../common/app-util';
-import { LoginMessage } from './../models/login-message';
+import { AppUtil } from '../../shared/util/app-util';
+import { LoginMessage } from '../../shared/models/login-message';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { AppConsts } from '../common/app-consts';
+import { AppConsts } from '../../shared/util/app-consts';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs';

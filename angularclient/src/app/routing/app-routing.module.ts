@@ -1,8 +1,8 @@
-import { AuthGuard } from './guards/auth.guard';
-import { NotFoundComponent } from './components/not-found/not-found.component';
-import { LoginComponent } from './components/login/login.component';
-import { UserFormComponent } from './components/user-form/user-form.component';
-import { UserListComponent } from './components/user-list/user-list.component';
+import { AuthGuard } from '../shared/guards/auth.guard';
+import { NotFoundComponent } from '../shared/components/not-found/not-found.component';
+import { LoginComponent } from '../core/components/login/login.component';
+import { UserFormComponent } from '../core/components/user-form/user-form.component';
+import { UserListComponent } from '../core/components/user-list/user-list.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 

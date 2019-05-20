@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ClientDataServiceService } from './client-data-service.service';
+import { ClientDataServiceService } from '../../shared/services/client-data-service.service';
 import { HttpClient } from '@angular/common/http';
-import { AppConsts } from '../common/app-consts';
+import { AppConsts } from '../../shared/util/app-consts';
 
 @Injectable({
   providedIn: 'root'

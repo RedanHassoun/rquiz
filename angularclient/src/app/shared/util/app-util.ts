@@ -1,7 +1,7 @@
-import { AccessDeniedError } from './access-denied-error';
-import { AppError } from './app-error';
-import { NotFoundError } from './not-found-error';
-import { BadInputError } from './bad-input-error';
+import { AppError } from './../app-errors/app-error';
+import { AccessDeniedError } from './../app-errors/access-denied-error';
+import { NotFoundError } from './../app-errors/not-found-error';
+import { BadInputError } from './../app-errors/bad-input-error';
 import { Observable } from 'rxjs';
 import { AppConsts } from './app-consts';
 import { throwError } from 'rxjs';
@@ -29,7 +29,7 @@ export class AppUtil {
 
     public static handleError(error: Response): Observable<never> {
         if (error.status === 400) {
-            return throwError(new BadInputError(error.json()));
+            return throwError(new BadInputError(error));
         }
 
         if (error.status === 404) {
@@ -40,6 +40,6 @@ export class AppUtil {
             return throwError(new AccessDeniedError());
         }
 
-        return throwError(new AppError(error.json()));
+        return throwError(new AppError(error));
     }
 }
