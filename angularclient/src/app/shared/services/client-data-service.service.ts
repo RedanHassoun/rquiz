@@ -12,28 +12,29 @@ export class ClientDataServiceService {
   constructor(private url: string, private http: HttpClient) {
   }
 
-  private createAuthorizationHeader(headers: Headers) {
-    headers.append('x-auth', localStorage.getItem(AppConsts.KEY_USER_TOKEN));
+  private createAuthorizationHeader(): HttpHeaders {
+    let headers = new HttpHeaders(); // TODO: take from 'jwt' interceptor
+    const authorizationToken: string = localStorage.getItem(AppConsts.KEY_USER_TOKEN);
+    headers = headers.set('Authorization', authorizationToken);
+    return headers;
   }
 
   getAll() {
-    const headers = new HttpHeaders();
-    // this.createAuthorizationHeader(headers);
-    return this.http.get(this.url, { headers: headers })
-      .pipe(map( (response: string) => JSON.parse(response)))
+    return this.http.get(this.url, { headers: this.createAuthorizationHeader() })
+      .pipe(map((response: string) => JSON.parse(response)))
       .pipe(catchError(AppUtil.handleError));
   }
 
   delete(id: string) {
     const headers = new HttpHeaders();
     // this.createAuthorizationHeader(headers);
-    return this.http.delete(this.url + id, { headers: headers })
+    return this.http.delete(this.url + id, { headers: this.createAuthorizationHeader() })
       .pipe(map((response: string) => JSON.parse(response)))
       .pipe(catchError(AppUtil.handleError));
   }
 
   create(resource) {
     return this.http.post(this.url, resource.json())
-    .pipe(catchError(AppUtil.handleError));
+      .pipe(catchError(AppUtil.handleError));
   }
 }

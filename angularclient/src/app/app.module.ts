@@ -1,6 +1,6 @@
+
 import { AppConsts } from './shared/util/app-consts';
 import { UserServiceService } from './core/services/user-service.service';
-
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -12,10 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { JwtModule } from '@auth0/angular-jwt';
 import { LoginComponent } from './core/components/login/login.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
-
-export function appTokenGetter() {
-  return localStorage.getItem(AppConsts.KEY_USER_TOKEN);
-}
+import { AppUtil } from './shared/util/app-util';
+import { AppJwtModule } from './app-jwt/app-jwt.module';
 
 @NgModule({
   declarations: [
@@ -31,12 +29,7 @@ export function appTokenGetter() {
     HttpClientModule,
     FormsModule,
     HttpClientModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: appTokenGetter,
-        whitelistedDomains: [AppConsts.BASE_URL]
-      }
-    })
+    AppJwtModule
   ],
   providers: [UserServiceService],
   bootstrap: [AppComponent]

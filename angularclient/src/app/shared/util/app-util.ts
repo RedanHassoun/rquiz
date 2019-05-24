@@ -18,12 +18,12 @@ export class AppUtil {
 
         const headers = response[`headers`];
 
-        let authorizationValue: string = headers.get(`Authorization`);
+        const authorizationValue: string = headers.get(`Authorization`);
 
         if (!authorizationValue) {
             throw new Error('Cannot find token inside headers');
         }
-        authorizationValue = authorizationValue.split(' ')[1]; // remove the 'Bearer' section
+
         localStorage.setItem(AppConsts.KEY_USER_TOKEN, authorizationValue);
     }
 
@@ -41,5 +41,17 @@ export class AppUtil {
         }
 
         return throwError(new AppError(error));
+    }
+
+    public static showError(err: AppError): void {
+        if (err instanceof AccessDeniedError) {
+            alert('Access denied!');
+            return;
+        }
+        alert('Something went wrong...');
+    }
+
+    public static appTokenGetter() {
+        return localStorage.getItem(AppConsts.KEY_USER_TOKEN);
     }
 }

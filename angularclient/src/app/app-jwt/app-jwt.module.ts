@@ -1,17 +1,21 @@
 import { AppConsts } from './../shared/util/app-consts';
 import { AppUtil } from './../shared/util/app-util';
 import { JwtModule } from '@auth0/angular-jwt';
-import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppJwtModule } from '../app-jwt/app-jwt.module';
+
+const jwtConfig = {
+  config: {
+    tokenGetter: AppUtil.appTokenGetter,
+    whitelistedDomains: [AppConsts.BASE_URL]
+  }
+};
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    SharedModule,
-    AppJwtModule
+    JwtModule.forRoot(jwtConfig)
   ]
 })
-export class CoreModule { }
+export class AppJwtModule { }

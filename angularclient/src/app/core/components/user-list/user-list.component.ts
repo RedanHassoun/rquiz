@@ -1,3 +1,5 @@
+import { AppUtil } from './../../../shared/util/app-util';
+import { AppError } from './../../../shared/app-errors/app-error';
 import { UserServiceService } from '../../services/user-service.service';
 import { User } from '../../../shared/models/user';
 import { Component, OnInit } from '@angular/core';
@@ -14,9 +16,10 @@ export class UserListComponent implements OnInit {
   constructor(private userService: UserServiceService) { }
 
   ngOnInit() {
-    this.userService.getAll().subscribe(data => {
-      this.users = data;
-    });
+    this.userService.getAll()
+      .subscribe(data => {
+        this.users = data;
+      }, (err: AppError) => AppUtil.showError);
   }
 
 }
