@@ -1,18 +1,16 @@
-<div class="card my-5">
+<div *ngIf="users" class="card my-5">
   <div class="card-body">
     <table class="table table-bordered table-striped">
       <thead class="thead-dark">
         <tr>
           <th scope="col">#</th>
           <th scope="col">Name</th>
-          <th scope="col">Email</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users">
+        <tr *ngFor="let user of users" (click)="showUser(user)">
           <td>{{ user.id }}</td>
-          <td>{{ user.name }}</td>
-          <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+          <td>{{ user.username }}</td>
         </tr>
       </tbody>
     </table>

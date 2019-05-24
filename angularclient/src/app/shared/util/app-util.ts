@@ -54,4 +54,8 @@ export class AppUtil {
     public static appTokenGetter() {
         return localStorage.getItem(AppConsts.KEY_USER_TOKEN);
     }
+
+    public static handleNullError(nullField: string) {
+        alert(`${nullField} cannot be null`);
+    }
 }

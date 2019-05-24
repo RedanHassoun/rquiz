@@ -1,3 +1,4 @@
+import { User } from './../models/user';
 import { AppUtil } from '../util/app-util';
 import { Injectable } from '@angular/core';
 import { AppConsts } from '../util/app-consts';
@@ -21,13 +22,10 @@ export class ClientDataServiceService {
 
   getAll() {
     return this.http.get(this.url, { headers: this.createAuthorizationHeader() })
-      .pipe(map((response: string) => JSON.parse(response)))
       .pipe(catchError(AppUtil.handleError));
   }
 
   delete(id: string) {
-    const headers = new HttpHeaders();
-    // this.createAuthorizationHeader(headers);
     return this.http.delete(this.url + id, { headers: this.createAuthorizationHeader() })
       .pipe(map((response: string) => JSON.parse(response)))
       .pipe(catchError(AppUtil.handleError));
@@ -35,6 +33,11 @@ export class ClientDataServiceService {
 
   create(resource) {
     return this.http.post(this.url, resource.json())
+      .pipe(catchError(AppUtil.handleError));
+  }
+
+  get(id: string) {
+    return this.http.get(this.url + id, { headers: this.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
   }
 }

@@ -9,7 +9,7 @@ import { AppConsts } from '../../shared/util/app-consts';
 export class UserServiceService extends ClientDataServiceService {
 
   constructor(http: HttpClient) {
-    super(`${AppConsts.BASE_URL}/users`, http);
+    super(`${AppConsts.BASE_URL}/users/`, http);
   }
 
 }

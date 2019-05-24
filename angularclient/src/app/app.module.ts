@@ -1,3 +1,6 @@
+import { CoreModule } from './core/core.module';
+import { SharedModule } from './shared/shared.module';
+import { ProfileComponent } from './shared/components/profile/profile.component';
 
 import { AppConsts } from './shared/util/app-consts';
 import { UserServiceService } from './core/services/user-service.service';
@@ -9,30 +12,30 @@ import { AppComponent } from './app.component';
 import { UserListComponent } from './core/components/user-list/user-list.component';
 import { UserFormComponent } from './core/components/user-form/user-form.component';
 import { FormsModule } from '@angular/forms';
-import { JwtModule } from '@auth0/angular-jwt';
 import { LoginComponent } from './core/components/login/login.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
-import { AppUtil } from './shared/util/app-util';
 import { AppJwtModule } from './app-jwt/app-jwt.module';
-
+import { CommonModule } from '@angular/common';
 @NgModule({
   declarations: [
     AppComponent,
-    UserListComponent,
-    UserFormComponent,
     LoginComponent,
     NotFoundComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
+    SharedModule,
+    CoreModule,
     HttpClientModule,
     AppJwtModule
   ],
-  providers: [UserServiceService],
-  bootstrap: [AppComponent]
+  providers: [
+    UserServiceService
+  ],
+  bootstrap: [
+    AppComponent
+  ]
 })
 export class AppModule {
 }
