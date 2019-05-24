@@ -5,4 +5,5 @@ import com.example.demo.models.ApplicationUser;
 
 public interface ApplicationUserRepository extends JpaRepository<ApplicationUser, Long> {
     ApplicationUser findByUsername(String username);
+    ApplicationUser findById(String id);
 }

@@ -2,6 +2,9 @@ package com.example.demo;
 
 import com.example.demo.models.ApplicationUser;
 import com.example.demo.repo.ApplicationUserRepository;
+import com.example.demo.services.UserService;
+import com.example.demo.services.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,15 +25,15 @@ public class DemoApplication
 	}
 
 	@Bean
-    CommandLineRunner init(ApplicationUserRepository userRepository) {
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    CommandLineRunner init(ApplicationUserRepository userRepository,
+						   UserService userService) {
 		return args -> {
 			Stream.of("John", "Julie", "Jennifer", "Helen", "Rachel")
 					.forEach(name -> {
 						ApplicationUser user = new ApplicationUser();
 						user.setUsername(name);
-						user.setPassword(bCryptPasswordEncoder.encode("123"));
-						userRepository.save(user);
+						user.setPassword("123");
+						userService.create(user);
 					});
 			userRepository.findAll().forEach(System.out::println);
 		};
