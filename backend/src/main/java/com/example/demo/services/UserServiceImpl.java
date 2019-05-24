@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(ApplicationUser dummy) {
+    public void update(ApplicationUser user) {
 
     }
 
