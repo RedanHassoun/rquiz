@@ -1,5 +1,6 @@
 package com.raiseup.rquiz.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.UUID;
@@ -8,9 +9,12 @@ import java.util.UUID;
 public class ApplicationUser {
     @Id
     private String id;
+    @Column(unique=true)
     private String username;
     private String password;
     private String imageUrl;
+
+
     public String getId() {
         return id;
     }
