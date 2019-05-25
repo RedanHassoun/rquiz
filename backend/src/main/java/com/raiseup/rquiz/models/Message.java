@@ -1,4 +1,4 @@
-package com.example.demo.models;
+package com.raiseup.rquiz.models;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

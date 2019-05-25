@@ -1,4 +1,4 @@
-package com.example.demo.security;
+package com.raiseup.rquiz.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import static com.example.demo.security.SecurityConstants.HEADER_STRING;
-import static com.example.demo.security.SecurityConstants.SECRET;
-import static com.example.demo.security.SecurityConstants.TOKEN_PREFIX;
+import static com.raiseup.rquiz.security.SecurityConstants.HEADER_STRING;
+import static com.raiseup.rquiz.security.SecurityConstants.SECRET;
+import static com.raiseup.rquiz.security.SecurityConstants.TOKEN_PREFIX;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 

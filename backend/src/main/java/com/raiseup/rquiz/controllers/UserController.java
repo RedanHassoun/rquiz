@@ -1,17 +1,12 @@
-package com.example.demo.controllers;
+package com.raiseup.rquiz.controllers;
 
-import com.example.demo.models.ApplicationUser;
-import com.example.demo.repo.ApplicationUserRepository;
-import com.example.demo.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.raiseup.rquiz.models.ApplicationUser;
+import com.raiseup.rquiz.repo.ApplicationUserRepository;
+import com.raiseup.rquiz.services.UserService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

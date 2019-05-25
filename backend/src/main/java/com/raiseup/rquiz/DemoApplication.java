@@ -1,10 +1,8 @@
-package com.example.demo;
+package com.raiseup.rquiz;
 
-import com.example.demo.models.ApplicationUser;
-import com.example.demo.repo.ApplicationUserRepository;
-import com.example.demo.services.UserService;
-import com.example.demo.services.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.raiseup.rquiz.models.ApplicationUser;
+import com.raiseup.rquiz.repo.ApplicationUserRepository;
+import com.raiseup.rquiz.services.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

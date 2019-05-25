@@ -1,7 +1,7 @@
-package com.example.demo.security;
+package com.raiseup.rquiz.security;
 
 
-import com.example.demo.services.UserDetailsServiceImpl;
+import com.raiseup.rquiz.services.UserDetailsServiceImpl;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,7 +14,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.context.annotation.Bean;
 
-import static com.example.demo.security.SecurityConstants.SIGN_UP_URL;
+import static com.raiseup.rquiz.security.SecurityConstants.SIGN_UP_URL;
 
 
 @EnableWebSecurity

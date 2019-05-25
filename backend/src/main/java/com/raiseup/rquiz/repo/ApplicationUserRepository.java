@@ -1,7 +1,7 @@
-package com.example.demo.repo;
+package com.raiseup.rquiz.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.demo.models.ApplicationUser;
+import com.raiseup.rquiz.models.ApplicationUser;
 
 public interface ApplicationUserRepository extends JpaRepository<ApplicationUser, Long> {
     ApplicationUser findByUsername(String username);

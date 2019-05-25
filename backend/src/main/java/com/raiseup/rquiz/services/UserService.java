@@ -1,6 +1,6 @@
-package com.example.demo.services;
+package com.raiseup.rquiz.services;
 
-import com.example.demo.models.ApplicationUser;
+import com.raiseup.rquiz.models.ApplicationUser;
 import java.util.Collection;
 import java.util.Optional;
 

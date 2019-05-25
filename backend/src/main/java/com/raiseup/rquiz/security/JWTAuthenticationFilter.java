@@ -1,7 +1,7 @@
-package com.example.demo.security;
+package com.raiseup.rquiz.security;
 
 import com.auth0.jwt.JWT;
-import com.example.demo.models.ApplicationUser;
+import com.raiseup.rquiz.models.ApplicationUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
-import static com.example.demo.security.SecurityConstants.*;
+import static com.raiseup.rquiz.security.SecurityConstants.*;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;

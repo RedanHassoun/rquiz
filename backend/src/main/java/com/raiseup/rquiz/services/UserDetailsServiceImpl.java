@@ -1,7 +1,7 @@
-package com.example.demo.services;
+package com.raiseup.rquiz.services;
 
-import com.example.demo.models.ApplicationUser;
-import com.example.demo.repo.ApplicationUserRepository;
+import com.raiseup.rquiz.models.ApplicationUser;
+import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.User;
