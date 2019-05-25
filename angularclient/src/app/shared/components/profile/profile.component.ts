@@ -11,14 +11,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
   private user: User;
+  private isCurrUser: boolean;
 
   constructor(private route: ActivatedRoute,
-              private usersService: UserServiceService) {
+    private usersService: UserServiceService) {
   }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramsMap => {
-
       const userId = paramsMap.get('id');
       if (!userId) {
         AppUtil.handleNullError('User id');
@@ -27,9 +27,18 @@ export class ProfileComponent implements OnInit {
 
       this.usersService.get(userId)
         .subscribe((user: User) => {
+          this.recognizeUser(user);
           this.user = user;
         });
     });
   }
 
+  recognizeUser(user: User): void {
+    const currUsername: string = AppUtil.getCurrentUsername();
+    if (user.username === currUsername) {
+      this.isCurrUser = true;
+    } else {
+      this.isCurrUser = false;
+    }
+  }
 }
