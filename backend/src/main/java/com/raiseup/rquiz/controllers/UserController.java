@@ -28,7 +28,7 @@ public class UserController {
         this.usersService = usersService;
     }
 
-    @GetMapping("")
+    @GetMapping("/all")
     public List<ApplicationUser> getUsers(){
         try{
             return new ArrayList<>(this.usersService.readAll());

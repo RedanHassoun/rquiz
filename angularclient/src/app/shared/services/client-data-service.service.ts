@@ -21,7 +21,7 @@ export class ClientDataServiceService {
   }
 
   getAll() {
-    return this.http.get(this.url, { headers: this.createAuthorizationHeader() })
+    return this.http.get(`${this.url}all`, { headers: this.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
   }
 

@@ -1,3 +1,4 @@
+import { QuizListComponent } from './feed/components/quiz-list/quiz-list.component';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { ProfileComponent } from './shared/components/profile/profile.component';
@@ -20,7 +21,8 @@ import { CommonModule } from '@angular/common';
   declarations: [
     AppComponent,
     LoginComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    QuizListComponent // TODO: check the lazy loading issue
   ],
   imports: [
     BrowserModule,

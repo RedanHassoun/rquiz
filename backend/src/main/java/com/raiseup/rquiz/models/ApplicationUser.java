@@ -3,9 +3,11 @@ package com.raiseup.rquiz.models;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.UUID;
+import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
+@Table(name = "users")
 public class ApplicationUser {
     @Id
     private String id;
@@ -52,5 +54,19 @@ public class ApplicationUser {
         return String.format("[ username: %s , password: %s]",
                 this.username,
                 this.password);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ApplicationUser that = (ApplicationUser) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(username, that.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username);
     }
 }

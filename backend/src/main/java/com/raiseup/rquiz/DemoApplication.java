@@ -1,7 +1,9 @@
 package com.raiseup.rquiz;
 
 import com.raiseup.rquiz.models.ApplicationUser;
+import com.raiseup.rquiz.models.Quiz;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
+import com.raiseup.rquiz.services.QuizService;
 import com.raiseup.rquiz.services.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -24,7 +26,8 @@ public class DemoApplication
 
 	@Bean
     CommandLineRunner init(ApplicationUserRepository userRepository,
-						   UserService userService) {
+						   UserService userService,
+						   QuizService quizService) {
 		return args -> {
 			Stream.of("John", "Julie", "Jennifer", "Helen", "Rachel")
 					.forEach(name -> {
@@ -33,7 +36,18 @@ public class DemoApplication
 						user.setPassword("123");
 						userService.create(user);
 					});
+			String tempId = userRepository.findAll().get(0).getId();
+			Stream.of("quiz a", "quiz b")
+					.forEach(title -> {
+						Quiz q = new Quiz();
+						q.setTitle(title);
+						q.setPublic(true);
+						q.setCreatorId(tempId);
+						quizService.create(q);
+					});
 			userRepository.findAll().forEach(System.out::println);
+			System.out.println("---------------------------");
+			quizService.readAll().forEach(System.out::println);
 		};
 	}
 }
