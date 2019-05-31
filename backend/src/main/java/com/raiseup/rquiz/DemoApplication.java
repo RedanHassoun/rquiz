@@ -37,12 +37,14 @@ public class DemoApplication
 						userService.create(user);
 					});
 			String tempId = userRepository.findAll().get(0).getId();
-			Stream.of("quiz a", "quiz b")
+			Stream.of("quiz a", "quiz b", "quiz c")
 					.forEach(title -> {
 						Quiz q = new Quiz();
 						q.setTitle(title);
-						q.setPublic(true);
+						q.setPublic(!title.equals("quiz c"));
 						q.setCreatorId(tempId);
+						q.setImageUrl("https://images.immediate.co.uk/production/volatile/sites/3/2018/04/Screen-Shot-2018-04-05-at-09.20.50-96984e5.png");
+						q.setDescription(String.format("This quiz is called %s and it is just an example, this text should be the description of the quiz", title));
 						quizService.create(q);
 					});
 			userRepository.findAll().forEach(System.out::println);

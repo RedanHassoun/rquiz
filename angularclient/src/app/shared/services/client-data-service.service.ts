@@ -10,10 +10,10 @@ import { catchError, map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ClientDataServiceService {
-  constructor(private url: string, private http: HttpClient) {
+  constructor(public url: string, public http: HttpClient) {
   }
 
-  private createAuthorizationHeader(): HttpHeaders {
+  public createAuthorizationHeader(): HttpHeaders {
     let headers = new HttpHeaders(); // TODO: take from 'jwt' interceptor
     const authorizationToken: string = localStorage.getItem(AppConsts.KEY_USER_TOKEN);
     headers = headers.set('Authorization', authorizationToken);

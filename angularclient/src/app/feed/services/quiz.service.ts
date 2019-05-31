@@ -1,13 +1,21 @@
+import { AppUtil } from './../../shared/util/app-util';
 import { HttpClient } from '@angular/common/http';
 import { AppConsts } from './../../shared/util/app-consts';
 import { ClientDataServiceService } from './../../shared/services/client-data-service.service';
 import { Injectable } from '@angular/core';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class QuizService extends ClientDataServiceService {
-  constructor(http: HttpClient) {
+  constructor(public http: HttpClient) {
     super(`${AppConsts.BASE_URL}/quiz/`, http);
+  }
+
+  getAllWithParam(isPublic: boolean) {
+    return this.http.get(`${this.url}all?isPublic=${isPublic}`,
+                        { headers: super.createAuthorizationHeader() })
+      .pipe(catchError(AppUtil.handleError));
   }
 }

@@ -14,7 +14,7 @@ export class QuizListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.quizService.getAll()
+    this.quizService.getAllWithParam(true)
         .subscribe( (quizList: Quiz[]) => {
           this.quizList = quizList;
           console.table(this.quizList);
