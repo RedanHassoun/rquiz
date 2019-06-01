@@ -9,13 +9,17 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class QuizService extends ClientDataServiceService {
+  public static readonly PAGE_SIZE = 5;
   constructor(public http: HttpClient) {
     super(`${AppConsts.BASE_URL}/quiz/`, http);
   }
 
-  getAllWithParam(isPublic: boolean) {
-    return this.http.get(`${this.url}all?isPublic=${isPublic}`,
-                        { headers: super.createAuthorizationHeader() })
+  getAllByPublic(isPublic: boolean, page: number) {
+    let url = `${this.url}all?isPublic=${isPublic}`;
+    if (page) {
+      url += `&page=${page}&size=${QuizService.PAGE_SIZE}`;
+    }
+    return this.http.get(url, { headers: super.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
   }
 }

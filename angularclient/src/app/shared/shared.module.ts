@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppUtil } from './util/app-util';
 import { AppJwtModule } from '../app-jwt/app-jwt.module';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -11,11 +12,13 @@ import { AppJwtModule } from '../app-jwt/app-jwt.module';
   imports: [
     CommonModule,
     AppJwtModule,
-    FormsModule
+    FormsModule,
+    InfiniteScrollModule
   ],
   exports: [
     FormsModule,
-    CommonModule
+    CommonModule,
+    InfiniteScrollModule
   ]
 })
 export class SharedModule { }
