@@ -23,6 +23,7 @@
       [infiniteScrollContainer]="selector"
       [fromRoot]="true" 
       (scrolled)="onScroll()"></div>
+
 <div class="feed-end-msg alert alert-warning" *ngIf="finished">
   End of quiz list. Total: {{ (quizList$ | async).length }}
 </div>

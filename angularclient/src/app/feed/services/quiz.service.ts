@@ -16,7 +16,7 @@ export class QuizService extends ClientDataServiceService {
 
   getAllByPublic(isPublic: boolean, page: number) {
     let url = `${this.url}all?isPublic=${isPublic}`;
-    if (page) {
+    if (page != null && typeof page !== undefined) {
       url += `&page=${page}&size=${QuizService.PAGE_SIZE}`;
     }
     return this.http.get(url, { headers: super.createAuthorizationHeader() })

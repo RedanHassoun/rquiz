@@ -45,7 +45,7 @@ export class QuizListComponent implements OnInit {
         const currentQuizList = this.quizList$.getValue();
         const combinedList = _.concat(currentQuizList, newQuizItems);
 
-        // Houase keeping
+        // House keeping
         if (newQuizItems.length < QuizService.PAGE_SIZE) {
           this.finished = true;
         }

@@ -3,7 +3,9 @@ package com.raiseup.rquiz.services;
 import com.raiseup.rquiz.models.Quiz;
 import com.raiseup.rquiz.repo.QuizRepository;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,16 +44,20 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Collection<Quiz> readAll(int size, int page) {
-        return this.quizRepository.findAll(PageRequest.of(page, size)).getContent();
+        return this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.ASC, "id"))
+                    .getContent();
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Collection<Quiz> readAll(Boolean isPublic, int size, int page) {
         if(isPublic == null)
-            return this.quizRepository.findAll(PageRequest.of(page, size)).getContent();
+            return this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.ASC, "id"))
+                    .getContent();
 
-        return this.quizRepository.findAllByPublic(isPublic, PageRequest.of(page, size));
+        return this.quizRepository.findAllByPublic(isPublic, PageRequest.of(page, size, Sort.Direction.ASC, "id"));
     }
 
     @Override
