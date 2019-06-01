@@ -22,10 +22,25 @@ public class QuizController {
     }
 
     @GetMapping("/all")
-    public List<Quiz> getQuizList(){
+    public List<Quiz> getQuizList(@RequestParam(required = false) Boolean isPublic,
+                                  @RequestParam(required = false) Integer page,
+                                  @RequestParam(required = false) Integer size){
         try{
-            return new ArrayList<>(this.quizService.readAll());
-        }catch (Exception ex){
+            if(page == null && size == null){
+                Collection<Quiz> res = this.quizService.readAll(isPublic);
+                return new ArrayList<>(res);
+            }
+
+            if(page == null || size == null){
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "In order to use pagination you must provide both page and size");
+            }
+
+            return new ArrayList<>(this.quizService.readAll(isPublic, size, page));
+
+        } catch (ResponseStatusException ex){
+            throw ex;
+        } catch (Exception ex){
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cant fetch quiz list", ex);
         }
