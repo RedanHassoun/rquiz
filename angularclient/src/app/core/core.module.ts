@@ -5,12 +5,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppJwtModule } from '../app-jwt/app-jwt.module';
 import { ProfileComponent } from '../shared/components/profile/profile.component';
+import { PageableComponent } from './components/pageable/pageable.component';
 
 @NgModule({
   declarations: [
     UserListComponent,
     UserFormComponent,
-    ProfileComponent
+    ProfileComponent,
+    PageableComponent
   ],
   imports: [
     CommonModule,

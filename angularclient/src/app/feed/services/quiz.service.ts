@@ -13,13 +13,4 @@ export class QuizService extends ClientDataServiceService {
   constructor(public http: HttpClient) {
     super(`${AppConsts.BASE_URL}/quiz/`, http);
   }
-
-  getAllByPublic(isPublic: boolean, page: number) {
-    let url = `${this.url}all?isPublic=${isPublic}`;
-    if (page != null && typeof page !== undefined) {
-      url += `&page=${page}&size=${QuizService.PAGE_SIZE}`;
-    }
-    return this.http.get(url, { headers: super.createAuthorizationHeader() })
-      .pipe(catchError(AppUtil.handleError));
-  }
 }

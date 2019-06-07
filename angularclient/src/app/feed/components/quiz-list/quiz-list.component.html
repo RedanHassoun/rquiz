@@ -6,7 +6,7 @@
 
 <div class="container list-article">
   <div class="row">
-    <div *ngFor="let quiz of quizList$ | async" class="col-xs-12 article-wrapper">
+    <div *ngFor="let quiz of dataList$ | async" class="col-xs-12 article-wrapper">
       <article>
         <a href="#" class="more">more</a>
         <div class="img-wrapper"><img src={{quiz.imageUrl}} alt="" /></div>
@@ -25,5 +25,5 @@
       (scrolled)="onScroll()"></div>
 
 <div class="feed-end-msg alert alert-warning" *ngIf="finished">
-  End of quiz list. Total: {{ (quizList$ | async).length }}
+  End of quiz list. Total: {{ (dataList$ | async).length }}
 </div>

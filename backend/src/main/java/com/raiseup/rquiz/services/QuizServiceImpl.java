@@ -26,6 +26,7 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Optional<Quiz> read(String id) {
         return Optional.empty();
     }
@@ -36,6 +37,7 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Collection<Quiz> readAll(Boolean isPublic) {
         if(isPublic == null){
             return this.quizRepository.findAll();

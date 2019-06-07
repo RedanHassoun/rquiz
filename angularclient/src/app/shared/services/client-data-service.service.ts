@@ -40,4 +40,36 @@ export class ClientDataServiceService {
     return this.http.get(this.url + id, { headers: this.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
   }
+
+  getAllByParameter(filterParamMap: Map<string, string>, page: number, size: number) {
+    let url = `${this.url}all`;
+    const hasFilterParameters: boolean = filterParamMap && filterParamMap.size > 0;
+
+    if (hasFilterParameters) {
+      let firstIteration = true;
+
+      filterParamMap.forEach((value: string, key: string) => {
+        if (firstIteration) {
+          url += `?${key}=${value}`;
+          firstIteration = false;
+
+        } else {
+          url += `&${key}=${value}`;
+        }
+      });
+    }
+
+    if (page != null && typeof page !== undefined) {
+      if (hasFilterParameters) {
+        url += '&';
+      } else {
+        url += '?';
+      }
+
+      url += `page=${page}&size=${size}`;
+    }
+
+    return this.http.get(url, { headers: this.createAuthorizationHeader() })
+      .pipe(catchError(AppUtil.handleError));
+  }
 }
