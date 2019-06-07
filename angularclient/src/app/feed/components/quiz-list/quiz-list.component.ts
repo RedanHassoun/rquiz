@@ -39,19 +39,20 @@ export class QuizListComponent implements OnInit {
 
     this.quizService.getAllByPublic(true, page)
       .pipe(tap(res => {
-        // update quiz list
+
         const newQuizItems = _.slice(res, 0, QuizService.PAGE_SIZE);
-
         const currentQuizList = this.quizList$.getValue();
-        const combinedList = _.concat(currentQuizList, newQuizItems);
 
-        // House keeping
         if (newQuizItems.length < QuizService.PAGE_SIZE) {
           this.finished = true;
         }
-        this.page++;
 
-        this.quizList$.next(combinedList);
+        if (newQuizItems.length > 0) {
+          const combinedList = _.concat(currentQuizList, newQuizItems);
+          this.quizList$.next(combinedList);
+        }
+
+        this.page++;
       }))
       .pipe(take(1))
       .subscribe();
