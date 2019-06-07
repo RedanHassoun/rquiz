@@ -16,7 +16,8 @@ export class PageableComponent implements OnInit {
   page = 0;
 
   constructor(private dataService: ClientDataServiceService,
-              private paramMap: Map<string, string>) {
+              private paramMap: Map<string, string>,
+              private pageSize: number) {
   }
 
   ngOnInit() {
@@ -38,18 +39,18 @@ export class PageableComponent implements OnInit {
       return;
     }
 
-    this.dataService.getAllByParameter(this.paramMap, page, QuizService.PAGE_SIZE)
+    this.dataService.getAllByParameter(this.paramMap, page, this.pageSize)
       .pipe(tap(res => {
 
-        const newQuizItems = _.slice(res, 0, QuizService.PAGE_SIZE);
-        const currentQuizList = this.dataList$.getValue();
+        const newItems = _.slice(res, 0, this.pageSize);
+        const currentItemsList = this.dataList$.getValue();
 
-        if (newQuizItems.length < QuizService.PAGE_SIZE) {
+        if (newItems.length < this.pageSize) {
           this.finished = true;
         }
 
-        if (newQuizItems.length > 0) {
-          const combinedList = _.concat(currentQuizList, newQuizItems);
+        if (newItems.length > 0) {
+          const combinedList = _.concat(currentItemsList, newItems);
           this.dataList$.next(combinedList);
         }
 
