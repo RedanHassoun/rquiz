@@ -2,6 +2,8 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 
+
+
 <h1 id="header" class="text-primary">RQuiz</h1>
 
 <div class="container list-article">
@@ -17,12 +19,8 @@
   </div>
 </div>
 
-<div infiniteScroll 
-      [infiniteScrollDistance]="1" 
-      [infiniteScrollThrottle]="500" 
-      [infiniteScrollContainer]="selector"
-      [fromRoot]="true" 
-      (scrolled)="onScroll()"></div>
+<div infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="500" [infiniteScrollContainer]="selector"
+  [fromRoot]="true" (scrolled)="onScroll()"></div>
 
 <div class="feed-end-msg alert alert-warning" *ngIf="finished">
   End of quiz list. Total: {{ (quizList$ | async).length }}

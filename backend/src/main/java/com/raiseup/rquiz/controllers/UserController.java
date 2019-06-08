@@ -53,11 +53,8 @@ public class UserController {
         return res.get();
     }
 
-
     @PostMapping("/sign-up")
     public void signUp(@RequestBody ApplicationUser user) {
         this.usersService.create(user);
     }
-
-
 }

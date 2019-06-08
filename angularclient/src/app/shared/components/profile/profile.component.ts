@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../../core/services/authentication.service';
 import { UserServiceService } from '../../../core/services/user-service.service';
 import { AppUtil } from '../../util/app-util';
 import { ActivatedRoute } from '@angular/router';
@@ -14,7 +15,8 @@ export class ProfileComponent implements OnInit {
   private isCurrUser: boolean;
 
   constructor(private route: ActivatedRoute,
-    private usersService: UserServiceService) {
+    private usersService: UserServiceService,
+    private authService: AuthenticationService) {
   }
 
   ngOnInit() {
@@ -33,9 +35,10 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  recognizeUser(user: User): void {
-    const currUsername: string = AppUtil.getCurrentUsername();
-    if (user.username === currUsername) {
+  async recognizeUser(user: User): Promise<void> {
+    const currentUser: User = await this.authService.getCurrentUser();
+
+    if (user.username === currentUser.username) {
       this.isCurrUser = true;
     } else {
       this.isCurrUser = false;

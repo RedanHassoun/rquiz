@@ -1,3 +1,4 @@
+import { User } from './../models/user';
 import { AppError } from './../app-errors/app-error';
 import { AccessDeniedError } from './../app-errors/access-denied-error';
 import { NotFoundError } from './../app-errors/not-found-error';
@@ -58,21 +59,5 @@ export class AppUtil {
 
     public static handleNullError(nullField: string) {
         alert(`${nullField} cannot be null`);
-    }
-
-    public static getCurrentUsername(): string {
-        const jwtHelper = new JwtHelperService();
-
-        const token: string = localStorage.getItem(AppConsts.KEY_USER_TOKEN);
-        if (!token) {
-            throw new Error(`Token should not be null`);
-        }
-
-        const username = jwtHelper.decodeToken(token)[`sub`];
-        if (!username) {
-            throw new Error(`Username cannot be null`);
-        }
-
-        return username;
     }
 }
