@@ -8,10 +8,14 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatListModule} from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import {MatDialogModule} from '@angular/material/dialog'; 
+import {MatButtonModule} from '@angular/material/button'; 
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
-  ],
+  ConfirmationDialogComponent],
   imports: [
     CommonModule,
     AppJwtModule,
@@ -20,7 +24,13 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatSidenavModule,
     MatIconModule,
     MatToolbarModule,
-    MatListModule
+    MatListModule,
+    BrowserAnimationsModule,
+    MatDialogModule,
+    MatButtonModule
+  ],
+  entryComponents: [
+    ConfirmationDialogComponent
   ],
   exports: [
     FormsModule,
@@ -29,7 +39,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatSidenavModule,
     MatIconModule,
     MatToolbarModule,
-    MatListModule
+    MatListModule,
+    BrowserAnimationsModule,
+    MatDialogModule,
+    MatButtonModule
   ]
 })
 export class SharedModule { }

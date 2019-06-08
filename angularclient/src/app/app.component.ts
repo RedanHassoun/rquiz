@@ -1,9 +1,10 @@
+import { NavigationHelperService } from './shared/services/navigation-helper.service';
 import { User } from './shared/models/user';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './core/services/authentication.service';
 import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
-import {DomSanitizer} from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -20,12 +21,13 @@ export class AppComponent {
   ]);
 
   constructor(public authService: AuthenticationService,
-              private router: Router,
-              private iconRegistry: MatIconRegistry,
-              private sanitizer: DomSanitizer) {
-    iconRegistry.addSvgIcon( // TODO: make more general
+    private router: Router,
+    private iconRegistry: MatIconRegistry,
+    private sanitizer: DomSanitizer,
+    private navigationService: NavigationHelperService) {
+    this.iconRegistry.addSvgIcon( // TODO: make more general
       'menu',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/img/baseline-menu-24px.svg'));
+      this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/baseline-menu-24px.svg'));
   }
 
   async openCurrentUserProfile() {
@@ -43,10 +45,16 @@ export class AppComponent {
         this.openCurrentUserProfile();
         break;
       case 'users':
-          this.router.navigate(['users'], { replaceUrl: true });
+        this.router.navigate(['users'], { replaceUrl: true });
         break;
       case 'logout':
-        this.authService.logout();
+        this.navigationService
+          .openYesNoDialogNoCallback('Do you confirm logout?')
+          .subscribe(res => {
+            if (res) {
+              this.authService.logout();
+            }
+          });
     }
 
     this.opened = false;

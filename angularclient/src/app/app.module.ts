@@ -10,7 +10,6 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './core/components/login/login.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 import { AppJwtModule } from './app-jwt/app-jwt.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -25,8 +24,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     SharedModule,
     CoreModule,
     HttpClientModule,
-    AppJwtModule,
-    BrowserAnimationsModule
+    AppJwtModule
   ],
   providers: [
     UserServiceService
