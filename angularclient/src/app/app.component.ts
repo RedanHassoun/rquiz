@@ -12,7 +12,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  opened = false;
+  drawerOpened = false;
   appPages = new Map<string, string>([
     ['home', 'Home'],
     ['profile', 'My profile'],
@@ -57,6 +57,6 @@ export class AppComponent {
           });
     }
 
-    this.opened = false;
+    this.drawerOpened = false;
   }
 }
