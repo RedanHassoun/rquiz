@@ -3,7 +3,6 @@ import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { QuizListComponent } from './components/quiz-list/quiz-list.component';
-
 @NgModule({
   declarations: [
     QuizListComponent

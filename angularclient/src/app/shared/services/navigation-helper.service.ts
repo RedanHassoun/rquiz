@@ -1,6 +1,8 @@
+import { Observable } from 'rxjs';
 import { ConfirmationDialogComponent } from './../components/confirmation-dialog/confirmation-dialog.component';
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { ComponentType } from '@angular/cdk/portal';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +11,9 @@ export class NavigationHelperService {
 
   constructor(public dialog: MatDialog) { }
 
-  openYesNoDialog(message: string,
+  public openYesNoDialog(message: string,
     yesResultCallback: (arg0?: any) => void,
-    customWidthPX?: number) {
+    customWidthPX?: number): MatDialogRef<ConfirmationDialogComponent, any> {
     let width = '350px';
 
     if (customWidthPX) {
@@ -33,8 +35,8 @@ export class NavigationHelperService {
   }
 
 
-  openYesNoDialogNoCallback(message: string,
-    customWidthPX?: number) {
+  public openYesNoDialogNoCallback(message: string,
+    customWidthPX?: number): Observable<any> {
     let width = '350px';
 
     if (customWidthPX) {
@@ -44,6 +46,19 @@ export class NavigationHelperService {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: width,
       data: message
+    });
+
+    return dialogRef.afterClosed();
+  }
+
+  openDialog(dialog: ComponentType<{}>, width?: number, dialogData?: any) {
+    let dialogWidth = '450px';
+    if (width) {
+      dialogWidth = `${width}px`;
+    }
+    const dialogRef = this.dialog.open(dialog, {
+      width: dialogWidth,
+      data: dialogData
     });
 
     return dialogRef.afterClosed();

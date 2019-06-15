@@ -1,12 +1,10 @@
-import { User } from './../models/user';
 import { AppError } from './../app-errors/app-error';
 import { AccessDeniedError } from './../app-errors/access-denied-error';
 import { NotFoundError } from './../app-errors/not-found-error';
 import { BadInputError } from './../app-errors/bad-input-error';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AppConsts } from './app-consts';
 import { throwError } from 'rxjs';
-import { JwtHelperService } from '@auth0/angular-jwt';
 
 export class AppUtil {
     public static extractAndSaveToken(response: any): void {
@@ -59,5 +57,15 @@ export class AppUtil {
 
     public static handleNullError(nullField: string) {
         alert(`${nullField} cannot be null`);
+    }
+
+    public static releaseSubscriptions(subscriptions: Subscription[]) {
+        if (!subscriptions || subscriptions.length === 0) {
+            return;
+        }
+
+        for (const sub of subscriptions) {
+            sub.unsubscribe();
+        }
     }
 }

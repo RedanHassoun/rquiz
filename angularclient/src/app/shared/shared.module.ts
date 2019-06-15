@@ -1,5 +1,6 @@
+import { CreateQuizComponent } from './components/create-quiz/create-quiz.component';
 import { ProfileComponent } from './../shared/components/profile/profile.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppJwtModule } from '../app-jwt/app-jwt.module';
@@ -15,11 +16,13 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
 
 @NgModule({
   declarations: [
-  ConfirmationDialogComponent],
+  ConfirmationDialogComponent,
+  CreateQuizComponent],
   imports: [
     CommonModule,
     AppJwtModule,
     FormsModule,
+    ReactiveFormsModule,
     InfiniteScrollModule,
     MatSidenavModule,
     MatIconModule,
@@ -30,7 +33,8 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
     MatButtonModule
   ],
   entryComponents: [
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    CreateQuizComponent
   ],
   exports: [
     FormsModule,

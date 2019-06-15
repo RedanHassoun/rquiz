@@ -1,7 +1,10 @@
+import { AppUtil } from './../../../shared/util/app-util';
+import { CreateQuizComponent } from '../../../shared/components/create-quiz/create-quiz.component';
+import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
 import { Quiz } from './../../../shared/models/quiz';
 import { QuizService } from './../../services/quiz.service';
-import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import { tap, take } from 'rxjs/operators';
 
@@ -10,12 +13,14 @@ import { tap, take } from 'rxjs/operators';
   templateUrl: './quiz-list.component.html',
   styleUrls: ['./quiz-list.component.scss']
 })
-export class QuizListComponent implements OnInit {
+export class QuizListComponent implements OnInit, OnDestroy {
   quizList$ = new BehaviorSubject([]);
   finished = false;
   page = 0;
+  private subscriptions: Subscription[] = [];
 
-  constructor(private quizService: QuizService) {
+  constructor(private quizService: QuizService,
+    private navigationService: NavigationHelperService) {
   }
 
   ngOnInit() {
@@ -56,5 +61,15 @@ export class QuizListComponent implements OnInit {
       }))
       .pipe(take(1))
       .subscribe();
+  }
+
+  openDiagg() {
+    this.subscriptions.push(
+      this.navigationService.openDialog(CreateQuizComponent).subscribe()
+    );
+  }
+
+  ngOnDestroy(): void {
+    AppUtil.releaseSubscriptions(this.subscriptions);
   }
 }
