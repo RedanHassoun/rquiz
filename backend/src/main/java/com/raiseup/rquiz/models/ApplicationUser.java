@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -12,7 +13,9 @@ public class ApplicationUser {
     @Id
     private String id;
     @Column(unique=true)
+    @NotNull(message = "Username cannot be null")
     private String username;
+    @NotNull(message = "Password cannot be null")
     private String password;
     private String imageUrl;
 

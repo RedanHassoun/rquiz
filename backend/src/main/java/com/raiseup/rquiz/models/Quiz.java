@@ -1,27 +1,67 @@
 package com.raiseup.rquiz.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.Column;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "quiz")
-public class Quiz {
+public class Quiz extends BaseModel{
+
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator")
     @Id
+    @Column(name="quiz_id")
     private String id;
+
+    @NotNull(message = "Title cannot be null")
+    @Size(max = 256)
     private String title;
+
+    @Lob
     private String description;
+
     private String imageUrl;
+
     @Column(nullable = false)
-    private boolean isPublic;
+    @NotNull(message = "public property cannot be null")
+    private Boolean isPublic;
+
     private String assignedUsers;
+
     @Column(nullable = false)
+    @NotNull(message = "Creator id cannot be null")
     private String creatorId;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "quiz_id", referencedColumnName = "quiz_id")
+    private Set<QuizAnswer> quizAnswers = new HashSet<>();
 
     public String getId() {
         return id;
+    }
+
+    public Boolean getPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(Boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public Set<QuizAnswer> getQuizAnswers() {
+        return quizAnswers;
+    }
+
+    public void setQuizAnswers(Set<QuizAnswer> quizAnswers) {
+        this.quizAnswers = quizAnswers;
     }
 
     public void setId(String id) {
@@ -75,6 +115,7 @@ public class Quiz {
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
     }
+
 
     @Override
     public boolean equals(Object o) {

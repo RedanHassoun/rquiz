@@ -2,22 +2,47 @@ package com.raiseup.rquiz.controllers;
 
 import com.raiseup.rquiz.models.Quiz;
 import com.raiseup.rquiz.services.QuizService;
+import com.raiseup.rquiz.services.ValidationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @RestController
 @RequestMapping("/quiz")
 @CrossOrigin
 public class QuizController {
     private QuizService quizService;
+    private ValidationService validationService;
 
-    public QuizController(QuizService quizService) {
+    public QuizController(QuizService quizService,
+                          ValidationService validationService) {
         this.quizService = quizService;
+        this.validationService = validationService;
+    }
+
+    @PostMapping(path = "",
+                consumes = "application/json",
+                produces = "application/json")
+    public Quiz createQuiz(@RequestBody Quiz quiz) {
+        try{
+            Optional<List<String>> validations = this.validationService.validateBean(quiz);
+
+            if(validations.isPresent()){
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        this.validationService.buildValidationMessage(validations.get()));
+            }
+
+            return this.quizService.create(quiz);
+        } catch (ResponseStatusException ex){
+            throw ex;
+        } catch (Exception ex){
+            ex.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Cannot create quiz object", ex);
+        }
+
     }
 
     @GetMapping("/all")

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class QuizServiceImpl implements QuizService {
@@ -20,8 +19,6 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public Quiz create(Quiz obj) {
-        String id = UUID.randomUUID().toString();
-        obj.setId(id);
         return this.quizRepository.save(obj);
     }
 
