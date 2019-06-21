@@ -1,3 +1,6 @@
+import { AppUtil } from './../../util/app-util';
+import { AuthenticationService } from './../../../core/services/authentication.service';
+import { QuizService } from './../../../feed/services/quiz.service';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Quiz } from '../../models/quiz';
@@ -13,11 +16,12 @@ export class CreateQuizComponent implements OnInit {
   quiz: Quiz;
   addQuizForm: FormGroup;
 
-  constructor() { }
+  constructor(private quizService: QuizService,
+    private authenticationService: AuthenticationService,
+    private dialogRef:MatDialogRef<CreateQuizComponent>) { }
 
   ngOnInit() {
     this.quiz = new Quiz();
-    this.temp();
     this.quiz.reset();
     this.addQuizForm = new FormGroup({
       'title': new FormControl(this.quiz.title, [
@@ -26,36 +30,45 @@ export class CreateQuizComponent implements OnInit {
       ]),
       'description': new FormControl(this.quiz.description, [
         Validators.required,
-        Validators.minLength(4)]),
-      'newAnswer': new FormControl(this.quiz.description, [
-        Validators.required,
         Validators.minLength(4)])
+      //   ,
+      // 'newAnswer': new FormControl(this.quiz.description, [
+      //   Validators.required,
+      //   Validators.minLength(4)])
     });
   }
 
-  temp() {
-    const answer: QuizAnswer = new QuizAnswer();
-    answer.id = 'aaa';
-    answer.content = 'answer 1';
-    answer.isCorrect = true;
-    this.quiz.addAnswer(answer);
-  }
   get title() { return this.quiz.title; }
   get description() { return this.quiz.description; }
 
 
-  addQuiz() {
-    console.log('adding ..');
-    // this.peopleService.createPerson(this.newPerson)
-    //   .subscribe((response) => {
-    //     console.log('Create person response: ' + JSON.stringify(response))
-    //     this.addToPeople(response.json())
-    //     this.newPerson.reset()
-    //   },
-    //     (error) => {
-    //       console.log('An error occurred: ' + error)
-    //       this.newPerson.reset()
-    //       alert('An error occurred while connecting to server')
-    //     })
+  addAnswer(answerContent: string) {
+    if (!answerContent) {
+      return;
+    }
+    const ans = new QuizAnswer();
+    ans.content = answerContent;
+    ans.isCorrect = false;
+    this.quiz.addAnswer(ans);
+  }
+
+  publicChanged(isPublic: boolean): void {
+    this.quiz.isPublic = isPublic;
+  }
+
+  async addQuiz() {
+    const currentUserId: string = (await this.authenticationService.getCurrentUser()).id;
+    this.quiz.creatorId = currentUserId;
+
+    // temp ////////////////////////////
+    this.quiz.answers[0].isCorrect = true;
+    ////////////////////////////////////
+
+    this.quizService.create(this.quiz)
+      .subscribe(res => {
+        this.dialogRef.close();
+      }, (err) => {
+        AppUtil.showError(err);
+      });
   }
 }

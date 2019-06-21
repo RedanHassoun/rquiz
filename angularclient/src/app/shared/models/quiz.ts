@@ -16,6 +16,7 @@ export class Quiz {
         this.description = '';
         this.imageUrl = '';
         this.isPublic = false;
+        this.answers = [];
     }
 
     addAnswer(answer: QuizAnswer) {

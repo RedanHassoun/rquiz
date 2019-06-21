@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import java.util.*;
+
 import java.util.stream.Stream;
 
 @SpringBootApplication
@@ -46,16 +46,16 @@ public class DemoApplication
 					.forEach(title -> {
 						Quiz q = new Quiz();
 						q.setTitle(title);
-						q.setPublic(!title.equals("quiz c"));
+						q.setIsPublic(!title.equals("quiz c"));
 						q.setCreatorId(tempId);
 						q.setImageUrl("https://images.immediate.co.uk/production/volatile/sites/3/2018/04/Screen-Shot-2018-04-05-at-09.20.50-96984e5.png");
 						q.setDescription(String.format("This quiz is called %s and it is just an example, this text should be the description of the quiz", title));
 
 						QuizAnswer ans = new QuizAnswer();
 						ans.setContent("answer x");
-						ans.setCorrect(true);
+						ans.setIsCorrect(true);
 
-						q.getQuizAnswers().add(ans);
+						q.getAnswers().add(ans);
 
 						quizService.create(q);
 					});

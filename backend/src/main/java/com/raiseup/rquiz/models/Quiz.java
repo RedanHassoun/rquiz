@@ -42,26 +42,26 @@ public class Quiz extends BaseModel{
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "quiz_id", referencedColumnName = "quiz_id")
-    private Set<QuizAnswer> quizAnswers = new HashSet<>();
+    private Set<QuizAnswer> answers = new HashSet<>();
 
     public String getId() {
         return id;
     }
 
-    public Boolean getPublic() {
+    public Boolean getIsPublic() {
         return isPublic;
     }
 
-    public void setPublic(Boolean aPublic) {
+    public void setIsPublic(Boolean aPublic) {
         isPublic = aPublic;
     }
 
-    public Set<QuizAnswer> getQuizAnswers() {
-        return quizAnswers;
+    public Set<QuizAnswer> getAnswers() {
+        return answers;
     }
 
-    public void setQuizAnswers(Set<QuizAnswer> quizAnswers) {
-        this.quizAnswers = quizAnswers;
+    public void setAnswers(Set<QuizAnswer> answers) {
+        this.answers = answers;
     }
 
     public void setId(String id) {
@@ -90,14 +90,6 @@ public class Quiz extends BaseModel{
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public boolean isPublic() {
-        return isPublic;
-    }
-
-    public void setPublic(boolean aPublic) {
-        isPublic = aPublic;
     }
 
     public String getAssignedUsers() {

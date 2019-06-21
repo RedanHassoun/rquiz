@@ -26,7 +26,7 @@ public class QuizController {
                 produces = "application/json")
     public Quiz createQuiz(@RequestBody Quiz quiz) {
         try{
-            Optional<List<String>> validations = this.validationService.validateBean(quiz);
+            Optional<List<String>> validations = this.validationService.validateQuiz(quiz);
 
             if(validations.isPresent()){
                 throw new ResponseStatusException(
