@@ -43,7 +43,7 @@ public class QuizServiceImpl implements QuizService {
     @Override
     @Transactional(readOnly=true)
     public Collection<Quiz> readAll(int size, int page) {
-        return this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.ASC, "id"))
+        return this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"))
                     .getContent();
     }
 
@@ -51,10 +51,10 @@ public class QuizServiceImpl implements QuizService {
     @Transactional(readOnly=true)
     public Collection<Quiz> readAll(Boolean isPublic, int size, int page) {
         if(isPublic == null)
-            return this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.ASC, "id"))
+            return this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"))
                     .getContent();
 
-        return this.quizRepository.findAllByPublic(isPublic, PageRequest.of(page, size, Sort.Direction.ASC, "id"));
+        return this.quizRepository.findAllByPublic(isPublic, PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"));
     }
 
     @Override
