@@ -63,7 +63,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  openDiagg() {
+  openCreateQuizDialog() {
     this.subscriptions.push(
       this.navigationService.openDialog(CreateQuizComponent).subscribe()
     );

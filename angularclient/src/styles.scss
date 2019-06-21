@@ -2,3 +2,11 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+.fabAddButton{
+    top: auto;
+    right: 20px;
+    bottom: 20px;
+    left: 0;
+    position: fixed;
+}
