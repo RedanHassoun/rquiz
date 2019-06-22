@@ -23,7 +23,7 @@
             Description must be at least 4 characters long.
         </div>
     </div>
-    
+
     <mat-checkbox (change)="publicChanged($event.checked)">Show in public</mat-checkbox>
 
     <br />
@@ -57,7 +57,15 @@
         <h3 mat-subheader>Answers</h3>
         <mat-list-item *ngFor="let answer of quiz.answers">
             <div (click)="setCorrect(answer)">
-                <mat-icon mat-list-icon>arrow_forward_ios</mat-icon>
+
+                <div *ngIf="answer.isCorrect;else not_correct">
+                        <mat-icon mat-list-icon>done</mat-icon>
+                </div>
+
+                <ng-template #not_correct>
+                    <mat-icon mat-list-icon>arrow_forward_ios</mat-icon>
+                </ng-template>
+
                 <h4 mat-line>{{answer.content}}</h4>
             </div>
         </mat-list-item>
@@ -66,7 +74,7 @@
 
     <br />
     <hr />
-    
+
     <button id="cancel-btn" class="btn btn-default" mat-dialog-close>Cancel</button>
 
     <button id="add-person-btn" class="btn btn-primary" [disabled]="!theForm.valid" (click)="addQuiz()">
