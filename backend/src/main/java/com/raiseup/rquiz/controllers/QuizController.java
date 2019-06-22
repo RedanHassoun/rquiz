@@ -34,11 +34,11 @@ public class QuizController {
                         this.validationService.buildValidationMessage(validations.get()));
             }
 
+            // TODO : return status 201
             return this.quizService.create(quiz);
         } catch (ResponseStatusException ex){
             throw ex;
         } catch (Exception ex){
-            ex.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cannot create quiz object", ex);
         }

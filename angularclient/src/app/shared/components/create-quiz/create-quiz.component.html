@@ -56,8 +56,10 @@
     <mat-list>
         <h3 mat-subheader>Answers</h3>
         <mat-list-item *ngFor="let answer of quiz.answers">
-            <mat-icon mat-list-icon>arrow_forward_ios</mat-icon>
-            <h4 mat-line>{{answer.content}}</h4>
+            <div (click)="setCorrect(answer)">
+                <mat-icon mat-list-icon>arrow_forward_ios</mat-icon>
+                <h4 mat-line>{{answer.content}}</h4>
+            </div>
         </mat-list-item>
         <mat-divider></mat-divider>
     </mat-list>

@@ -1,3 +1,4 @@
+import { Quiz } from './../../shared/models/quiz';
 import { AppUtil } from './../../shared/util/app-util';
 import { HttpClient } from '@angular/common/http';
 import { AppConsts } from './../../shared/util/app-consts';
@@ -21,5 +22,15 @@ export class QuizService extends ClientDataServiceService {
     }
     return this.http.get(url, { headers: super.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
+  }
+
+  hasCorrectAnswer(quiz: Quiz): Promise<boolean> {
+    for (const ans of quiz.answers) {
+      if (ans.isCorrect) {
+        return Promise.resolve(true);
+      }
+    }
+
+    return Promise.resolve(false);
   }
 }

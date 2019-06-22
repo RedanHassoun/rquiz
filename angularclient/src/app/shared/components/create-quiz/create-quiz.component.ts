@@ -2,7 +2,7 @@ import { AppUtil } from './../../util/app-util';
 import { AuthenticationService } from './../../../core/services/authentication.service';
 import { QuizService } from './../../../feed/services/quiz.service';
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Quiz } from '../../models/quiz';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { QuizAnswer } from '../../models/quiz-answer';
@@ -18,7 +18,7 @@ export class CreateQuizComponent implements OnInit {
 
   constructor(private quizService: QuizService,
     private authenticationService: AuthenticationService,
-    private dialogRef:MatDialogRef<CreateQuizComponent>) { }
+    private dialogRef: MatDialogRef<CreateQuizComponent>) { }
 
   ngOnInit() {
     this.quiz = new Quiz();
@@ -57,12 +57,13 @@ export class CreateQuizComponent implements OnInit {
   }
 
   async addQuiz() {
+    const hasCorrectAnswer: boolean = await this.quizService.hasCorrectAnswer(this.quiz);
+    if (!hasCorrectAnswer) {
+      alert('You must choose correct answer');
+      return;
+    }
     const currentUserId: string = (await this.authenticationService.getCurrentUser()).id;
     this.quiz.creatorId = currentUserId;
-
-    // temp ////////////////////////////
-    this.quiz.answers[0].isCorrect = true;
-    ////////////////////////////////////
 
     this.quizService.create(this.quiz)
       .subscribe(res => {
@@ -70,5 +71,15 @@ export class CreateQuizComponent implements OnInit {
       }, (err) => {
         AppUtil.showError(err);
       });
+  }
+
+  setCorrect(answer: QuizAnswer): void {
+    for (const ans of this.quiz.answers) {
+      if (ans.content === answer.content) {
+        ans.isCorrect = true;
+      } else {
+        ans.isCorrect = false;
+      }
+    }
   }
 }
