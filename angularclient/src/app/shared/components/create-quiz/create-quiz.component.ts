@@ -1,18 +1,20 @@
 import { AppUtil } from './../../util/app-util';
 import { AuthenticationService } from './../../../core/services/authentication.service';
 import { QuizService } from './../../../feed/services/quiz.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Quiz } from '../../models/quiz';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { QuizAnswer } from '../../models/quiz-answer';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-create-quiz',
   templateUrl: './create-quiz.component.html',
   styleUrls: ['./create-quiz.component.scss']
 })
-export class CreateQuizComponent implements OnInit {
+export class CreateQuizComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
   quiz: Quiz;
   addQuizForm: FormGroup;
 
@@ -65,12 +67,14 @@ export class CreateQuizComponent implements OnInit {
     const currentUserId: string = (await this.authenticationService.getCurrentUser()).id;
     this.quiz.creatorId = currentUserId;
 
-    this.quizService.create(this.quiz)
-      .subscribe(res => {
-        this.dialogRef.close();
-      }, (err) => {
-        AppUtil.showError(err);
-      });
+    this.subscriptions.push(
+      this.quizService.create(this.quiz)
+        .subscribe(res => {
+          this.dialogRef.close();
+        }, (err) => {
+          AppUtil.showError(err);
+        })
+    );
   }
 
   setCorrect(answer: QuizAnswer): void {
@@ -81,5 +85,9 @@ export class CreateQuizComponent implements OnInit {
         ans.isCorrect = false;
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    AppUtil.releaseSubscriptions(this.subscriptions);
   }
 }
