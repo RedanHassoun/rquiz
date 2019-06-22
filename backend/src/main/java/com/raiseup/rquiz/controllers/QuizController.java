@@ -3,6 +3,8 @@ package com.raiseup.rquiz.controllers;
 import com.raiseup.rquiz.models.Quiz;
 import com.raiseup.rquiz.services.QuizService;
 import com.raiseup.rquiz.services.ValidationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,6 +16,7 @@ import java.util.*;
 public class QuizController {
     private QuizService quizService;
     private ValidationService validationService;
+    private Logger logger = LoggerFactory.getLogger(QuizController.class);
 
     public QuizController(QuizService quizService,
                           ValidationService validationService) {
@@ -25,6 +28,7 @@ public class QuizController {
                 consumes = "application/json",
                 produces = "application/json")
     public Quiz createQuiz(@RequestBody Quiz quiz) {
+        this.logger.debug("Creating quiz: " + quiz.toString());
         try{
             Optional<List<String>> validations = this.validationService.validateQuiz(quiz);
 
@@ -37,8 +41,10 @@ public class QuizController {
             // TODO : return status 201
             return this.quizService.create(quiz);
         } catch (ResponseStatusException ex){
+            logger.error("Cannot create quiz. " + ex.toString());
             throw ex;
         } catch (Exception ex){
+            logger.error("Cannot create quiz. " + ex.toString());
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cannot create quiz object", ex);
         }
@@ -50,6 +56,8 @@ public class QuizController {
                                   @RequestParam(required = false) Integer page,
                                   @RequestParam(required = false) Integer size){
         try{
+            this.logger.debug(String.format("Getting all quiz list. page: %d size: %d", page, size));
+
             if(page == null && size == null){
                 Collection<Quiz> res = this.quizService.readAll(isPublic);
                 return new ArrayList<>(res);
@@ -63,8 +71,10 @@ public class QuizController {
             return new ArrayList<>(this.quizService.readAll(isPublic, size, page));
 
         } catch (ResponseStatusException ex){
+            logger.error("Cant fetch quiz list." + ex.toString());
             throw ex;
         } catch (Exception ex){
+            logger.error("Cant fetch quiz list." + ex.toString());
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cant fetch quiz list", ex);
         }
