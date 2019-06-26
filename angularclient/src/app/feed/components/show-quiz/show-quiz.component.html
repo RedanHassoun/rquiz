@@ -1,0 +1,14 @@
+<div *ngIf="quiz">
+  <h2>{{ quiz.title }}</h2>
+  <p>{{ quiz.description }}</p>
+  
+  <ul>
+    <li *ngFor="let answer of quiz.answers">
+      {{answer.content}}
+    </li>
+  </ul>
+
+
+  <button id="cancel-btn" class="btn btn-default" mat-dialog-close>Cancel</button>
+</div>
+
