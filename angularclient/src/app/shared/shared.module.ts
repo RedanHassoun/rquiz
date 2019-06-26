@@ -14,11 +14,13 @@ import {MatButtonModule} from '@angular/material/button';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { ShowQuizComponent } from '../feed/components/show-quiz/show-quiz.component';
 
 @NgModule({
   declarations: [
   ConfirmationDialogComponent,
-  CreateQuizComponent],
+  CreateQuizComponent,
+  ShowQuizComponent],
   imports: [
     CommonModule,
     AppJwtModule,
@@ -36,7 +38,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
   ],
   entryComponents: [
     ConfirmationDialogComponent,
-    CreateQuizComponent
+    CreateQuizComponent,
+    ShowQuizComponent // TODO: check if this must be in shared
   ],
   exports: [
     FormsModule,

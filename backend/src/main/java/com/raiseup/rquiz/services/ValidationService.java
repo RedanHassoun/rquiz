@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface ValidationService {
     Optional<List<String>> validateObject(BaseModel beanObject);
     Optional<List<String>> validateQuiz(Quiz quizObject);
+    Optional<String> validateString(String toValidate, String name);
     String buildValidationMessage(List<String> validations);
 }

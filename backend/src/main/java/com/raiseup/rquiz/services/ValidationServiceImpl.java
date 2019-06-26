@@ -20,7 +20,7 @@ public class ValidationServiceImpl implements ValidationService {
         Set<ConstraintViolation<BaseModel>> violations = validator.validate(beanObject);
 
         if(violations != null && violations.size() > 0) {
-            List<String> validations = new ArrayList<>();
+            final List<String> validations = new ArrayList<>();
             for (ConstraintViolation<BaseModel> violation : violations) {
                 validations.add(violation.getMessage());
             }
@@ -35,7 +35,7 @@ public class ValidationServiceImpl implements ValidationService {
         Set<ConstraintViolation<BaseModel>> violations = validator.validate(quiz);
 
         if(violations != null && violations.size() > 0) {
-            List<String> validations = new ArrayList<>();
+            final List<String> validations = new ArrayList<>();
             for (ConstraintViolation<BaseModel> violation : violations) {
                 validations.add(violation.getMessage());
             }
@@ -45,7 +45,7 @@ public class ValidationServiceImpl implements ValidationService {
         for(QuizAnswer answer: quiz.getAnswers()){
             violations = validator.validate(answer);
             if(violations != null && violations.size() > 0) {
-                List<String> validations = new ArrayList<>();
+                final List<String> validations = new ArrayList<>();
                 for (ConstraintViolation<BaseModel> violation : violations) {
                     validations.add(violation.getMessage());
                 }
@@ -54,9 +54,19 @@ public class ValidationServiceImpl implements ValidationService {
         }
 
         if(!this.hasOneCorrectAnswer(quiz)){
-            List<String> validations = new ArrayList<>();
+            final List<String> validations = new ArrayList<>();
             validations.add("Quiz must have one correct answer");
             return Optional.of(validations);
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<String> validateString(String toValidate, String name) {
+        if(toValidate == null || toValidate.equals("")){
+            final String validation = String.format("%s must have a value", name);
+            return Optional.of(validation);
         }
 
         return Optional.empty();
@@ -67,23 +77,20 @@ public class ValidationServiceImpl implements ValidationService {
         if(validations == null){
             throw new NullPointerException("validations list cannot be null");
         }
-        StringBuilder sp = new StringBuilder();
-        sp.append("Validation failed. errors: ");
-        sp.append(String.join(" , ", validations));
-        return sp.toString();
+
+        return "Validation failed. errors: " +
+                    String.join(" , ", validations);
     }
 
     private boolean hasOneCorrectAnswer(Quiz quiz){
-        Object[] l = Arrays.stream(quiz.getAnswers().toArray())
+        Object[] correctList = Arrays.stream(quiz.getAnswers().toArray())
                         .filter(q -> ((QuizAnswer)q).getIsCorrect())
                     .toArray();
-        if(l == null){
+
+        if(correctList == null){
             return false;
         }
 
-        if(l.length != 1){
-            return false;
-        }
-        return true;
+        return correctList.length == 1;
     }
 }

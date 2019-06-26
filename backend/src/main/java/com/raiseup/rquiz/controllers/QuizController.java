@@ -48,7 +48,6 @@ public class QuizController {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cannot create quiz object", ex);
         }
-
     }
 
     @GetMapping("/all")
@@ -78,5 +77,40 @@ public class QuizController {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cannot fetch quiz list", ex);
         }
+    }
+
+    @GetMapping(path = "{id}",
+            produces = "application/json")
+    public Quiz findQuiz(@PathVariable("id") String quizId) {
+        this.logger.debug(String.format("Reading quiz: %s", quizId));
+
+        try{
+            Optional<String> validation = this.validationService.validateString(quizId, "Quiz id");
+
+            if(validation.isPresent()){
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        validation.get());
+            }
+
+            Optional<Quiz> quizOptional = this.quizService.read(quizId);
+
+            if(!quizOptional.isPresent()){
+                logger.error(String.format("Quiz %s not found", quizId));
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Quiz not found");
+            }
+
+            return quizOptional.get();
+        } catch (ResponseStatusException ex){
+            logger.error("Cannot get quiz. " + ex.toString());
+            throw ex;
+        } catch (Exception ex){
+            logger.error("Cannot get quiz. " + ex.toString());
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Cannot get quiz object", ex);
+        }
+
     }
 }

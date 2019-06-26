@@ -24,7 +24,7 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public Optional<Quiz> read(String id) {
-        return Optional.empty();
+        return this.quizRepository.findById(id);
     }
 
     @Override
@@ -54,7 +54,10 @@ public class QuizServiceImpl implements QuizService {
             return this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"))
                     .getContent();
 
-        return this.quizRepository.findAllByPublic(isPublic, PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"));
+        return this.quizRepository.findAllByPublic(isPublic, PageRequest.of(page,
+                                                                            size,
+                                                                            Sort.Direction.DESC,
+                                                                   "createdAt"));
     }
 
     @Override

@@ -3,9 +3,11 @@ import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { QuizListComponent } from './components/quiz-list/quiz-list.component';
+import { ShowQuizComponent } from './components/show-quiz/show-quiz.component';
 @NgModule({
   declarations: [
-    QuizListComponent
+    QuizListComponent,
+    ShowQuizComponent
   ],
   imports: [
     CommonModule,
