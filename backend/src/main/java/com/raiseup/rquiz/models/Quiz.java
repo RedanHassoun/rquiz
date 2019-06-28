@@ -1,7 +1,7 @@
 package com.raiseup.rquiz.models;
 
+import com.raiseup.rquiz.common.AppConstants.*;
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
@@ -18,7 +18,7 @@ public class Quiz extends BaseModel{
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator")
     @Id
-    @Column(name="quiz_id")
+    @Column(name=ColumnNames.QUIZ_ID)
     private String id;
 
     @NotNull(message = "Title cannot be null")
@@ -43,6 +43,10 @@ public class Quiz extends BaseModel{
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "quiz_id", referencedColumnName = "quiz_id")
     private Set<QuizAnswer> answers = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = ColumnNames.QUIZ_ID, referencedColumnName = ColumnNames.QUIZ_ID)
+    private Set<UserAnswer> userAnswers = new HashSet<>();
 
     public String getId() {
         return id;
@@ -108,6 +112,13 @@ public class Quiz extends BaseModel{
         this.creatorId = creatorId;
     }
 
+    public Set<UserAnswer> getUserAnswers() {
+        return userAnswers;
+    }
+
+    public void setUserAnswers(Set<UserAnswer> userAnswers) {
+        this.userAnswers = userAnswers;
+    }
 
     @Override
     public boolean equals(Object o) {

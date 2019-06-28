@@ -1,6 +1,12 @@
 package com.raiseup.rquiz.controllers;
 
+import com.raiseup.rquiz.common.AppUtils;
+import com.raiseup.rquiz.exceptions.QuizNotFoundException;
+import com.raiseup.rquiz.exceptions.UserNotFoundException;
 import com.raiseup.rquiz.models.Quiz;
+import com.raiseup.rquiz.models.QuizAnswer;
+import com.raiseup.rquiz.models.UserAnswer;
+import com.raiseup.rquiz.services.UserAnswerService;
 import com.raiseup.rquiz.services.QuizService;
 import com.raiseup.rquiz.services.ValidationService;
 import org.slf4j.Logger;
@@ -15,12 +21,15 @@ import java.util.*;
 @CrossOrigin
 public class QuizController {
     private QuizService quizService;
+    private UserAnswerService userAnswerService;
     private ValidationService validationService;
     private Logger logger = LoggerFactory.getLogger(QuizController.class);
 
     public QuizController(QuizService quizService,
+                          UserAnswerService userAnswerService,
                           ValidationService validationService) {
         this.quizService = quizService;
+        this.userAnswerService = userAnswerService;
         this.validationService = validationService;
     }
 
@@ -112,5 +121,30 @@ public class QuizController {
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cannot get quiz object", ex);
         }
 
+    }
+
+    @PostMapping(path = "/{id}/answer",
+            consumes = "application/json",
+            produces = "application/json")
+    public UserAnswer solve(@RequestHeader("Authorization") String authorization,
+                            @PathVariable("id") String quizId,
+                            @RequestBody QuizAnswer quizAnswer){
+        try {
+            // TODO: add validation + need to check if the answer exists on the quiz
+            String userId = AppUtils.getUserIdFromAuthorizationHeader(authorization);
+            return this.userAnswerService.create(quizId, userId, quizAnswer);
+        }catch (QuizNotFoundException | UserNotFoundException ex){
+            final String errorMsg = String.format("Quiz %s was not found", quizId);
+            this.logger.error(errorMsg);
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    ex.getMessage());
+        } catch (Exception ex){
+            final String errorMsg =
+                    String.format("Cannot add answer for quiz %s. error: %s", quizId, ex.toString());
+            logger.error(errorMsg);
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, errorMsg, ex);
+        }
     }
 }
