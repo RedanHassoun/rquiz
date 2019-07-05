@@ -1,5 +1,4 @@
 import { CreateQuizComponent } from './components/create-quiz/create-quiz.component';
-import { ProfileComponent } from './../shared/components/profile/profile.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -15,6 +14,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { ShowQuizComponent } from '../feed/components/show-quiz/show-quiz.component';
+import {MatRadioModule} from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,8 @@ import { ShowQuizComponent } from '../feed/components/show-quiz/show-quiz.compon
     BrowserAnimationsModule,
     MatDialogModule,
     MatButtonModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatRadioModule
   ],
   entryComponents: [
     ConfirmationDialogComponent,

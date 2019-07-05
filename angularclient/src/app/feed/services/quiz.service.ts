@@ -1,3 +1,4 @@
+import { QuizAnswer } from './../../shared/models/quiz-answer';
 import { Quiz } from './../../shared/models/quiz';
 import { AppUtil } from './../../shared/util/app-util';
 import { HttpClient } from '@angular/common/http';
@@ -5,6 +6,8 @@ import { AppConsts } from './../../shared/util/app-consts';
 import { ClientDataServiceService } from './../../shared/services/client-data-service.service';
 import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
+import { UserAnswer } from 'src/app/shared/models/user-answer';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +35,10 @@ export class QuizService extends ClientDataServiceService {
     }
 
     return Promise.resolve(false);
+  }
+
+  solve(quizId: string, quizAnswer: QuizAnswer): Observable<any> { // TODO: replace any
+    return this.http.post(`${this.url}${quizId}/answer`, quizAnswer, { headers: super.createAuthorizationHeader() })
+      .pipe(catchError(AppUtil.handleError));
   }
 }
