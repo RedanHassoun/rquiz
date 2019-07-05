@@ -82,6 +82,18 @@ public class ValidationServiceImpl implements ValidationService {
                     String.join(" , ", validations);
     }
 
+    public Optional<List<String>> validateUserAnswer(QuizAnswer quizAnswer, String quizId){
+        if(quizId == null){
+            return Optional.of(Collections.singletonList("Quiz id cannot be null"));
+        }
+
+        if(quizAnswer == null){
+            return Optional.of(Collections.singletonList("Quiz answer cannot be null"));
+        }
+
+        return this.validateObject(quizAnswer);
+    }
+
     private boolean hasOneCorrectAnswer(Quiz quiz){
         Iterator answersIterator = quiz.getAnswers().iterator();
 

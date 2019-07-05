@@ -21,8 +21,10 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
-    public Quiz create(Quiz obj) {
-        return this.quizRepository.save(obj);
+    public Quiz create(Quiz quiz) {
+        quiz.getAnswers().forEach(answer -> answer.setQuiz(quiz));
+
+        return this.quizRepository.save(quiz);
     }
 
     @Override

@@ -132,7 +132,14 @@ public class QuizController {
                             @PathVariable("id") String quizId,
                             @RequestBody QuizAnswer quizAnswer){
         try {
-            // TODO: add validation + need to check if the answer exists on the quiz
+            Optional<List<String>> validations = this.validationService.validateUserAnswer(quizAnswer, quizId);
+            if(validations.isPresent()){
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        this.validationService.buildValidationMessage(validations.get()));
+            }
+
+            // TODO: need to check if the answer exists on the quiz
             String userId = AppUtils.getUserIdFromAuthorizationHeader(authorization);
             return this.userAnswerService.create(quizId, userId, quizAnswer);
         }catch (QuizNotFoundException | UserNotFoundException ex){
