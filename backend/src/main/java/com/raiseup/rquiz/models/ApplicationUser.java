@@ -1,7 +1,6 @@
 package com.raiseup.rquiz.models;
 
 import com.raiseup.rquiz.common.AppConstants.*;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -9,10 +8,11 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = DBConsts.USERS_TABLE_NAME)
+@Access(AccessType.FIELD)
 public class ApplicationUser extends BaseModel{
     @Id
-    @Column(name=ColumnNames.USER_ID)
+    @Column(name=DBConsts.USER_ID)
     private String id;
     @Column(unique=true)
     @NotNull(message = "Username cannot be null")
@@ -21,16 +21,16 @@ public class ApplicationUser extends BaseModel{
     private String password;
     private String imageUrl;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = ColumnNames.USER_ID, referencedColumnName = ColumnNames.USER_ID)
-    private Set<UserAnswer> answers = new HashSet<>();
+    @OneToMany(mappedBy = "applicationUser",
+               cascade = CascadeType.ALL)
+    private Set<UserAnswer> userAnswers = new HashSet<>();
 
-    public Set<UserAnswer> getAnswers() {
-        return answers;
+    public Set<UserAnswer> getUserAnswers() {
+        return userAnswers;
     }
 
-    public void setAnswers(Set<UserAnswer> answers) {
-        this.answers = answers;
+    public void setUserAnswers(Set<UserAnswer> userAnswers) {
+        this.userAnswers = userAnswers;
     }
 
     public String getId() {

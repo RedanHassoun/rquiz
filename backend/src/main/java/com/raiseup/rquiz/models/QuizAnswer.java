@@ -1,5 +1,6 @@
 package com.raiseup.rquiz.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.raiseup.rquiz.common.AppConstants.*;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
@@ -8,29 +9,32 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "quiz_answer")
+@Table(name = DBConsts.QUIZ_ANSWER_TABLE_NAME)
+@Access(AccessType.FIELD)
 public class QuizAnswer extends BaseModel{
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name=ColumnNames.QUIZ_ANSWER_ID)
+    @Column(name=DBConsts.QUIZ_ANSWER_ID)
     private String id;
 
     @NotNull(message = "Content cannot be null")
     @Column(nullable = false)
     private String content;
 
-    @JoinColumn(name = "quiz_id", nullable = false)
+    @ManyToOne
+    @JoinColumn
+    @JsonIgnore
     private Quiz quiz;
 
     @NotNull(message = "is-correct cannot be null")
     @Column(nullable = false)
     private Boolean isCorrect;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = ColumnNames.QUIZ_ANSWER_ID, referencedColumnName = ColumnNames.QUIZ_ANSWER_ID)
+    @OneToMany(mappedBy = "quizAnswer",
+               cascade = CascadeType.ALL)
     private Set<UserAnswer> userAnswers = new HashSet<>();
 
     public String getId() {
@@ -41,9 +45,7 @@ public class QuizAnswer extends BaseModel{
         this.id = id;
     }
 
-    public Quiz getQuiz() {
-        return quiz;
-    }
+    public Quiz getQuiz() { return quiz; }
 
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;

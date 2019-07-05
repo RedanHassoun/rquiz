@@ -83,14 +83,16 @@ public class ValidationServiceImpl implements ValidationService {
     }
 
     private boolean hasOneCorrectAnswer(Quiz quiz){
-        Object[] correctList = Arrays.stream(quiz.getAnswers().toArray())
-                        .filter(q -> ((QuizAnswer)q).getIsCorrect())
-                    .toArray();
+        Iterator answersIterator = quiz.getAnswers().iterator();
 
-        if(correctList == null){
-            return false;
+        int correctCount = 0;
+        while(answersIterator.hasNext()){
+            QuizAnswer q = (QuizAnswer) answersIterator.next();
+            if(q.getIsCorrect()){
+                correctCount++;
+            }
         }
 
-        return correctList.length == 1;
+        return correctCount == 1;
     }
 }

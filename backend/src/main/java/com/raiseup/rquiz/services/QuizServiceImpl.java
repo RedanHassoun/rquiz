@@ -2,6 +2,8 @@ package com.raiseup.rquiz.services;
 
 import com.raiseup.rquiz.models.Quiz;
 import com.raiseup.rquiz.repo.QuizRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import java.util.Optional;
 
 @Service
 public class QuizServiceImpl implements QuizService {
+    private Logger logger = LoggerFactory.getLogger(QuizServiceImpl.class);
     private QuizRepository quizRepository;
 
     public QuizServiceImpl(QuizRepository quizRepository){
@@ -24,6 +27,9 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public Optional<Quiz> read(String id) {
+//        Quiz q = this.quizRepository.findWithAnswers(id);
+//        this.logger.info("------------------------------");
+//        this.logger.info(q.toString());
         return this.quizRepository.findById(id);
     }
 

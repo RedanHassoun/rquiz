@@ -55,7 +55,7 @@ public class DemoApplication
 						ans.setContent("answer x");
 						ans.setIsCorrect(true);
 
-						q.getAnswers().add(ans);
+						q.addQuizAnswer(ans);
 
 						quizService.create(q);
 					});

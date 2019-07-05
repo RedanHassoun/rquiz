@@ -1,5 +1,6 @@
 package com.raiseup.rquiz.services;
 
+import com.raiseup.rquiz.exceptions.AnswerAlreadyExistException;
 import com.raiseup.rquiz.exceptions.QuizNotFoundException;
 import com.raiseup.rquiz.exceptions.UserNotFoundException;
 import com.raiseup.rquiz.models.ApplicationUser;
@@ -33,7 +34,8 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     @Override
     public UserAnswer create(String quizId, String userId, QuizAnswer quizAnswer)
                                                      throws QuizNotFoundException,
-                                                            UserNotFoundException{
+                                                            UserNotFoundException,
+                                                            AnswerAlreadyExistException{
         if(quizId == null || userId == null || quizAnswer == null){
             final String errorMsg = String.format("Bad input: quizId=%s, userId=%s, userAnswer=%s",
                                             quizId,
@@ -42,6 +44,12 @@ public class UserAnswerServiceImpl implements UserAnswerService {
             this.logger.error(errorMsg);
             throw new NullPointerException(errorMsg);
         }
+
+        // Check if already exist. TODO
+//        Optional<UserAnswer> ans = this.userAnswerRepository.find(quizId, userId);
+//        if(ans.isPresent()){
+//            throw new AnswerAlreadyExistException("answer already exist");
+//        }
 
         UserAnswer userAnswer = new UserAnswer();
 
@@ -63,7 +71,7 @@ public class UserAnswerServiceImpl implements UserAnswerService {
             throw new UserNotFoundException(errorMsg);
         }
 
-        userAnswer.setUser(user.get());
+        userAnswer.setApplicationUser(user.get());
 
         return this.userAnswerRepository.save(userAnswer);
     }

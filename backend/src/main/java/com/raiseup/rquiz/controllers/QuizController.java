@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.*;
+import org.apache.commons.lang.exception.ExceptionUtils;
+
 
 @RestController
 @RequestMapping("/quiz")
@@ -141,7 +143,8 @@ public class QuizController {
                     ex.getMessage());
         } catch (Exception ex){
             final String errorMsg =
-                    String.format("Cannot add answer for quiz %s. error: %s", quizId, ex.toString());
+                    String.format("Cannot add answer for quiz %s. error: %s",
+                                    quizId, ExceptionUtils.getStackTrace(ex));
             logger.error(errorMsg);
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, errorMsg, ex);

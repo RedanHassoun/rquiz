@@ -1,12 +1,13 @@
 package com.raiseup.rquiz.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.raiseup.rquiz.common.AppConstants.*;
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 
 @Entity
-@Table(name = "quiz_user_answer")
+@Table(name = DBConsts.USER_ANSWER_TABLE_NAME)
+@Access(AccessType.FIELD)
 public class UserAnswer extends BaseModel{
     @Id
     @GeneratedValue(generator = "UUID")
@@ -15,15 +16,20 @@ public class UserAnswer extends BaseModel{
             strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
 
-    @JoinColumn(name = ColumnNames.QUIZ_ID, nullable = false)
+    @ManyToOne
+    @JoinColumn
+    @JsonIgnore
     private Quiz quiz;
 
-    @JoinColumn(name = ColumnNames.USER_ID, nullable = false)
-    private ApplicationUser user;
+    @ManyToOne
+    @JoinColumn
+    @JsonIgnore
+    private ApplicationUser applicationUser;
 
-    @JoinColumn(name = ColumnNames.QUIZ_ANSWER_ID, nullable = false)
+    @ManyToOne
+    @JoinColumn
+    @JsonIgnore
     private QuizAnswer quizAnswer;
-
 
     public String getId() {
         return id;
@@ -41,12 +47,12 @@ public class UserAnswer extends BaseModel{
         this.quiz = quiz;
     }
 
-    public ApplicationUser getUser() {
-        return user;
+    public ApplicationUser getApplicationUser() {
+        return applicationUser;
     }
 
-    public void setUser(ApplicationUser user) {
-        this.user = user;
+    public void setApplicationUser(ApplicationUser applicationUser) {
+        this.applicationUser = applicationUser;
     }
 
     public QuizAnswer getQuizAnswer() {
