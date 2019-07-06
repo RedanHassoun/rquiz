@@ -11,6 +11,7 @@ public interface QuizService {
     Collection<Quiz> readAll (Boolean isPublic);
     Collection<Quiz> readAll (int size, int page);
     Collection<Quiz> readAll (Boolean isPublic, int size, int page);
+    Collection<Quiz> readAllForCreator (String creatorId, int size, int page);
     void update (Quiz obj);
     void delete (String id);
 }

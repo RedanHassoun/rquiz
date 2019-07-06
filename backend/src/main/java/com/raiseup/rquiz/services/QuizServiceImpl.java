@@ -69,6 +69,14 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    public Collection<Quiz> readAllForCreator(String creatorId, int size, int page) {
+        return this.quizRepository.findAllByCreator(creatorId, PageRequest.of(page,
+                size,
+                Sort.Direction.DESC,
+                "createdAt"));
+    }
+
+    @Override
     public void update(Quiz obj) {
 
     }

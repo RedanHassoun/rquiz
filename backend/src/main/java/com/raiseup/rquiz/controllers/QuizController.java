@@ -90,6 +90,30 @@ public class QuizController {
         }
     }
 
+    @GetMapping("/all/creator/{creatorId}")
+    public List<Quiz> getByCreator(@RequestParam(required = true) String creatorId,
+                                   @RequestParam(required = true) Integer page,
+                                   @RequestParam(required = true) Integer size){
+        try{
+            this.logger.debug(String.format("Getting quiz list for creator: %s . page: %d size: %d",
+                    creatorId, page, size));
+
+            return new ArrayList<>(this.quizService.readAllForCreator(creatorId, size, page));
+
+        } catch (ResponseStatusException ex){
+            final String errorMsg = String.format("Cannot fetch quiz list for creator: %s. error: %s",
+                    creatorId, ExceptionUtils.getStackTrace(ex));
+            logger.error(errorMsg);
+            throw ex;
+        } catch (Exception ex){
+            final String errorMsg = String.format("Cannot fetch quiz list for creator: %s. error: %s",
+                    creatorId, ExceptionUtils.getStackTrace(ex));
+            logger.error(errorMsg);
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, errorMsg, ex);
+        }
+    }
+
     @GetMapping(path = "{id}",
             produces = "application/json")
     public Quiz findQuiz(@PathVariable("id") String quizId) {
