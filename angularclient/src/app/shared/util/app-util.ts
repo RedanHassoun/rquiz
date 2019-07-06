@@ -2,10 +2,9 @@ import { AppError } from './../app-errors/app-error';
 import { AccessDeniedError } from './../app-errors/access-denied-error';
 import { NotFoundError } from './../app-errors/not-found-error';
 import { BadInputError } from './../app-errors/bad-input-error';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AppConsts } from './app-consts';
 import { throwError } from 'rxjs';
-import { JwtHelperService } from '@auth0/angular-jwt';
 
 export class AppUtil {
     public static extractAndSaveToken(response: any): void {
@@ -60,19 +59,13 @@ export class AppUtil {
         alert(`${nullField} cannot be null`);
     }
 
-    public static getCurrentUsername(): string {
-        const jwtHelper = new JwtHelperService();
-
-        const token: string = localStorage.getItem(AppConsts.KEY_USER_TOKEN);
-        if (!token) {
-            throw new Error(`Token should not be null`);
+    public static releaseSubscriptions(subscriptions: Subscription[]) {
+        if (!subscriptions || subscriptions.length === 0) {
+            return;
         }
 
-        const username = jwtHelper.decodeToken(token)[`sub`];
-        if (!username) {
-            throw new Error(`Username cannot be null`);
+        for (const sub of subscriptions) {
+            sub.unsubscribe();
         }
-
-        return username;
     }
 }

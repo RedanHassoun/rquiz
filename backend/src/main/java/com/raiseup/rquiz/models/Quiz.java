@@ -1,24 +1,53 @@
 package com.raiseup.rquiz.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.Column;
-import java.util.Objects;
+import com.raiseup.rquiz.common.AppConstants.*;
+import org.hibernate.LazyInitializationException;
+import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.*;
+import java.util.*;
+import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "quiz")
-public class Quiz {
+@Access(AccessType.FIELD)
+@Table(name = DBConsts.QUIZ_TABLE_NAME)
+public class Quiz extends BaseModel{
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name=DBConsts.QUIZ_ID)
     private String id;
+
+    @NotNull(message = "Title cannot be null")
+    @Size(max = 512)
     private String title;
+
+    @Lob
     private String description;
+
     private String imageUrl;
+
     @Column(nullable = false)
-    private boolean isPublic;
+    @NotNull(message = "public property cannot be null")
+    private Boolean isPublic;
+
     private String assignedUsers;
+
     @Column(nullable = false)
+    @NotNull(message = "Creator id cannot be null")
     private String creatorId;
+
+    @OneToMany(mappedBy = "quiz",
+               cascade = CascadeType.ALL)
+    private Set<QuizAnswer> answers = new HashSet<>();
+
+    @OneToMany(mappedBy = "quiz",
+               cascade = CascadeType.ALL)
+    private Set<UserAnswer> userAnswers = new HashSet<>();
+
 
     public String getId() {
         return id;
@@ -52,11 +81,11 @@ public class Quiz {
         this.imageUrl = imageUrl;
     }
 
-    public boolean isPublic() {
+    public Boolean getIsPublic() {
         return isPublic;
     }
 
-    public void setPublic(boolean aPublic) {
+    public void setIsPublic(Boolean aPublic) {
         isPublic = aPublic;
     }
 
@@ -76,6 +105,23 @@ public class Quiz {
         this.creatorId = creatorId;
     }
 
+    public Set<QuizAnswer> getAnswers() {
+        return answers;
+    }
+
+    public void addQuizAnswer(QuizAnswer quizAnswer) {
+        quizAnswer.setQuiz(this);
+        this.answers.add(quizAnswer);
+    }
+
+    public Set<UserAnswer> getUserAnswers() {
+        return userAnswers;
+    }
+
+    public void setUserAnswers(Set<UserAnswer> userAnswers) {
+        this.userAnswers = userAnswers;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -92,7 +138,16 @@ public class Quiz {
 
     @Override
     public String toString(){
-        return String.format("[ quiz id: %s , title: %s, creator id: %s]",
-                this.id,this.title,this.creatorId);
+        List<String> answers;
+        try {
+            answers = Arrays.stream(this.answers.toArray())
+                    .map(item -> ((QuizAnswer)item).getContent())
+                    .collect(Collectors.toList());
+        }
+        catch(LazyInitializationException ex){
+            answers = new ArrayList<>();
+        }
+        return String.format("[ quiz id: %s , title: %s, creator id: %s, answers: %s]",
+                this.id,this.title,this.creatorId, String.join(",", answers));
     }
 }

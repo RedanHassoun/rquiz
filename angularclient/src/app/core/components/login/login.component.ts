@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(credentials)
       .subscribe(response => {
         AppUtil.extractAndSaveToken(response);
-        this.router.navigate(['/users']);
+        this.router.navigate(['/quizList']);
       }, (err: AppError) => {
         if (err instanceof AccessDeniedError) {
           this.invalidLogin = true;
@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/users']);
+      this.router.navigate(['/quizList']);
     }
   }
 }

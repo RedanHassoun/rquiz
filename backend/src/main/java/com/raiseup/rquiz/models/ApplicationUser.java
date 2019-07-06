@@ -1,21 +1,37 @@
 package com.raiseup.rquiz.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.raiseup.rquiz.common.AppConstants.*;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "users")
-public class ApplicationUser {
+@Table(name = DBConsts.USERS_TABLE_NAME)
+@Access(AccessType.FIELD)
+public class ApplicationUser extends BaseModel{
     @Id
+    @Column(name=DBConsts.USER_ID)
     private String id;
     @Column(unique=true)
+    @NotNull(message = "Username cannot be null")
     private String username;
+    @NotNull(message = "Password cannot be null")
     private String password;
     private String imageUrl;
 
+    @OneToMany(mappedBy = "applicationUser",
+               cascade = CascadeType.ALL)
+    private Set<UserAnswer> userAnswers = new HashSet<>();
+
+    public Set<UserAnswer> getUserAnswers() {
+        return userAnswers;
+    }
+
+    public void setUserAnswers(Set<UserAnswer> userAnswers) {
+        this.userAnswers = userAnswers;
+    }
 
     public String getId() {
         return id;

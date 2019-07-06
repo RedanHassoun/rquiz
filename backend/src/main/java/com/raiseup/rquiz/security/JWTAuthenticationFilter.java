@@ -3,6 +3,8 @@ package com.raiseup.rquiz.security;
 import com.auth0.jwt.JWT;
 import com.raiseup.rquiz.models.ApplicationUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.raiseup.rquiz.repo.ApplicationUserRepository;
+import org.json.JSONObject;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,9 +23,12 @@ import static com.raiseup.rquiz.security.SecurityConstants.*;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
+    private ApplicationUserRepository applicationUserRepository;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager,
+                                   ApplicationUserRepository applicationUserRepository) {
         this.authenticationManager = authenticationManager;
+        this.applicationUserRepository = applicationUserRepository;
     }
 
     @Override
@@ -49,13 +54,25 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse res,
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
+        String username = ((User) auth.getPrincipal()).getUsername();
 
         String token = JWT.create()
-                .withSubject(((User) auth.getPrincipal()).getUsername())
+                .withSubject(this.buildTokenSubject(username))
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(HMAC512(SECRET.getBytes()));
 
         res.setHeader("Access-Control-Expose-Headers","Authorization");
         res.setHeader(HEADER_STRING, TOKEN_PREFIX + token);
+    }
+
+    private String buildTokenSubject(String username){
+        ApplicationUser user = this.applicationUserRepository.findByUsername(username);
+
+        JSONObject jsonUser = new JSONObject();
+
+        jsonUser.put("id", user.getId());
+        jsonUser.put("username", username);
+
+        return jsonUser.toString();
     }
 }

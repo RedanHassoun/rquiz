@@ -2,13 +2,17 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 
+
+
 <h1 id="header" class="text-primary">RQuiz</h1>
+
+<button mat-mini-fab class="fabAddButton" color="primary" (click)="openCreateQuizDialog()">+</button>
 
 <div class="container list-article">
   <div class="row">
     <div *ngFor="let quiz of dataList$ | async" class="col-xs-12 article-wrapper">
       <article>
-        <a href="#" class="more">more</a>
+        <a (click)="showQuiz(quiz.id)" class="more">Show</a>
         <div class="img-wrapper"><img src={{quiz.imageUrl}} alt="" /></div>
         <h1>{{quiz.title}}</h1>
         <p>{{ quiz.description }}</p>
@@ -17,12 +21,8 @@
   </div>
 </div>
 
-<div infiniteScroll 
-      [infiniteScrollDistance]="1" 
-      [infiniteScrollThrottle]="500" 
-      [infiniteScrollContainer]="selector"
-      [fromRoot]="true" 
-      (scrolled)="onScroll()"></div>
+<div infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="500" [infiniteScrollContainer]="selector"
+  [fromRoot]="true" (scrolled)="onScroll()"></div>
 
 <div class="feed-end-msg alert alert-warning" *ngIf="finished">
   End of quiz list. Total: {{ (dataList$ | async).length }}

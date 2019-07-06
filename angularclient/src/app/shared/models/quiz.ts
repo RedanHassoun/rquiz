@@ -1,3 +1,4 @@
+import { QuizAnswer } from './quiz-answer';
 import { User } from './user';
 export class Quiz {
     id: string;
@@ -7,4 +8,18 @@ export class Quiz {
     isPublic: boolean;
     assignedUsers: User[];
     creatorId: string;
+    answers: QuizAnswer[] = [];
+
+    reset() {
+        this.id = null;
+        this.title = '';
+        this.description = '';
+        this.imageUrl = '';
+        this.isPublic = false;
+        this.answers = [];
+    }
+
+    addAnswer(answer: QuizAnswer) {
+        this.answers.push(answer);
+    }
 }

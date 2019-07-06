@@ -1,0 +1,21 @@
+<div *ngIf="quiz">
+  <form #quizForm="ngForm">
+    <h2>{{ quiz.title }}</h2>
+    <p>{{ quiz.description }}</p>
+
+    <mat-radio-group name="quizAnswers" class="quiz-radio-group" aria-label="Select an answer" 
+      [selected]="null"
+      [(ngModel)]="selectedAnswerId">
+      <mat-radio-button class="quiz-radio-button" *ngFor="let answer of quiz.answers" [value]="answer.id"
+        [disabled]="false">
+        {{answer.content}}
+      </mat-radio-button>
+    </mat-radio-group>
+
+    <button id="cancel-btn" class="btn btn-default" mat-dialog-close>Cancel</button>
+    <button id="submit-btn" class="btn btn-primary" [disabled]="false" (click)="solve()">
+      Solve!
+    </button>
+
+  </form>
+</div>

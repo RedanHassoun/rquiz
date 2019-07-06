@@ -33,12 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<ApplicationUser> read(String id) {
-        ApplicationUser res = this.applicationUserRepository.findById(id);
-
-        if(res == null){
-            return Optional.empty();
-        }
-        return Optional.of(res);
+        return this.applicationUserRepository.findById(id);
     }
 
     @Override

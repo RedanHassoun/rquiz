@@ -32,7 +32,7 @@ export class ClientDataServiceService {
   }
 
   create(resource) {
-    return this.http.post(this.url, resource.json())
+    return this.http.post(this.url, resource, { headers: this.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
   }
 

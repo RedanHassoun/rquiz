@@ -1,15 +1,27 @@
 <div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card bg-dark my-5">
-        <div class="card-body" *ngIf="authService.isLoggedIn()">
-          <ul class="text-center list-inline py-3">
-            <li class="list-inline-item"><a routerLink="/users" class="btn btn-info">List Users</a></li>
-            <li class="list-inline-item"><a routerLink="/adduser" class="btn btn-info">Add User</a></li>
-          </ul>
-        </div>
-      </div>
+  <mat-toolbar color="primary" class="app-toolbar">
+    <button mat-icon-button (click)="snav.toggle()" [disabled]="!this.authService.isLoggedIn()">
+      <mat-icon svgIcon="menu"></mat-icon>
+    </button>
+    <h1 class="app-name">RQuiz</h1>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="app-side-nav-container mat-app-background">
+    <mat-sidenav #snav [mode]="side" [(opened)]="drawerOpened" fixedTopGap="56">
+      <mat-nav-list>
+        <a mat-list-item (click)="goToPage('home')">{{ appPages.get('home') }}</a>
+
+        <a mat-list-item (click)="goToPage('profile')">{{ appPages.get('profile') }}</a>
+
+        <a mat-list-item (click)="goToPage('users')">{{ appPages.get('users') }}</a>
+
+        <a mat-list-item (click)="goToPage('logout')">{{ appPages.get('logout') }}</a>
+
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
       <router-outlet></router-outlet>
-    </div>
-  </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
 </div>

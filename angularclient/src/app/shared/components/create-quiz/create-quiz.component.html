@@ -1,0 +1,83 @@
+<h4>Add a new quiz: </h4>
+<form *ngIf="addQuizForm && quiz" #theForm="ngForm" [formGroup]="addQuizForm">
+    Title : <input [(ngModel)]="quiz.title" name="title" class="form-control" required formControlName="title">
+
+    <div *ngIf="title.invalid && 
+                                (title.dirty || title.touched)" class="alert alert-danger">
+        <div *ngIf="title.errors.required">
+            Title is required.
+        </div>
+        <div *ngIf="title.errors.minlength">
+            Title must be at least 4 characters long.
+        </div>
+    </div>
+    Description : <input [(ngModel)]="quiz.description" name="description" class="form-control"
+        formControlName="description" />
+
+    <div *ngIf="description.invalid && 
+                                (description.dirty || description.touched)" class="alert alert-danger">
+        <div *ngIf="description.errors.required">
+            Description is required.
+        </div>
+        <div *ngIf="description.errors.minlength">
+            Description must be at least 4 characters long.
+        </div>
+    </div>
+
+    <mat-checkbox (change)="publicChanged($event.checked)">Show in public</mat-checkbox>
+
+    <br />
+    <hr />
+
+
+    <div class="input-group mb-3">
+        <input #answerInput type="text" class="form-control" placeholder="Add answer" aria-label="Add answer"
+            aria-describedby="basic-addon2">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" (click)="addAnswer(answerInput.value)">Add</button>
+        </div>
+    </div>
+
+
+    <!-- 
+    <input [(ngModel)]="quiz.description" placeholder="Add answer" name="description" class="form-control"
+        formControlName="description" />
+
+    <div *ngIf="description.invalid && 
+                                (description.dirty || description.touched)" class="alert alert-danger">
+        <div *ngIf="description.errors.required">
+            Description is required.
+        </div>
+        <div *ngIf="description.errors.minlength">
+            Description must be at least 4 characters long.
+        </div>
+    </div> -->
+
+    <mat-list>
+        <h3 mat-subheader>Answers</h3>
+        <mat-list-item *ngFor="let answer of quiz.answers">
+            <div (click)="setCorrect(answer)">
+
+                <div *ngIf="answer.isCorrect;else not_correct">
+                    <mat-icon mat-list-icon>done</mat-icon>
+                </div>
+
+                <ng-template #not_correct>
+                    <mat-icon mat-list-icon>arrow_forward_ios</mat-icon>
+                </ng-template>
+
+                <h4 mat-line>{{answer.content}}</h4>
+            </div>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+    </mat-list>
+
+    <br />
+    <hr />
+
+    <button id="cancel-btn" class="btn btn-default" mat-dialog-close>Cancel</button>
+
+    <button id="add-person-btn" class="btn btn-primary" [disabled]="!theForm.valid" (click)="addQuiz()">
+        Add quiz
+    </button>
+</form>
