@@ -8,6 +8,7 @@ import { QuizService } from './../../services/quiz.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import * as _ from 'lodash';
+import { ParameterFetchingStrategy } from 'src/app/core/strategiest/parameter-fetching-strategy';
 
 @Component({
   selector: 'app-quiz-list',
@@ -19,9 +20,9 @@ export class QuizListComponent extends PageableComponent implements OnInit, OnDe
 
   constructor(private quizService: QuizService,
               private navigationService: NavigationHelperService) {
-    super(quizService,
-          new Map<string, string>([ ['isPublic', 'true'] ]),
-          QuizService.PAGE_SIZE);
+    super(new ParameterFetchingStrategy(quizService,
+          new Map<string, string>([['isPublic', 'true']]),
+          QuizService.PAGE_SIZE));
   }
 
   ngOnInit() {
@@ -37,7 +38,7 @@ export class QuizListComponent extends PageableComponent implements OnInit, OnDe
   showQuiz(quizId: string) {
     this.subscriptions.push(
       this.navigationService.openDialog(ShowQuizComponent, undefined, quizId)
-          .subscribe()
+        .subscribe()
     );
   }
 

@@ -72,4 +72,14 @@ export class ClientDataServiceService {
     return this.http.get(url, { headers: this.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
   }
+
+  getAllByCustomUrl(resourceUrl: string, page: number, size: number) {
+    resourceUrl = this.url + resourceUrl;
+    if (page != null && typeof page !== undefined) {
+      resourceUrl += `&page=${page}&size=${size}`;
+    }
+
+    return this.http.get(resourceUrl, { headers: this.createAuthorizationHeader() })
+      .pipe(catchError(AppUtil.handleError));
+  }
 }

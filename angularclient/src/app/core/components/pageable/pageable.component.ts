@@ -1,3 +1,4 @@
+import { ParameterFetchingStrategy } from './../../strategiest/parameter-fetching-strategy';
 import { tap, take } from 'rxjs/operators';
 import { QuizService } from './../../../feed/services/quiz.service';
 import { ClientDataServiceService } from './../../../shared/services/client-data-service.service';
@@ -15,9 +16,7 @@ export class PageableComponent implements OnInit {
   finished = false;
   page = 0;
 
-  constructor(private dataService: ClientDataServiceService,
-              private paramMap: Map<string, string>,
-              private pageSize: number) {
+  constructor(private pagingStrategy: ParameterFetchingStrategy) {
   }
 
   ngOnInit() {
@@ -39,13 +38,13 @@ export class PageableComponent implements OnInit {
       return;
     }
 
-    this.dataService.getAllByParameter(this.paramMap, page, this.pageSize)
+    this.pagingStrategy.dataObservable(page)
       .pipe(tap(res => {
 
-        const newItems = _.slice(res, 0, this.pageSize);
+        const newItems = _.slice(res, 0, this.pagingStrategy.getPageSize());
         const currentItemsList = this.dataList$.getValue();
 
-        if (newItems.length < this.pageSize) {
+        if (newItems.length < this.pagingStrategy.getPageSize()) {
           this.finished = true;
         }
 
