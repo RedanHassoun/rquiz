@@ -8,7 +8,7 @@ import { QuizService } from './../../services/quiz.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import * as _ from 'lodash';
-import { ParameterFetchingStrategy } from 'src/app/core/strategiest/parameter-fetching-strategy';
+import { ParameterFetchingStrategy } from 'src/app/core/strategies/parameter-fetching-strategy';
 
 @Component({
   selector: 'app-quiz-list',
@@ -35,7 +35,7 @@ export class QuizListComponent extends PageableComponent implements OnInit, OnDe
     );
   }
 
-  showQuiz(quizId: string) {
+  showQuiz(quizId: string): void {
     this.subscriptions.push(
       this.navigationService.openDialog(ShowQuizComponent, undefined, quizId)
         .subscribe()

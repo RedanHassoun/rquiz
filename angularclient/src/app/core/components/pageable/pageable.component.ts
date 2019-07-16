@@ -1,4 +1,4 @@
-import { ParameterFetchingStrategy } from './../../strategiest/parameter-fetching-strategy';
+import { ParameterFetchingStrategy } from './../../strategies/parameter-fetching-strategy';
 import { tap, take } from 'rxjs/operators';
 import { QuizService } from './../../../feed/services/quiz.service';
 import { ClientDataServiceService } from './../../../shared/services/client-data-service.service';
