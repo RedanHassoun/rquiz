@@ -19,7 +19,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 
 @RestController
-@RequestMapping("/quiz")
+@RequestMapping("/v1/quiz")
 @CrossOrigin
 public class QuizController {
     private QuizService quizService;
