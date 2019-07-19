@@ -10,7 +10,7 @@
 
 <div class="container list-article">
   <div class="row">
-    <div *ngFor="let quiz of dataList$ | async" class="col-xs-12 article-wrapper">
+    <div *ngFor="let quiz of quizList" class="col-xs-12 article-wrapper">
       <article>
         <a (click)="showQuiz(quiz.id)" class="more">Show</a>
         <div class="img-wrapper"><img src={{quiz.imageUrl}} alt="" /></div>
@@ -21,9 +21,6 @@
   </div>
 </div>
 
-<div infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="500" [infiniteScrollContainer]="selector"
-  [fromRoot]="true" (scrolled)="onScroll()"></div>
-
-<div class="feed-end-msg alert alert-warning" *ngIf="finished">
-  End of quiz list. Total: {{ (dataList$ | async).length }}
-</div>
+<app-pageable [pagingStrategy]='pagingStrategy' 
+              (dataList)="quizListChanged($event)">
+</app-pageable>

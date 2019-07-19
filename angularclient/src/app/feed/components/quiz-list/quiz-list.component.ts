@@ -1,3 +1,4 @@
+import { PagingDataFetchStrategy } from './../../../core/strategies/paging-data-fetch-strategy';
 import { PageableComponent } from './../../../core/components/pageable/pageable.component';
 import { ShowQuizComponent } from './../show-quiz/show-quiz.component';
 import { AppUtil } from './../../../shared/util/app-util';
@@ -15,18 +16,19 @@ import { ParameterFetchingStrategy } from 'src/app/core/strategies/parameter-fet
   templateUrl: './quiz-list.component.html',
   styleUrls: ['./quiz-list.component.scss']
 })
-export class QuizListComponent extends PageableComponent implements OnInit, OnDestroy {
+export class QuizListComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
+  private quizList: Quiz[] = [];
+  pagingStrategy: PagingDataFetchStrategy;
 
   constructor(private quizService: QuizService,
-              private navigationService: NavigationHelperService) {
-    super(new ParameterFetchingStrategy(quizService,
-          new Map<string, string>([['isPublic', 'true']]),
-          QuizService.PAGE_SIZE));
+    private navigationService: NavigationHelperService) {
   }
 
   ngOnInit() {
-    super.ngOnInit();
+    this.pagingStrategy = new ParameterFetchingStrategy(this.quizService,
+      new Map<string, string>([['isPublic', 'true']]),
+      QuizService.PAGE_SIZE);
   }
 
   openCreateQuizDialog() {
@@ -40,6 +42,10 @@ export class QuizListComponent extends PageableComponent implements OnInit, OnDe
       this.navigationService.openDialog(ShowQuizComponent, undefined, quizId)
         .subscribe()
     );
+  }
+
+  quizListChanged(newQuizList: Quiz[]) {
+    this.quizList = _.concat(this.quizList, newQuizList);
   }
 
   ngOnDestroy(): void {

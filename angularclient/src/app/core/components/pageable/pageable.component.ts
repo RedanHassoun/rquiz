@@ -1,8 +1,6 @@
-import { ParameterFetchingStrategy } from './../../strategies/parameter-fetching-strategy';
+import { PagingDataFetchStrategy } from './../../strategies/paging-data-fetch-strategy';
 import { tap, take } from 'rxjs/operators';
-import { QuizService } from './../../../feed/services/quiz.service';
-import { ClientDataServiceService } from './../../../shared/services/client-data-service.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash';
 
@@ -12,11 +10,13 @@ import * as _ from 'lodash';
   styleUrls: ['./pageable.component.scss']
 })
 export class PageableComponent implements OnInit {
-  dataList$ = new BehaviorSubject([]);
+  @Input() public pagingStrategy: PagingDataFetchStrategy;
+  @Output() public dataList = new EventEmitter();
+  totalItemsCount = 0;
   finished = false;
   page = 0;
 
-  constructor(private pagingStrategy: ParameterFetchingStrategy) {
+  constructor() {
   }
 
   ngOnInit() {
@@ -42,15 +42,14 @@ export class PageableComponent implements OnInit {
       .pipe(tap(res => {
 
         const newItems = _.slice(res, 0, this.pagingStrategy.getPageSize());
-        const currentItemsList = this.dataList$.getValue();
 
         if (newItems.length < this.pagingStrategy.getPageSize()) {
           this.finished = true;
         }
 
         if (newItems.length > 0) {
-          const combinedList = _.concat(currentItemsList, newItems);
-          this.dataList$.next(combinedList);
+          this.totalItemsCount += newItems.length;
+          this.dataList.emit(newItems);
         }
 
         this.page++;

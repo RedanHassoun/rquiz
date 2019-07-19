@@ -18,6 +18,9 @@ import { PageableComponent } from './components/pageable/pageable.component';
     CommonModule,
     SharedModule,
     AppJwtModule
+  ],
+  exports: [
+    PageableComponent
   ]
 })
 export class CoreModule { }
