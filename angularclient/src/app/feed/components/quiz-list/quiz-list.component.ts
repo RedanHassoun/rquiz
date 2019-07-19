@@ -21,7 +21,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
   pagingStrategy: PagingDataFetchStrategy;
 
   constructor(private quizService: QuizService,
-    private navigationService: NavigationHelperService) {
+              private navigationService: NavigationHelperService) {
   }
 
   ngOnInit() {

@@ -30,7 +30,7 @@ export class PageableComponent implements OnInit {
   }
 
   fetchItemsList(page: number) {
-    if (page == null || typeof page === undefined) {
+    if (page == null || typeof page === undefined || !this.pagingStrategy) {
       return;
     }
 

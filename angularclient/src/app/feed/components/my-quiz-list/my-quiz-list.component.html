@@ -1,3 +1,19 @@
-<p>
-  my-quiz-list works!
-</p>
+<!-- Bootstrap -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+<div class="container list-article">
+  <div class="row">
+    <div *ngFor="let quiz of quizList" class="col-xs-12 article-wrapper">
+      <article>
+        <a (click)="showQuiz(quiz.id)" class="more">Show</a>
+        <div class="img-wrapper"><img src={{quiz.imageUrl}} alt="" /></div>
+        <h1>{{quiz.title}}</h1>
+        <p>{{ quiz.description }}</p>
+      </article>
+    </div>
+  </div>
+</div>
+<app-pageable [pagingStrategy]='pagingStrategy' 
+              (dataList)="quizListChanged($event)">
+</app-pageable>

@@ -76,7 +76,7 @@ export class ClientDataServiceService {
   getAllByCustomUrl(resourceUrl: string, page: number, size: number) {
     resourceUrl = this.url + resourceUrl;
     if (page != null && typeof page !== undefined) {
-      resourceUrl += `&page=${page}&size=${size}`;
+      resourceUrl += `?page=${page}&size=${size}`;
     }
 
     return this.http.get(resourceUrl, { headers: this.createAuthorizationHeader() })

@@ -16,6 +16,7 @@ export class AppComponent {
   appPages = new Map<string, string>([
     ['home', 'Home'],
     ['profile', 'My profile'],
+    [ 'myquizlist', 'My Quiz List' ],
     ['users', 'Users'],
     ['logout', 'Logout']
   ]);
@@ -43,6 +44,9 @@ export class AppComponent {
         break;
       case 'profile':
         this.openCurrentUserProfile();
+        break;
+      case 'myquizlist':
+        this.router.navigate(['myquizlist'], { replaceUrl: true });
         break;
       case 'users':
         this.router.navigate(['users'], { replaceUrl: true });
