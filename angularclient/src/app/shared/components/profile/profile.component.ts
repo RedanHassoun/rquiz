@@ -1,3 +1,5 @@
+import { NotFoundError } from './../../app-errors/not-found-error';
+import { AppError } from './../../app-errors/app-error';
 import { AuthenticationService } from './../../../core/services/authentication.service';
 import { UserServiceService } from '../../../core/services/user-service.service';
 import { AppUtil } from '../../util/app-util';
@@ -31,6 +33,13 @@ export class ProfileComponent implements OnInit {
         .subscribe((user: User) => {
           this.recognizeUser(user);
           this.user = user;
+        }, (err: AppError) => {
+          if (err instanceof NotFoundError) {
+            AppUtil.showWarningMessage('An error occurred, please login again.');
+            this.authService.logout();
+            return;
+          }
+          AppUtil.showWarningMessage('An error occurred');
         });
     });
   }

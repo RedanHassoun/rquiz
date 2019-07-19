@@ -68,4 +68,8 @@ export class AppUtil {
             sub.unsubscribe();
         }
     }
+
+    public static showWarningMessage(message: string){
+        alert(message);
+    }
 }
