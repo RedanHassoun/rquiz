@@ -9,6 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,6 +70,19 @@ public class QuizServiceImpl implements QuizService {
                                                                             size,
                                                                             Sort.Direction.DESC,
                                                                    "createdAt"));
+    }
+
+    @Override
+    public Collection<Quiz> readAll(HashMap<String, Object> filterParams) {
+        // TODO: should enable null for the pageable object / define as optional / create another method
+        // in the repository
+        return this.quizRepository.findQuizListByParameters(filterParams, null);
+    }
+
+    @Override
+    public Collection<Quiz> readAll(HashMap<String, Object> filterParams, int size, int page) {
+        return this.quizRepository.findQuizListByParameters(filterParams,
+                PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"));
     }
 
     @Override
