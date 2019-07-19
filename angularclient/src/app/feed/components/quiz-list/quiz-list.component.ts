@@ -1,5 +1,4 @@
 import { PagingDataFetchStrategy } from './../../../core/strategies/paging-data-fetch-strategy';
-import { PageableComponent } from './../../../core/components/pageable/pageable.component';
 import { ShowQuizComponent } from './../show-quiz/show-quiz.component';
 import { AppUtil } from './../../../shared/util/app-util';
 import { CreateQuizComponent } from '../../../shared/components/create-quiz/create-quiz.component';
@@ -7,7 +6,7 @@ import { NavigationHelperService } from './../../../shared/services/navigation-h
 import { Quiz } from './../../../shared/models/quiz';
 import { QuizService } from './../../services/quiz.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import { ParameterFetchingStrategy } from 'src/app/core/strategies/parameter-fetching-strategy';
 
