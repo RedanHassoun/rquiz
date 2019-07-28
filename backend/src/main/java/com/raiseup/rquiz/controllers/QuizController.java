@@ -73,6 +73,7 @@ public class QuizController {
                 return new ArrayList<>(res);
             }
 
+            // TODO: Add validation for page and size - should be positive
             if(page == null || size == null){
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST, "In order to use pagination you must provide both page and size");

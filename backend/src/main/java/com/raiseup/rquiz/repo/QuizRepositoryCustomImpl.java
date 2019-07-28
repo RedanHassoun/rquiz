@@ -5,6 +5,7 @@ import com.raiseup.rquiz.models.Quiz;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -52,6 +53,8 @@ public class QuizRepositoryCustomImpl implements QuizRepositoryCustom {
         CriteriaQuery<Quiz> select = query.select(from)
                 .where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
 
+        select = this.HandleSortingParameters(cb, select, from, pageable);
+
         TypedQuery<Quiz> typedQuery = this.entityManager.createQuery(select);
 
         if(pageable != null){
@@ -60,7 +63,7 @@ public class QuizRepositoryCustomImpl implements QuizRepositoryCustom {
 
              this.logger.debug(String.format("Using paging. page: %s, size: %s",
                                              pageNumber, pageSize));
-            typedQuery.setFirstResult(pageNumber);
+            typedQuery.setFirstResult(pageNumber * pageSize);
             typedQuery.setMaxResults(pageSize);
         }
 
@@ -69,4 +72,44 @@ public class QuizRepositoryCustomImpl implements QuizRepositoryCustom {
         return quizList;
     }
 
+    /**
+     * This method defines the sorting mechanism for the query according
+     * to the parameters that were sent inside the 'pageable'.
+     * It supports only one parameter for sorting
+     * @param cb
+     * @param select
+     * @param from
+     * @param pageable
+     */
+    private CriteriaQuery<Quiz> HandleSortingParameters(CriteriaBuilder cb,
+                                         CriteriaQuery<Quiz> select,
+                                         Root<Quiz> from,
+                                         Pageable pageable){
+        if(pageable == null){
+            return select;
+        }
+
+        String property = null;
+        Sort.Direction sortingDirection = null;
+        Iterator<Sort.Order> itr = pageable.getSort().iterator();
+        while (itr.hasNext()){
+            Sort.Order param = itr.next();
+            property = param.getProperty();
+            sortingDirection = param.getDirection();
+        }
+
+        if(property == null || sortingDirection == null){
+            this.logger.debug(String.format("Query %s dosen't contain a sorting parameters",
+                                select.toString()));
+            return select;
+        }
+
+        if(sortingDirection.isDescending()){
+            select.orderBy(cb.desc(from.get(property)));
+        }else {
+            select.orderBy(cb.asc(from.get(property)));
+        }
+
+        return select;
+    }
 }

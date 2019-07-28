@@ -11,7 +11,7 @@ import * as _ from 'lodash';
 })
 export class PageableComponent implements OnInit {
   @Input() public pagingStrategy: PagingDataFetchStrategy;
-  @Output() public dataList = new EventEmitter();
+  @Output() public dataListChanged = new EventEmitter();
   totalItemsCount = 0;
   finished = false;
   page = 0;
@@ -49,7 +49,7 @@ export class PageableComponent implements OnInit {
 
         if (newItems.length > 0) {
           this.totalItemsCount += newItems.length;
-          this.dataList.emit(newItems);
+          this.dataListChanged.emit(newItems);
         }
 
         this.page++;
