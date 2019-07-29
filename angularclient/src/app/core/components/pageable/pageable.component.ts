@@ -1,6 +1,6 @@
 import { PagingDataFetchStrategy } from './../../strategies/paging-data-fetch-strategy';
 import { tap, take } from 'rxjs/operators';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash';
 
@@ -9,18 +9,27 @@ import * as _ from 'lodash';
   templateUrl: './pageable.component.html',
   styleUrls: ['./pageable.component.scss']
 })
-export class PageableComponent implements OnInit {
+export class PageableComponent implements OnInit, OnChanges {
   @Input() public pagingStrategy: PagingDataFetchStrategy;
   @Output() public dataListChanged = new EventEmitter();
   totalItemsCount = 0;
   finished = false;
   page = 0;
 
-  constructor() {
-  }
+  constructor() {}
 
   ngOnInit() {
     this.fetchItemsList(this.page);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes.hasOwnProperty('pagingStrategy')) {
+      return;
+    }
+
+    if (this.page === 0 && this.totalItemsCount === 0) {
+      this.fetchItemsList(this.page);
+    }
   }
 
   onScroll() {
