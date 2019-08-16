@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -74,5 +75,14 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         userAnswer.setApplicationUser(user.get());
 
         return this.userAnswerRepository.save(userAnswer);
+    }
+
+    @Override
+    public List<UserAnswer> getUserAnswersForQuiz(String quizId) {
+        if(quizId == null){
+            throw new IllegalArgumentException("quiz id cannot be null");
+        }
+
+        return this.userAnswerRepository.findByQuizId(quizId);
     }
 }

@@ -6,7 +6,10 @@ import com.raiseup.rquiz.exceptions.UserNotFoundException;
 import com.raiseup.rquiz.models.QuizAnswer;
 import com.raiseup.rquiz.models.UserAnswer;
 
+import java.util.List;
+
 public interface UserAnswerService {
-    public UserAnswer create(String quizId, String userId, QuizAnswer quizAnswer)
+    UserAnswer create(String quizId, String userId, QuizAnswer quizAnswer)
             throws QuizNotFoundException, UserNotFoundException, AnswerAlreadyExistException;
+    List<UserAnswer> getUserAnswersForQuiz(String quizId);
 }

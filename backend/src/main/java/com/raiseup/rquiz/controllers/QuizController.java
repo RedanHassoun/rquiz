@@ -158,4 +158,22 @@ public class QuizController {
                     HttpStatus.INTERNAL_SERVER_ERROR, errorMsg, ex);
         }
     }
+
+
+    @GetMapping(path = "/{id}/user-answer",
+            consumes = "application/json",
+            produces = "application/json")
+    public List<UserAnswer> getQuizUserAnswers(@PathVariable("id") String quizId){
+        try{
+            return this.userAnswerService.getUserAnswersForQuiz(quizId);
+
+        } catch (ResponseStatusException ex){
+            logger.error("Cannot fetch quiz list." + ExceptionUtils.getStackTrace(ex));
+            throw ex;
+        } catch (Exception ex){
+            logger.error("Cannot fetch quiz list." + ExceptionUtils.getStackTrace(ex));
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Cannot fetch quiz list", ex);
+        }
+    }
 }

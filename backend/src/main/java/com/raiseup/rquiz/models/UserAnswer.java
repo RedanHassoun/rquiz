@@ -1,9 +1,10 @@
 package com.raiseup.rquiz.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.raiseup.rquiz.common.AppConstants.*;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Objects;
 
 @Entity
 @Table(name = DBConsts.USER_ANSWER_TABLE_NAME)
@@ -14,6 +15,7 @@ public class UserAnswer extends BaseModel{
     @GenericGenerator(
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name="id")
     private String id;
 
     @ManyToOne
@@ -61,5 +63,20 @@ public class UserAnswer extends BaseModel{
 
     public void setQuizAnswer(QuizAnswer quizAnswer) {
         this.quizAnswer = quizAnswer;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserAnswer that = (UserAnswer) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getQuiz(), that.getQuiz());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getId(), getQuiz());
     }
 }
