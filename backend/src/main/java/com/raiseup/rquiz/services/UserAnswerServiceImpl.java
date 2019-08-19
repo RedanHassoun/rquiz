@@ -85,4 +85,17 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
         return this.userAnswerRepository.findByQuizId(quizId);
     }
+
+    @Override
+    public Optional<Integer> getCorrectCount(List<UserAnswer> userAnswers) {
+        int correctCount = 0;
+
+        for(UserAnswer ans : userAnswers){
+            if(ans.getQuizAnswer().getIsCorrect()){
+                correctCount++;
+            }
+        }
+
+        return Optional.of(correctCount);
+    }
 }

@@ -9,6 +9,8 @@ export class Quiz {
     assignedUsers: User[];
     creatorId: string;
     answers: QuizAnswer[] = [];
+    numberOfCorrectAnswers: number;
+    totalNumberOfAnswers: number;
 
     reset() {
         this.id = null;
@@ -17,6 +19,8 @@ export class Quiz {
         this.imageUrl = '';
         this.isPublic = false;
         this.answers = [];
+        this.numberOfCorrectAnswers = 0;
+        this.totalNumberOfAnswers = 0;
     }
 
     addAnswer(answer: QuizAnswer) {

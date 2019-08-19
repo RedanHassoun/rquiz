@@ -1,6 +1,7 @@
 package com.raiseup.rquiz.services;
 
 import com.raiseup.rquiz.models.Quiz;
+import com.raiseup.rquiz.models.UserAnswer;
 import com.raiseup.rquiz.repo.QuizRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +18,12 @@ import java.util.Optional;
 public class QuizServiceImpl implements QuizService {
     private Logger logger = LoggerFactory.getLogger(QuizServiceImpl.class);
     private QuizRepository quizRepository;
+    private UserAnswerService userAnswerService;
 
-    public QuizServiceImpl(QuizRepository quizRepository){
+    public QuizServiceImpl(QuizRepository quizRepository,
+                           UserAnswerService userAnswerService){
         this.quizRepository = quizRepository;
+        this.userAnswerService = userAnswerService;
     }
 
     @Override
@@ -40,36 +44,57 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public Collection<Quiz> readAll() {
-        return this.quizRepository.findAll();
+        Collection<Quiz> quizList = this.quizRepository.findAll();
+
+        this.initQuizAnswersCount(quizList);
+
+        return quizList;
     }
 
     @Override
     @Transactional(readOnly=true)
     public Collection<Quiz> readAll(Boolean isPublic) {
+        Collection<Quiz> quizList;
+
         if(isPublic == null){
-            return this.quizRepository.findAll();
+            quizList = this.quizRepository.findAll();
+            this.initQuizAnswersCount(quizList);
+            return quizList;
         }
-        return this.quizRepository.findAllByPublic(isPublic);
+
+        quizList = this.quizRepository.findAllByPublic(isPublic);
+        this.initQuizAnswersCount(quizList);
+        return quizList;
     }
 
     @Override
     @Transactional(readOnly=true)
     public Collection<Quiz> readAll(int size, int page) {
-        return this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"))
-                    .getContent();
+        Collection<Quiz> quizList = this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"))
+                                                        .getContent();
+        this.initQuizAnswersCount(quizList);
+
+        return quizList;
     }
 
     @Override
     @Transactional(readOnly=true)
     public Collection<Quiz> readAll(Boolean isPublic, int size, int page) {
-        if(isPublic == null)
-            return this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"))
-                    .getContent();
+        Collection<Quiz> quizList;
 
-        return this.quizRepository.findAllByPublic(isPublic, PageRequest.of(page,
-                                                                            size,
-                                                                            Sort.Direction.DESC,
-                                                                   "createdAt"));
+        if(isPublic == null) {
+            quizList = this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"))
+                    .getContent();
+            this.initQuizAnswersCount(quizList);
+            return quizList;
+        }
+
+        quizList = this.quizRepository.findAllByPublic(isPublic, PageRequest.of(page,
+                size,
+                Sort.Direction.DESC,
+                "createdAt"));
+        this.initQuizAnswersCount(quizList);
+        return quizList;
     }
 
     @Override
@@ -93,5 +118,16 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public void delete(String id) {
 
+    }
+
+    private void initQuizAnswersCount(Collection<Quiz> quizList){
+        for(Quiz quiz : quizList) {
+            final List<UserAnswer> userAnswersForQuiz =
+                    this.userAnswerService.getUserAnswersForQuiz(quiz.getId());
+            quiz.setTotalNumberOfAnswers(userAnswersForQuiz.size());
+            Optional<Integer> correctNumOptional =
+                    this.userAnswerService.getCorrectCount(userAnswersForQuiz);
+            quiz.setNumberOfCorrectAnswers(correctNumOptional.orElse(null));
+        }
     }
 }

@@ -9,6 +9,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import { ParameterFetchingStrategy } from 'src/app/core/strategies/parameter-fetching-strategy';
+import { MatIconRegistry } from '@angular/material/icon';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-quiz-list',
@@ -21,7 +23,16 @@ export class QuizListComponent implements OnInit, OnDestroy {
   pagingStrategy: PagingDataFetchStrategy;
 
   constructor(private quizService: QuizService,
-              private navigationService: NavigationHelperService) {
+              private navigationService: NavigationHelperService,
+              private iconRegistry: MatIconRegistry,
+              private sanitizer: DomSanitizer) {
+    this.iconRegistry.addSvgIcon( // TODO: make more general
+        'done',
+        this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/baseline-done-24px.svg'));
+
+    this.iconRegistry.addSvgIcon( // TODO: make more general
+        'clear',
+        this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/baseline-clear-24px.svg'));
   }
 
   ngOnInit() {
