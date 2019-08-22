@@ -1,6 +1,8 @@
 package com.raiseup.rquiz.models;
 
 import com.raiseup.rquiz.common.AppConstants.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.LazyInitializationException;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
@@ -12,6 +14,8 @@ import javax.validation.constraints.Size;
 @Entity
 @Access(AccessType.FIELD)
 @Table(name = DBConsts.QUIZ_TABLE_NAME)
+@Getter
+@Setter
 public class Quiz extends BaseModel{
     @Id
     @GeneratedValue(generator = "UUID")
@@ -48,92 +52,9 @@ public class Quiz extends BaseModel{
                cascade = CascadeType.ALL)
     private Set<UserAnswer> userAnswers = new HashSet<>();
 
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public Boolean getIsPublic() {
-        return isPublic;
-    }
-
-    public void setIsPublic(Boolean aPublic) {
-        isPublic = aPublic;
-    }
-
-    public String getAssignedUsers() {
-        return assignedUsers;
-    }
-
-    public void setAssignedUsers(String assignedUsers) {
-        this.assignedUsers = assignedUsers;
-    }
-
-    public String getCreatorId() {
-        return creatorId;
-    }
-
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
-    }
-
-    public Set<QuizAnswer> getAnswers() {
-        return answers;
-    }
-
     public void addQuizAnswer(QuizAnswer quizAnswer) {
         quizAnswer.setQuiz(this);
         this.answers.add(quizAnswer);
-    }
-
-    public Set<UserAnswer> getUserAnswers() {
-        return userAnswers;
-    }
-
-    public void setUserAnswers(Set<UserAnswer> userAnswers) {
-        this.userAnswers = userAnswers;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Quiz quiz = (Quiz) o;
-        return Objects.equals(id, quiz.id) &&
-                Objects.equals(creatorId, quiz.creatorId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, creatorId);
     }
 
     @Override

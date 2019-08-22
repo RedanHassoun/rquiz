@@ -1,15 +1,20 @@
 package com.raiseup.rquiz.models;
 
 import com.raiseup.rquiz.common.AppConstants.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = DBConsts.USERS_TABLE_NAME)
 @Access(AccessType.FIELD)
+@Getter
+@Setter
+@EqualsAndHashCode
 public class ApplicationUser extends BaseModel{
     @Id
     @Column(name=DBConsts.USER_ID)
@@ -25,64 +30,10 @@ public class ApplicationUser extends BaseModel{
                cascade = CascadeType.ALL)
     private Set<UserAnswer> userAnswers = new HashSet<>();
 
-    public Set<UserAnswer> getUserAnswers() {
-        return userAnswers;
-    }
-
-    public void setUserAnswers(Set<UserAnswer> userAnswers) {
-        this.userAnswers = userAnswers;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
     @Override
     public String toString(){
         return String.format("[ username: %s , password: %s]",
                 this.username,
                 this.password);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ApplicationUser that = (ApplicationUser) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(username, that.username);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username);
     }
 }
