@@ -46,11 +46,10 @@ public class UserAnswerServiceImpl implements UserAnswerService {
             throw new NullPointerException(errorMsg);
         }
 
-        // Check if already exist. TODO
-//        Optional<UserAnswer> ans = this.userAnswerRepository.find(quizId, userId);
-//        if(ans.isPresent()){
-//            throw new AnswerAlreadyExistException("answer already exist");
-//        }
+        Optional<UserAnswer> ans = this.userAnswerRepository.find(quizId, userId);
+        if(ans.isPresent()){
+            throw new AnswerAlreadyExistException("Answer already exist");
+        }
 
         UserAnswer userAnswer = new UserAnswer();
 
