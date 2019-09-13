@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserAnswerRepository extends JpaRepository<UserAnswer, String> {
-    @Query("SELECT a FROM UserAnswer AS a WHERE a.applicationUser.id = :userId AND a.quiz.id = :quizId")
+    @Query("SELECT a FROM UserAnswer AS a WHERE a.user.id = :userId AND a.quiz.id = :quizId")
     Optional<UserAnswer> find(@Param("quizId") String quizId,@Param("userId") String userId);
 
     @Query("SELECT u FROM UserAnswer AS u WHERE u.quiz.id = :quizId")

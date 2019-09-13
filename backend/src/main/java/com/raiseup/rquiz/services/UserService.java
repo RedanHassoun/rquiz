@@ -1,14 +1,14 @@
 package com.raiseup.rquiz.services;
 
-import com.raiseup.rquiz.models.ApplicationUser;
+import com.raiseup.rquiz.models.User;
 import java.util.Collection;
 import java.util.Optional;
 
 public interface UserService {
-    ApplicationUser create (ApplicationUser user);
-    Optional<ApplicationUser> read (String id);
-    Collection<ApplicationUser> readAll ();
-    Collection<ApplicationUser> readAll (int size, int page);
-    void update (ApplicationUser dummy);
+    User create (User user);
+    Optional<User> read (String id);
+    Collection<User> readAll ();
+    Collection<User> readAll (int size, int page);
+    void update (User dummy);
     void delete (String id);
 }

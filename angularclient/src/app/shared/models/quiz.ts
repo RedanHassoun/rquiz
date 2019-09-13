@@ -1,3 +1,4 @@
+import { UserAnswer } from './user-answer';
 import { QuizAnswer } from './quiz-answer';
 import { User } from './user';
 export class Quiz {
@@ -9,6 +10,7 @@ export class Quiz {
     assignedUsers: User[];
     creatorId: string;
     answers: QuizAnswer[] = [];
+    userAnswers: UserAnswer[] = [];
     numberOfCorrectAnswers: number;
     totalNumberOfAnswers: number;
 

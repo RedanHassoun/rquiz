@@ -1,6 +1,6 @@
 package com.raiseup.rquiz.services;
 
-import com.raiseup.rquiz.models.ApplicationUser;
+import com.raiseup.rquiz.models.User;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApplicationUser create(ApplicationUser user) {
+    public User create(User user) {
         String id = UUID.randomUUID().toString();
         user.setId(id);
 		user.setImageUrl("https://www.hindustantimes.com/rf/image_size_960x540/HT/p2/2018/09/27/Pictures/_0ab52210-c22f-11e8-ac2f-8b6cbdfc246f.PNG");
@@ -32,22 +32,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<ApplicationUser> read(String id) {
+    public Optional<User> read(String id) {
         return this.applicationUserRepository.findById(id);
     }
 
     @Override
-    public Collection<ApplicationUser> readAll() {
+    public Collection<User> readAll() {
         return applicationUserRepository.findAll();
     }
 
     @Override
-    public Collection<ApplicationUser> readAll(int size, int page) {
+    public Collection<User> readAll(int size, int page) {
         return null;
     }
 
     @Override
-    public void update(ApplicationUser user) {
+    public void update(User user) {
 
     }
 

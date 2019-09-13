@@ -1,5 +1,6 @@
 package com.raiseup.rquiz.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.raiseup.rquiz.common.AppConstants.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,7 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = DBConsts.USERS_TABLE_NAME)
 @Access(AccessType.FIELD)
-public class ApplicationUser extends BaseModel{
+public class User extends BaseModel{
     @Id
     @Column(name=DBConsts.USER_ID)
     private String id;
@@ -21,8 +22,9 @@ public class ApplicationUser extends BaseModel{
     private String password;
     private String imageUrl;
 
-    @OneToMany(mappedBy = "applicationUser",
+    @OneToMany(mappedBy = "user",
                cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<UserAnswer> userAnswers = new HashSet<>();
 
     public Set<UserAnswer> getUserAnswers() {
@@ -76,7 +78,7 @@ public class ApplicationUser extends BaseModel{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ApplicationUser that = (ApplicationUser) o;
+        User that = (User) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(username, that.username);
     }

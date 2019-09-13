@@ -1,6 +1,6 @@
 package com.raiseup.rquiz;
 
-import com.raiseup.rquiz.models.ApplicationUser;
+import com.raiseup.rquiz.models.User;
 import com.raiseup.rquiz.models.Quiz;
 import com.raiseup.rquiz.models.QuizAnswer;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
@@ -35,7 +35,7 @@ public class DemoApplication
 		return args -> {
 			Stream.of("John", "Julie", "Jennifer", "Helen", "Rachel")
 					.forEach(name -> {
-						ApplicationUser user = new ApplicationUser();
+						User user = new User();
 						user.setUsername(name);
 						user.setPassword("123");
 						userService.create(user);

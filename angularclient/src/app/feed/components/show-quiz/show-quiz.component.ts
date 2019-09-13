@@ -3,7 +3,6 @@ import { AppUtil } from './../../../shared/util/app-util';
 import { Quiz } from './../../../shared/models/quiz';
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
-import { Observable } from 'rxjs';
 import { QuizService } from '../../services/quiz.service';
 import { Subscription } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -17,6 +16,7 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   quiz: Quiz;
   selectedAnswerId: string;
+  isAlreadyAnswered: boolean;
 
   constructor(@Inject(MAT_DIALOG_DATA) public quizId: string,
     private quizService: QuizService,
@@ -27,6 +27,7 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
       this.quizService.get(this.quizId)
         .subscribe((res: Quiz) => {
           this.quiz = res;
+          this.checkIfQuizAlreadyAnswered(res);
         }, (err) => {
           AppUtil.showError(err);
         })
@@ -35,6 +36,10 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     AppUtil.releaseSubscriptions(this.subscriptions);
+  }
+
+  async checkIfQuizAlreadyAnswered(quiz: Quiz): Promise<void> {
+    this.isAlreadyAnswered = await this.quizService.isAlreadyAnswered(quiz);
   }
 
   async solve(): Promise<void> {
@@ -48,7 +53,6 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
     if (!answer) {
       throw new Error('The selected answer is undefined');
     }
-    console.log('answer: ', JSON.stringify(answer));
 
     this.quizService.solve(this.quiz.id, answer)
       .subscribe(res => {

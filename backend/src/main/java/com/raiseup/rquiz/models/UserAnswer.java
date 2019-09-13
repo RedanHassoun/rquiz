@@ -25,8 +25,7 @@ public class UserAnswer extends BaseModel{
 
     @ManyToOne
     @JoinColumn
-    @JsonIgnore
-    private ApplicationUser applicationUser;
+    private User user;
 
     @ManyToOne
     @JoinColumn
@@ -49,12 +48,12 @@ public class UserAnswer extends BaseModel{
         this.quiz = quiz;
     }
 
-    public ApplicationUser getApplicationUser() {
-        return applicationUser;
+    public User getUser() {
+        return user;
     }
 
-    public void setApplicationUser(ApplicationUser applicationUser) {
-        this.applicationUser = applicationUser;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public QuizAnswer getQuizAnswer() {

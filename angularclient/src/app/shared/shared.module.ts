@@ -15,6 +15,7 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { ShowQuizComponent } from '../feed/components/show-quiz/show-quiz.component';
 import {MatRadioModule} from '@angular/material/radio';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import {MatRadioModule} from '@angular/material/radio';
     MatDialogModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+    MatTooltipModule
   ],
   entryComponents: [
     ConfirmationDialogComponent,
@@ -53,7 +55,8 @@ import {MatRadioModule} from '@angular/material/radio';
     BrowserAnimationsModule,
     MatDialogModule,
     MatButtonModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTooltipModule
   ]
 })
 export class SharedModule { }
