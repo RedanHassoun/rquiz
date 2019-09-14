@@ -1,3 +1,5 @@
+import { User } from './../../shared/models/user';
+import { AuthenticationService } from './../../core/services/authentication.service';
 import { QuizAnswer } from './../../shared/models/quiz-answer';
 import { Quiz } from './../../shared/models/quiz';
 import { AppUtil } from './../../shared/util/app-util';
@@ -14,7 +16,7 @@ import { Observable } from 'rxjs';
 })
 export class QuizService extends ClientDataServiceService {
   public static readonly PAGE_SIZE = 20;
-  constructor(public http: HttpClient) {
+  constructor(public http: HttpClient, private authenticationService: AuthenticationService) {
     super(`${AppConsts.BASE_URL}/v1/quiz/`, http);
   }
 
@@ -40,5 +42,16 @@ export class QuizService extends ClientDataServiceService {
   solve(quizId: string, quizAnswer: QuizAnswer): Observable<any> { // TODO: replace any
     return this.http.post(`${this.url}${quizId}/answer`, quizAnswer, { headers: super.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
+  }
+
+  async isAlreadyAnswered(quiz: Quiz): Promise<boolean> {
+    const currentUser: User = await this.authenticationService.getCurrentUser();
+    const userAnswersList: UserAnswer[] = quiz.userAnswers;
+    for (const userAnswer of userAnswersList) {
+        if (currentUser.id.toString() === userAnswer.user.id.toString()) {
+            return true;
+        }
+    }
+    return false;
   }
 }

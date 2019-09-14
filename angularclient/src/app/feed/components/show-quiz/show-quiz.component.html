@@ -3,8 +3,7 @@
     <h2>{{ quiz.title }}</h2>
     <p>{{ quiz.description }}</p>
 
-    <mat-radio-group name="quizAnswers" class="quiz-radio-group" aria-label="Select an answer" 
-      [selected]="null"
+    <mat-radio-group name="quizAnswers" class="quiz-radio-group" aria-label="Select an answer" [selected]="null"
       [(ngModel)]="selectedAnswerId">
       <mat-radio-button class="quiz-radio-button" *ngFor="let answer of quiz.answers" [value]="answer.id"
         [disabled]="false">
@@ -12,8 +11,13 @@
       </mat-radio-button>
     </mat-radio-group>
 
-    <button id="cancel-btn" class="btn btn-default" mat-dialog-close>Cancel</button>
-    <button id="submit-btn" class="btn btn-primary" [disabled]="false" (click)="solve()">
+
+    <button id="cancel-btn" class="btn btn-default" mat-dialog-close>
+      Cancel
+    </button>
+
+    <!-- TODO: Fix the tooltip issue -->
+    <button class="btn btn-primary" id="submit-btn" [disabled]="isAlreadyAnswered && isAlreadyAnswered === true" (click)="solve()">
       Solve!
     </button>
 

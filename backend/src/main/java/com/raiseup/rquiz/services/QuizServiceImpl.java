@@ -36,17 +36,20 @@ public class QuizServiceImpl implements QuizService {
     @Override
     @Transactional(readOnly=true)
     public Optional<Quiz> read(String id) {
-//        Quiz q = this.quizRepository.findWithAnswers(id);
-//        this.logger.info("------------------------------");
-//        this.logger.info(q.toString());
-        return this.quizRepository.findById(id);
+        Optional<Quiz> quizOptional = this.quizRepository.findById(id);
+        if(!quizOptional.isPresent()){
+            return Optional.empty();
+        }
+        Quiz quiz = quizOptional.get();
+        this.initQuizAnswersCount(quiz);
+        return Optional.of(quiz);
     }
 
     @Override
     public Collection<Quiz> readAll() {
         Collection<Quiz> quizList = this.quizRepository.findAll();
 
-        this.initQuizAnswersCount(quizList);
+        this.initQuizListAnswersCount(quizList);
 
         return quizList;
     }
@@ -58,12 +61,12 @@ public class QuizServiceImpl implements QuizService {
 
         if(isPublic == null){
             quizList = this.quizRepository.findAll();
-            this.initQuizAnswersCount(quizList);
+            this.initQuizListAnswersCount(quizList);
             return quizList;
         }
 
         quizList = this.quizRepository.findAllByPublic(isPublic);
-        this.initQuizAnswersCount(quizList);
+        this.initQuizListAnswersCount(quizList);
         return quizList;
     }
 
@@ -72,7 +75,7 @@ public class QuizServiceImpl implements QuizService {
     public Collection<Quiz> readAll(int size, int page) {
         Collection<Quiz> quizList = this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"))
                                                         .getContent();
-        this.initQuizAnswersCount(quizList);
+        this.initQuizListAnswersCount(quizList);
 
         return quizList;
     }
@@ -85,7 +88,7 @@ public class QuizServiceImpl implements QuizService {
         if(isPublic == null) {
             quizList = this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"))
                     .getContent();
-            this.initQuizAnswersCount(quizList);
+            this.initQuizListAnswersCount(quizList);
             return quizList;
         }
 
@@ -93,7 +96,7 @@ public class QuizServiceImpl implements QuizService {
                 size,
                 Sort.Direction.DESC,
                 "createdAt"));
-        this.initQuizAnswersCount(quizList);
+        this.initQuizListAnswersCount(quizList);
         return quizList;
     }
 
@@ -120,14 +123,18 @@ public class QuizServiceImpl implements QuizService {
 
     }
 
-    private void initQuizAnswersCount(Collection<Quiz> quizList){
+    private void initQuizListAnswersCount(Collection<Quiz> quizList){
         for(Quiz quiz : quizList) {
-            final List<UserAnswer> userAnswersForQuiz =
-                    this.userAnswerService.getUserAnswersForQuiz(quiz.getId());
-            quiz.setTotalNumberOfAnswers(userAnswersForQuiz.size());
-            Optional<Integer> correctNumOptional =
-                    this.userAnswerService.getCorrectCount(userAnswersForQuiz);
-            quiz.setNumberOfCorrectAnswers(correctNumOptional.orElse(null));
+            this.initQuizAnswersCount(quiz);
         }
+    }
+
+    private void initQuizAnswersCount(Quiz quiz){
+        final List<UserAnswer> userAnswersForQuiz =
+                this.userAnswerService.getUserAnswersForQuiz(quiz.getId());
+        quiz.setTotalNumberOfAnswers(userAnswersForQuiz.size());
+        Optional<Integer> correctNumOptional =
+                this.userAnswerService.getCorrectCount(userAnswersForQuiz);
+        quiz.setNumberOfCorrectAnswers(correctNumOptional.orElse(null));
     }
 }

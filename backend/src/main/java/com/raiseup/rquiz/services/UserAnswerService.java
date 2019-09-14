@@ -5,7 +5,6 @@ import com.raiseup.rquiz.exceptions.QuizNotFoundException;
 import com.raiseup.rquiz.exceptions.UserNotFoundException;
 import com.raiseup.rquiz.models.QuizAnswer;
 import com.raiseup.rquiz.models.UserAnswer;
-
 import java.util.List;
 import java.util.Optional;
 

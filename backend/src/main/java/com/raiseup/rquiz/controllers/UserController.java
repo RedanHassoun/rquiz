@@ -1,7 +1,7 @@
 package com.raiseup.rquiz.controllers;
 
 import com.raiseup.rquiz.common.AppUtils;
-import com.raiseup.rquiz.models.ApplicationUser;
+import com.raiseup.rquiz.models.User;
 import com.raiseup.rquiz.models.Quiz;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import com.raiseup.rquiz.services.QuizService;
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    public List<ApplicationUser> getUsers(){
+    public List<User> getUsers(){
         try{
             return new ArrayList<>(this.usersService.readAll());
         }catch (Exception ex){
@@ -48,12 +48,12 @@ public class UserController {
     }
 
     @GetMapping("{id}")
-    public ApplicationUser getUser(@PathVariable("id") String id){
+    public User getUser(@PathVariable("id") String id){
         if (id ==  null){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "User id should not be null");
         }
-        Optional<ApplicationUser> res = this.usersService.read(id);
+        Optional<User> res = this.usersService.read(id);
 
         if(!res.isPresent()){
             throw new ResponseStatusException(
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")
-    public void signUp(@RequestBody ApplicationUser user) {
+    public void signUp(@RequestBody User user) {
         this.usersService.create(user);
     }
 

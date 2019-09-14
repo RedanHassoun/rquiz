@@ -1,6 +1,7 @@
 package com.raiseup.rquiz.controllers;
 
 import com.raiseup.rquiz.common.AppUtils;
+import com.raiseup.rquiz.exceptions.AnswerAlreadyExistException;
 import com.raiseup.rquiz.exceptions.QuizNotFoundException;
 import com.raiseup.rquiz.exceptions.UserNotFoundException;
 import com.raiseup.rquiz.models.Quiz;
@@ -149,6 +150,12 @@ public class QuizController {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     ex.getMessage());
+        } catch (AnswerAlreadyExistException ex){
+            final String errorMsg = "Quiz already answered.";
+            this.logger.error(errorMsg);
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    errorMsg);
         } catch (Exception ex){
             final String errorMsg =
                     String.format("Cannot add answer for quiz %s. error: %s",

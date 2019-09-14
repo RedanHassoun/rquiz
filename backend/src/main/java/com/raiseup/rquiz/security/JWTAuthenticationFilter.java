@@ -1,7 +1,7 @@
 package com.raiseup.rquiz.security;
 
 import com.auth0.jwt.JWT;
-import com.raiseup.rquiz.models.ApplicationUser;
+import com.raiseup.rquiz.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import org.json.JSONObject;
@@ -9,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -35,8 +34,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res) throws AuthenticationException {
         try {
-            ApplicationUser creds = new ObjectMapper()
-                    .readValue(req.getInputStream(), ApplicationUser.class);
+            User creds = new ObjectMapper()
+                    .readValue(req.getInputStream(), User.class);
 
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -54,7 +53,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse res,
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
-        String username = ((User) auth.getPrincipal()).getUsername();
+        String username = ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername();
 
         String token = JWT.create()
                 .withSubject(this.buildTokenSubject(username))
@@ -66,7 +65,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     private String buildTokenSubject(String username){
-        ApplicationUser user = this.applicationUserRepository.findByUsername(username);
+        User user = this.applicationUserRepository.findByUsername(username);
 
         JSONObject jsonUser = new JSONObject();
 
