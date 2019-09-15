@@ -15,8 +15,9 @@ export class PageableComponent implements OnInit, OnChanges {
   totalItemsCount = 0;
   finished = false;
   page = 0;
+  fetchingData = false;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
     this.fetchItemsList(this.page);
@@ -39,6 +40,10 @@ export class PageableComponent implements OnInit, OnChanges {
   }
 
   fetchItemsList(page: number) {
+    if (this.fetchingData) {
+      return;
+    }
+
     if (page == null || typeof page === undefined || !this.pagingStrategy) {
       return;
     }
@@ -46,9 +51,11 @@ export class PageableComponent implements OnInit, OnChanges {
     if (this.finished) {
       return;
     }
+    this.fetchingData = true;
 
     this.pagingStrategy.dataObservable(page)
       .pipe(tap(res => {
+        this.fetchingData = false;
 
         const newItems = _.slice(res, 0, this.pagingStrategy.getPageSize());
 

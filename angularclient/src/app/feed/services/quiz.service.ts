@@ -15,7 +15,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class QuizService extends ClientDataServiceService {
-  public static readonly PAGE_SIZE = 20;
+  public static readonly PAGE_SIZE = 15;
   constructor(public http: HttpClient, private authenticationService: AuthenticationService) {
     super(`${AppConsts.BASE_URL}/v1/quiz/`, http);
   }
