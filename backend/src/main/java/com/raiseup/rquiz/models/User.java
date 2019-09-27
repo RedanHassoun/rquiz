@@ -27,6 +27,9 @@ public class User extends BaseModel{
     @JsonIgnore
     private Set<UserAnswer> userAnswers = new HashSet<>();
 
+    @ManyToMany(mappedBy = "assignedUsers")
+    private Set<Quiz> assignedQuizList = new HashSet<>();
+
     public Set<UserAnswer> getUserAnswers() {
         return userAnswers;
     }
@@ -65,6 +68,14 @@ public class User extends BaseModel{
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Set<Quiz> getAssignedQuizList() {
+        return assignedQuizList;
+    }
+
+    public void setAssignedQuizList(Set<Quiz> assignedQuizList) {
+        this.assignedQuizList = assignedQuizList;
     }
 
     @Override

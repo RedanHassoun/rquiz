@@ -34,7 +34,12 @@ public class Quiz extends BaseModel{
     @NotNull(message = "public property cannot be null")
     private Boolean isPublic;
 
-    private String assignedUsers;
+    @ManyToMany
+    @JoinTable(
+            name = "user_quiz_assignment",
+            joinColumns = @JoinColumn(name = DBConsts.QUIZ_ID),
+            inverseJoinColumns = @JoinColumn(name = DBConsts.USER_ID))
+    private Set<User> assignedUsers;
 
     @Column(nullable = false)
     @NotNull(message = "Creator id cannot be null")
@@ -94,14 +99,6 @@ public class Quiz extends BaseModel{
         isPublic = aPublic;
     }
 
-    public String getAssignedUsers() {
-        return assignedUsers;
-    }
-
-    public void setAssignedUsers(String assignedUsers) {
-        this.assignedUsers = assignedUsers;
-    }
-
     public String getCreatorId() {
         return creatorId;
     }
@@ -141,6 +138,14 @@ public class Quiz extends BaseModel{
 
     public void setTotalNumberOfAnswers(Integer totalNumberOfAnswers) {
         this.totalNumberOfAnswers = totalNumberOfAnswers;
+    }
+
+    public Set<User> getAssignedUsers() {
+        return assignedUsers;
+    }
+
+    public void setAssignedUsers(Set<User> assignedUsers) {
+        this.assignedUsers = assignedUsers;
     }
 
     @Override
