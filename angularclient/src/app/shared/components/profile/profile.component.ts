@@ -1,7 +1,7 @@
 import { NotFoundError } from './../../app-errors/not-found-error';
 import { AppError } from './../../app-errors/app-error';
 import { AuthenticationService } from './../../../core/services/authentication.service';
-import { UserServiceService } from '../../../core/services/user-service.service';
+import { UserService } from '../../../core/services/user-service.service';
 import { AppUtil } from '../../util/app-util';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../../models/user';
@@ -17,7 +17,7 @@ export class ProfileComponent implements OnInit {
   private isCurrUser: boolean;
 
   constructor(private route: ActivatedRoute,
-    private usersService: UserServiceService,
+    private usersService: UserService,
     private authService: AuthenticationService) {
   }
 

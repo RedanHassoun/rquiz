@@ -16,6 +16,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { ShowQuizComponent } from '../feed/components/show-quiz/show-quiz.component';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatButtonModule,
     MatCheckboxModule,
     MatRadioModule,
-    MatTooltipModule
+    MatTooltipModule,
+    NgMultiSelectDropDownModule.forRoot()
   ],
   entryComponents: [
     ConfirmationDialogComponent,
@@ -56,7 +58,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatDialogModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatTooltipModule
+    MatTooltipModule,
+    NgMultiSelectDropDownModule
   ]
 })
-export class SharedModule { }
+export class SharedModule {}

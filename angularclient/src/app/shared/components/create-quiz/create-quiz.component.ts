@@ -1,3 +1,5 @@
+import { UserService } from './../../../core/services/user-service.service';
+import { User } from './../../models/user';
 import { AppUtil } from './../../util/app-util';
 import { AuthenticationService } from './../../../core/services/authentication.service';
 import { QuizService } from './../../../feed/services/quiz.service';
@@ -7,6 +9,7 @@ import { Quiz } from '../../models/quiz';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { QuizAnswer } from '../../models/quiz-answer';
 import { Subscription } from 'rxjs';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'app-create-quiz',
@@ -15,14 +18,19 @@ import { Subscription } from 'rxjs';
 })
 export class CreateQuizComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
+  dropdownSettings: IDropdownSettings;
   quiz: Quiz;
   addQuizForm: FormGroup;
+  users: User[];
+  selectedUsers: User[] = [];
+  currentUserId: string;
 
   constructor(private quizService: QuizService,
     private authenticationService: AuthenticationService,
-    private dialogRef: MatDialogRef<CreateQuizComponent>) { }
+    private dialogRef: MatDialogRef<CreateQuizComponent>,
+    private userService: UserService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.quiz = new Quiz();
     this.quiz.reset();
     this.addQuizForm = new FormGroup({
@@ -38,38 +46,57 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
       //   Validators.required,
       //   Validators.minLength(4)])
     });
+
+    this.currentUserId = (await this.authenticationService.getCurrentUser()).id;
+
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'username',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
+
+    this.subscriptions.push(
+      this.userService.getAll()
+        .subscribe((users: any[]) => {
+          this.users = AppUtil.removeById(users, this.currentUserId);
+        })
+    );
   }
 
   get title() { return this.quiz.title; }
   get description() { return this.quiz.description; }
 
 
-  addAnswer(answerContent: string) {
+  addAnswer(answerContent: string): void {
     if (!answerContent) {
       return;
     }
-    const ans = new QuizAnswer();
-    ans.content = answerContent;
-    ans.isCorrect = false;
-    this.quiz.addAnswer(ans);
+    const answer = new QuizAnswer();
+    answer.content = answerContent;
+    answer.isCorrect = false;
+    this.quiz.addAnswer(answer);
   }
 
   publicChanged(isPublic: boolean): void {
     this.quiz.isPublic = isPublic;
   }
 
-  async addQuiz() {
+  async addQuiz(): Promise<void> {
     const hasCorrectAnswer: boolean = await this.quizService.hasCorrectAnswer(this.quiz);
     if (!hasCorrectAnswer) {
-      alert('You must choose correct answer');
+      alert('You must choose a correct answer');
       return;
     }
-    const currentUserId: string = (await this.authenticationService.getCurrentUser()).id;
-    this.quiz.creatorId = currentUserId;
 
+    this.quiz.creatorId = this.currentUserId;
+    this.quiz.assignedUsers = this.selectedUsers;
     this.subscriptions.push(
       this.quizService.create(this.quiz)
-        .subscribe(res => {
+        .subscribe(result => {
           this.dialogRef.close();
         }, (err) => {
           AppUtil.showError(err);

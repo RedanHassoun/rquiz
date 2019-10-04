@@ -1,6 +1,6 @@
 import { AppUtil } from './../../../shared/util/app-util';
 import { AppError } from './../../../shared/app-errors/app-error';
-import { UserServiceService } from '../../services/user-service.service';
+import { UserService } from '../../services/user-service.service';
 import { User } from '../../../shared/models/user';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -14,7 +14,7 @@ export class UserListComponent implements OnInit {
 
   users: User[];
 
-  constructor(private userService: UserServiceService,
+  constructor(private userService: UserService,
     private router: Router) { }
 
   ngOnInit() {

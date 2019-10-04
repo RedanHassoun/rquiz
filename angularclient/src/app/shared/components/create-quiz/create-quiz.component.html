@@ -25,6 +25,11 @@
     </div>
 
     <mat-checkbox (change)="publicChanged($event.checked)">Show in public</mat-checkbox>
+    <div *ngIf="!quiz.isPublic">
+        <ng-multiselect-dropdown [placeholder]="'Assign quiz to ...'" [data]="users" [(ngModel)]="selectedUsers"
+            [ngModelOptions]="{standalone: true}" [settings]="dropdownSettings">
+        </ng-multiselect-dropdown>
+    </div>
 
     <br />
     <hr />
@@ -37,7 +42,6 @@
             <button class="btn btn-outline-secondary" type="button" (click)="addAnswer(answerInput.value)">Add</button>
         </div>
     </div>
-
 
     <!-- 
     <input [(ngModel)]="quiz.description" placeholder="Add answer" name="description" class="form-control"

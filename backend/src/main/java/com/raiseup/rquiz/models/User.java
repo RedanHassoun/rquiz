@@ -28,6 +28,7 @@ public class User extends BaseModel{
     private Set<UserAnswer> userAnswers = new HashSet<>();
 
     @ManyToMany(mappedBy = "assignedUsers")
+    @JsonIgnore
     private Set<Quiz> assignedQuizList = new HashSet<>();
 
     public Set<UserAnswer> getUserAnswers() {

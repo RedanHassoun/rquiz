@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -40,7 +41,12 @@ public class UserController {
     @GetMapping("/all")
     public List<User> getUsers(){
         try{
-            return new ArrayList<>(this.usersService.readAll());
+            return this.usersService.readAll()
+                    .stream()
+                    .map(user -> {
+                        user.setPassword(null);
+                        return user;
+                    }).collect(Collectors.toList());
         }catch (Exception ex){
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cant fetch users list", ex);

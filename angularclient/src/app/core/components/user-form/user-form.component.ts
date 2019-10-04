@@ -1,4 +1,4 @@
-import { UserServiceService } from '../../services/user-service.service';
+import { UserService } from '../../services/user-service.service';
 import { User } from '../../../shared/models/user';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,7 +14,7 @@ export class UserFormComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private userService: UserServiceService) {
+              private userService: UserService) {
     this.user = new User();
   }
 

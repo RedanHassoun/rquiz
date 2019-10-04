@@ -1,3 +1,4 @@
+import { User } from './../models/user';
 import { AppError } from './../app-errors/app-error';
 import { AccessDeniedError } from './../app-errors/access-denied-error';
 import { NotFoundError } from './../app-errors/not-found-error';
@@ -5,6 +6,7 @@ import { BadInputError } from './../app-errors/bad-input-error';
 import { Observable, Subscription } from 'rxjs';
 import { AppConsts } from './app-consts';
 import { throwError } from 'rxjs';
+import * as _ from 'lodash';
 
 export class AppUtil {
     public static extractAndSaveToken(response: any): void {
@@ -25,6 +27,12 @@ export class AppUtil {
         }
 
         localStorage.setItem(AppConsts.KEY_USER_TOKEN, authorizationValue);
+    }
+
+    public static removeById(items: any[], id: string): any[] {
+        return _.remove(items, (item) => {
+            return item.id !== id;
+        });
     }
 
     public static handleError(error: Response): Observable<never> {
@@ -69,7 +77,7 @@ export class AppUtil {
         }
     }
 
-    public static showWarningMessage(message: string){
+    public static showWarningMessage(message: string) {
         alert(message);
     }
 }

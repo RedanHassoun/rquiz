@@ -1,4 +1,4 @@
-import { UserServiceService } from './../../../core/services/user-service.service';
+import { UserService } from './../../../core/services/user-service.service';
 import { Quiz } from './../../../shared/models/quiz';
 import { CustomUrlFetchingStrategy } from './../../../core/strategies/custom-url-fetching-strategy';
 import { PagingDataFetchStrategy } from './../../../core/strategies/paging-data-fetch-strategy';
@@ -18,7 +18,7 @@ export class MyQuizListComponent implements OnInit {
   private quizList: Quiz[] = [];
   private pagingStrategy: PagingDataFetchStrategy;
 
-  constructor(private userService: UserServiceService,
+  constructor(private userService: UserService,
               private navigationService: NavigationHelperService,
               private authService: AuthenticationService) {
   }

@@ -6,7 +6,7 @@ import { AppConsts } from '../../shared/util/app-consts';
 @Injectable({
   providedIn: 'root'
 })
-export class UserServiceService extends ClientDataServiceService {
+export class UserService extends ClientDataServiceService {
 
   constructor(http: HttpClient) {
     super(`${AppConsts.BASE_URL}/users/`, http);
