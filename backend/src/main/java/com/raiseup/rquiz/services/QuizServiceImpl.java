@@ -27,6 +27,7 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    @Transactional
     public Quiz create(Quiz quiz) {
         quiz.getAnswers().forEach(answer -> answer.setQuiz(quiz));
 
@@ -46,6 +47,7 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Collection<Quiz> readAll() {
         Collection<Quiz> quizList = this.quizRepository.findAll();
 
@@ -101,6 +103,7 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Collection<Quiz> readAll(HashMap<String, Object> filterParams) {
         // TODO: should enable null for the pageable object / define as optional / create another method
         // in the repository
@@ -108,17 +111,20 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Collection<Quiz> readAll(HashMap<String, Object> filterParams, int size, int page) {
         return this.quizRepository.findQuizListByParameters(filterParams,
                 PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"));
     }
 
     @Override
+    @Transactional
     public void update(Quiz obj) {
 
     }
 
     @Override
+    @Transactional
     public void delete(String id) {
 
     }

@@ -27,6 +27,7 @@ public class AppUtils {
         return subjectJson.get("id").toString();
     }
 
+    @SafeVarargs
     public static HashMap<String, Object> createQueryParametersMap(Pair<String, Object> ... pairs){
         if(pairs == null){
             return null;

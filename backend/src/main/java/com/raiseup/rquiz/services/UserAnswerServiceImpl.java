@@ -13,7 +13,7 @@ import com.raiseup.rquiz.repo.QuizRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +33,7 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     }
 
     @Override
+    @Transactional
     public UserAnswer create(String quizId, String userId, QuizAnswer quizAnswer)
                                                      throws QuizNotFoundException,
                                                             UserNotFoundException,

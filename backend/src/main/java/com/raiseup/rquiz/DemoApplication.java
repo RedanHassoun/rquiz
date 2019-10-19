@@ -6,6 +6,7 @@ import com.raiseup.rquiz.models.QuizAnswer;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import com.raiseup.rquiz.services.QuizService;
 import com.raiseup.rquiz.services.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,6 +20,9 @@ import java.util.stream.Stream;
 @EnableJpaAuditing
 public class DemoApplication
 {
+	@Value("${rquiz.shouldSeedDatabase}")
+	private boolean shouldSeedDatabase;
+
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
@@ -32,6 +36,10 @@ public class DemoApplication
     CommandLineRunner init(ApplicationUserRepository userRepository,
 						   UserService userService,
 						   QuizService quizService) {
+		if(!shouldSeedDatabase) {
+			return null;
+		}
+
 		return args -> {
 			Stream.of("John", "Julie", "Jennifer", "Helen", "Rachel")
 					.forEach(name -> {
