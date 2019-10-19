@@ -7,6 +7,7 @@ import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import com.raiseup.rquiz.services.QuizService;
 import com.raiseup.rquiz.services.UserService;
 import javafx.util.Pair;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -89,10 +90,10 @@ public class UserController {
             HashMap<String, Object> queryParams = AppUtils.createQueryParametersMap(new Pair<>("creatorId", userId));
             return new ArrayList<>(this.quizService.readAll(queryParams, size, page));
         } catch (ResponseStatusException ex){
-            logger.error("Cannot fetch quiz list." + ex.toString());
+            logger.error("Cannot fetch quiz list." + ExceptionUtils.getStackTrace(ex));
             throw ex;
         } catch (Exception ex){
-            logger.error("Cannot fetch quiz list." + ex.toString());
+            logger.error("Cannot fetch quiz list." + ExceptionUtils.getStackTrace(ex));
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cannot fetch quiz list", ex);
         }

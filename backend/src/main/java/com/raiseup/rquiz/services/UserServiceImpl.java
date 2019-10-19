@@ -4,6 +4,8 @@ import com.raiseup.rquiz.models.User;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,6 +24,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User create(User user) {
         String id = UUID.randomUUID().toString();
         user.setId(id);
@@ -32,26 +35,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Optional<User> read(String id) {
         return this.applicationUserRepository.findById(id);
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Collection<User> readAll() {
         return applicationUserRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Collection<User> readAll(int size, int page) {
         return null;
     }
 
     @Override
+    @Transactional
     public void update(User user) {
 
     }
 
     @Override
+    @Transactional
     public void delete(String id) {
 
     }
