@@ -82,17 +82,11 @@ public class UserController {
             this.logger.debug(String.format("Getting all quiz list for user: %s. page: %d size: %d",
                                             userId, page, size));
 
-            if(page == null && size == null){
-                // TODO: fix Intelij warning
-                HashMap<String, Object> queryParams = AppUtils.createQueryParametersMap(new Pair<>("creatorId", userId));
-                Collection<Quiz> res = this.quizService.readAll(queryParams);
-                return new ArrayList<>(res);
-            }
-
-            if(page == null || size == null){
+            if(!AppUtils.isPaginationParamsValid(page, size)){
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST, "In order to use pagination you must provide both page and size");
             }
+
             HashMap<String, Object> queryParams = AppUtils.createQueryParametersMap(new Pair<>("creatorId", userId));
             return new ArrayList<>(this.quizService.readAll(queryParams, size, page));
         } catch (ResponseStatusException ex){

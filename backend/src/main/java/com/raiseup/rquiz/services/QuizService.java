@@ -9,11 +9,8 @@ public interface QuizService {
     Quiz create (Quiz obj);
     Optional<Quiz> read (String id);
     Collection<Quiz> readAll ();
-    Collection<Quiz> readAll (Boolean isPublic);
-    Collection<Quiz> readAll (int size, int page);
-    Collection<Quiz> readAll (Boolean isPublic, int size, int page);
-    Collection<Quiz> readAll (HashMap<String, Object> filterParams);
-    Collection<Quiz> readAll (HashMap<String, Object> filterParams, int size, int page);
+    Collection<Quiz> readAll (Boolean isPublic, Integer size, Integer page);
+    Collection<Quiz> readAll (HashMap<String, Object> filterParams, Integer size, Integer page);
     Collection<Quiz> readAllAssignedToUser (String userId, Integer size, Integer page);
     void update (Quiz obj);
     void delete (String id);

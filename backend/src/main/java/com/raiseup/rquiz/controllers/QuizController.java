@@ -69,13 +69,7 @@ public class QuizController {
         try{
             this.logger.debug(String.format("Getting all quiz list. page: %d size: %d", page, size));
 
-            if(page == null && size == null){
-                Collection<Quiz> res = this.quizService.readAll(isPublic);
-                return new ArrayList<>(res);
-            }
-
-            // TODO: Add validation for page and size - should be positive
-            if(page == null || size == null){
+            if(!AppUtils.isPaginationParamsValid(page, size)){
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST, "In order to use pagination you must provide both page and size");
             }

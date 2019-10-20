@@ -6,6 +6,7 @@ import com.raiseup.rquiz.repo.QuizRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,61 +59,35 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     @Transactional(readOnly=true)
-    public Collection<Quiz> readAll(Boolean isPublic) {
+    public Collection<Quiz> readAll(Boolean isPublic, Integer size, Integer page) {
         Collection<Quiz> quizList;
+        Pageable pageable = null;
 
-        if(isPublic == null){
-            quizList = this.quizRepository.findAll();
-            this.initQuizListAnswersCount(quizList);
-            return quizList;
+        if(size != null && page != null) {
+            this.logger.debug(String.format("Preparing page request for fetching quiz list. page=%d, size=%d",
+                    page, size));
+            pageable = PageRequest.of(page, size,
+                    Sort.Direction.DESC, "createdAt");
         }
 
-        quizList = this.quizRepository.findAllByPublic(isPublic);
-        this.initQuizListAnswersCount(quizList);
-        return quizList;
-    }
-
-    @Override
-    @Transactional(readOnly=true)
-    public Collection<Quiz> readAll(int size, int page) {
-        Collection<Quiz> quizList = this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"))
-                                                        .getContent();
-        this.initQuizListAnswersCount(quizList);
-
-        return quizList;
-    }
-
-    @Override
-    @Transactional(readOnly=true)
-    public Collection<Quiz> readAll(Boolean isPublic, int size, int page) {
-        Collection<Quiz> quizList;
-
         if(isPublic == null) {
-            quizList = this.quizRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"))
+            quizList = this.quizRepository.findAll(pageable)
                     .getContent();
             this.initQuizListAnswersCount(quizList);
             return quizList;
         }
 
-        quizList = this.quizRepository.findAllByPublic(isPublic, PageRequest.of(page,
-                size,
-                Sort.Direction.DESC,
-                "createdAt"));
+        quizList = this.quizRepository.findAllByPublic(isPublic, pageable);
         this.initQuizListAnswersCount(quizList);
         return quizList;
     }
 
     @Override
     @Transactional(readOnly=true)
-    public Collection<Quiz> readAll(HashMap<String, Object> filterParams) {
-        // TODO: should enable null for the pageable object / define as optional / create another method
-        // in the repository
-        return this.quizRepository.findQuizListByParameters(filterParams, null);
-    }
+    public Collection<Quiz> readAll(HashMap<String, Object> filterParams, Integer size, Integer page) {
+        if(size == null || page == null)
+            return this.quizRepository.findQuizListByParameters(filterParams,null);
 
-    @Override
-    @Transactional(readOnly=true)
-    public Collection<Quiz> readAll(HashMap<String, Object> filterParams, int size, int page) {
         return this.quizRepository.findQuizListByParameters(filterParams,
                 PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"));
     }
