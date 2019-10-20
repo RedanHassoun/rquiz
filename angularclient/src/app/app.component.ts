@@ -17,7 +17,7 @@ export class AppComponent {
     ['home', 'Home'],
     ['profile', 'My profile'],
     ['myquizlist', 'My Quiz List'],
-    ['myassignedquizlist', 'Assigned To Me'],
+    ['my-assigned-quiz-list', 'Assigned To Me'],
     ['users', 'Users'],
     ['logout', 'Logout']
   ]);
@@ -49,8 +49,8 @@ export class AppComponent {
       case 'myquizlist':
         this.router.navigate(['myquizlist'], { replaceUrl: true });
         break;
-      case 'myassignedquizlist':
-        this.router.navigate(['myassignedquizlist'], { replaceUrl: true });
+      case 'my-assigned-quiz-list':
+        this.router.navigate(['my-assigned-quiz-list'], { replaceUrl: true });
         break;
       case 'users':
         this.router.navigate(['users'], { replaceUrl: true });
