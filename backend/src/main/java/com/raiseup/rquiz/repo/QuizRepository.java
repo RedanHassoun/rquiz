@@ -13,4 +13,6 @@ public interface QuizRepository extends JpaRepository<Quiz, String>, QuizReposit
 
     @Query("SELECT q FROM Quiz AS q WHERE q.isPublic = :isPublic")
     List<Quiz> findAllByPublic (@Param("isPublic") Boolean isPublic);
+
+    List<Quiz> findByAssignedUsers_Id(String userId, Pageable pageable);
 }

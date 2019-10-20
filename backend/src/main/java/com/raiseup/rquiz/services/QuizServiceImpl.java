@@ -118,6 +118,16 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    @Transactional(readOnly=true)
+    public Collection<Quiz> readAllAssignedToUser(String userId, Integer size, Integer page) {
+        if(size == null || page == null){
+            return this.quizRepository.findByAssignedUsers_Id(userId, null);
+        }
+        return this.quizRepository.findByAssignedUsers_Id(userId,
+                PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"));
+    }
+
+    @Override
     @Transactional
     public void update(Quiz obj) {
 

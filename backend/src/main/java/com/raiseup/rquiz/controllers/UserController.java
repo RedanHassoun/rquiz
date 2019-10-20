@@ -104,4 +104,37 @@ public class UserController {
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cannot fetch quiz list", ex);
         }
     }
+
+    @GetMapping("/{userId}/assignedQuiz")
+    public List<Quiz> getAssignedQuizList(@PathVariable("userId") String userId,
+                                  @RequestParam(required = false) Integer page,
+                                  @RequestParam(required = false) Integer size){
+        try{
+            this.logger.debug(String.format("Getting all assigned quiz list for user: %s. page: %d size: %d",
+                    userId, page, size));
+
+            if(!AppUtils.isPaginationParamsValid(page, size)){
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "In order to use pagination you must provide both page and size");
+            }
+
+            List<Quiz> res = this.quizService.readAllAssignedToUser(userId,size,page)
+                    .stream()
+                    .map(quiz -> {
+                        quiz.setAssignedUsers(null);
+                        return quiz;
+                    }).collect(Collectors.toList());
+
+            this.logger.debug(String.format("Returning %d quiz for user: %s", res.size(), userId));
+
+            return res;
+        } catch (ResponseStatusException ex){
+            logger.error("Cannot fetch quiz list." + ExceptionUtils.getStackTrace(ex));
+            throw ex;
+        } catch (Exception ex){
+            logger.error("Cannot fetch quiz list." + ExceptionUtils.getStackTrace(ex));
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Cannot fetch quiz list", ex);
+        }
+    }
 }

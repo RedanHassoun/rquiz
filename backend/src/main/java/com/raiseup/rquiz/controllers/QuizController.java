@@ -83,10 +83,10 @@ public class QuizController {
             return new ArrayList<>(this.quizService.readAll(isPublic, size, page));
 
         } catch (ResponseStatusException ex){
-            logger.error("Cannot fetch quiz list." + ex.toString());
+            logger.error("Cannot fetch quiz list." + ExceptionUtils.getStackTrace(ex));
             throw ex;
         } catch (Exception ex){
-            logger.error("Cannot fetch quiz list." + ex.toString());
+            logger.error("Cannot fetch quiz list." + ExceptionUtils.getStackTrace(ex));
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cannot fetch quiz list", ex);
         }
@@ -117,10 +117,10 @@ public class QuizController {
 
             return quizOptional.get();
         } catch (ResponseStatusException ex){
-            logger.error("Cannot get quiz. " + ex.toString());
+            logger.error("Cannot get quiz. " + ExceptionUtils.getStackTrace(ex));
             throw ex;
         } catch (Exception ex){
-            logger.error("Cannot get quiz. " + ex.toString());
+            logger.error("Cannot get quiz. " + ExceptionUtils.getStackTrace(ex));
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cannot get quiz object", ex);
         }

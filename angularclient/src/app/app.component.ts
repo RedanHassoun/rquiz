@@ -16,7 +16,8 @@ export class AppComponent {
   appPages = new Map<string, string>([
     ['home', 'Home'],
     ['profile', 'My profile'],
-    [ 'myquizlist', 'My Quiz List' ],
+    ['myquizlist', 'My Quiz List'],
+    ['myassignedquizlist', 'Assigned To Me'],
     ['users', 'Users'],
     ['logout', 'Logout']
   ]);
@@ -47,6 +48,9 @@ export class AppComponent {
         break;
       case 'myquizlist':
         this.router.navigate(['myquizlist'], { replaceUrl: true });
+        break;
+      case 'myassignedquizlist':
+        this.router.navigate(['myassignedquizlist'], { replaceUrl: true });
         break;
       case 'users':
         this.router.navigate(['users'], { replaceUrl: true });

@@ -41,4 +41,15 @@ public class AppUtils {
 
         return paramsMap;
     }
+
+    public static boolean isPaginationParamsValid(Integer page, Integer size)
+    {
+        if(page == null && size == null)
+            return true;
+
+        if(page != null && size != null)
+            return true;
+
+        return false;
+    }
 }
