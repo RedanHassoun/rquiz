@@ -1,7 +1,6 @@
 <!-- Bootstrap -->
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-
 <div class="container list-article">
   <div class="row">
     <div *ngFor="let quiz of quizList" class="col-xs-12 article-wrapper">
@@ -9,6 +8,4 @@
     </div>
   </div>
 </div>
-<app-pageable [pagingStrategy]='pagingStrategy' 
-              (dataListChanged)="quizListChanged($event)">
-</app-pageable>
+<app-pageable [pagingStrategy]='pagingStrategy' (dataListChanged)="quizListChanged($event)"> </app-pageable>

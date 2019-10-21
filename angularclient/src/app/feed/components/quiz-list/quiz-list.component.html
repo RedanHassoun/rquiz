@@ -11,16 +11,7 @@
 <div class="container list-article">
   <div class="row">
     <div *ngFor="let quiz of quizList" class="col-xs-12 article-wrapper">
-      <article>
-        <a (click)="showQuiz(quiz.id)" class="more">Show</a>
-        <div class="img-wrapper"><img src={{quiz.imageUrl}} alt="" /></div>
-        <h1>{{quiz.title}}</h1>
-        <p>{{ quiz.description }}</p>
-        <div>
-          <mat-icon svgIcon="done"></mat-icon> {{ quiz.numberOfCorrectAnswers }}
-          <mat-icon svgIcon="clear"></mat-icon> {{ quiz.totalNumberOfAnswers - quiz.numberOfCorrectAnswers }}
-        </div>
-      </article>
+      <app-quiz-item [quiz]="quiz"></app-quiz-item>
     </div>
   </div>
 </div>

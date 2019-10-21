@@ -1,0 +1,10 @@
+<article>
+  <a (click)="showQuiz(quiz.id)" class="more">Show</a>
+  <div class="img-wrapper"><img src={{getQuizImage()}} alt="" /></div>
+  <h1>{{quiz.title}}</h1>
+  <p>{{ quiz.description }}</p>
+  <div>
+    <mat-icon svgIcon="done"></mat-icon> {{ quiz.numberOfCorrectAnswers }}
+    <mat-icon svgIcon="clear"></mat-icon> {{ quiz.totalNumberOfAnswers - quiz.numberOfCorrectAnswers }}
+  </div>
+</article>
