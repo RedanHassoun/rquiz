@@ -1,9 +1,9 @@
-import { QuizAnswer } from './../../../shared/models/quiz-answer';
-import { AppUtil } from './../../../shared/util/app-util';
-import { Quiz } from './../../../shared/models/quiz';
+import { QuizAnswer } from '../../models/quiz-answer';
+import { AppUtil } from '../../util/app-util';
+import { Quiz } from '../../models/quiz';
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
-import { QuizService } from '../../services/quiz.service';
+import { QuizService } from '../../../feed/services/quiz.service';
 import { Subscription } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
 

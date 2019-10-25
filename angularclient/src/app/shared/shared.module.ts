@@ -13,16 +13,18 @@ import {MatButtonModule} from '@angular/material/button';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import { ShowQuizComponent } from '../feed/components/show-quiz/show-quiz.component';
+import { ShowQuizComponent } from './components/show-quiz/show-quiz.component';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { QuizItemComponent } from './components/quiz-item/quiz-item.component';
 
 @NgModule({
   declarations: [
   ConfirmationDialogComponent,
   CreateQuizComponent,
-  ShowQuizComponent],
+  ShowQuizComponent,
+  QuizItemComponent],
   imports: [
     CommonModule,
     AppJwtModule,

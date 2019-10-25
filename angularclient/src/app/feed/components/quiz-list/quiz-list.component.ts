@@ -1,5 +1,5 @@
 import { PagingDataFetchStrategy } from './../../../core/strategies/paging-data-fetch-strategy';
-import { ShowQuizComponent } from './../show-quiz/show-quiz.component';
+import { ShowQuizComponent } from '../../../shared/components/show-quiz/show-quiz.component';
 import { AppUtil } from './../../../shared/util/app-util';
 import { CreateQuizComponent } from '../../../shared/components/create-quiz/create-quiz.component';
 import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
