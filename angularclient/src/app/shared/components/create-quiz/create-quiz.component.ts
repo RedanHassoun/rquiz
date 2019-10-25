@@ -1,3 +1,5 @@
+import { ImageSnippet } from './../../models/image-snippet';
+import { FileUploaderService } from './../../services/file-uploader.service';
 import { UserService } from './../../../core/services/user-service.service';
 import { User } from './../../models/user';
 import { AppUtil } from './../../util/app-util';
@@ -8,7 +10,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { Quiz } from '../../models/quiz';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { QuizAnswer } from '../../models/quiz-answer';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
 @Component({
@@ -28,7 +30,8 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
   constructor(private quizService: QuizService,
     private authenticationService: AuthenticationService,
     private dialogRef: MatDialogRef<CreateQuizComponent>,
-    private userService: UserService) { }
+    private userService: UserService,
+    private fileUploaderService: FileUploaderService) { }
 
   async ngOnInit() {
     this.quiz = new Quiz();

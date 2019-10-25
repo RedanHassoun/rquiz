@@ -18,6 +18,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { QuizItemComponent } from './components/quiz-item/quiz-item.component';
+import * as firebase from 'firebase/app';
+import { firebaseConfig } from './../config/firebase-config';
 
 @NgModule({
   declarations: [
@@ -67,4 +69,9 @@ import { QuizItemComponent } from './components/quiz-item/quiz-item.component';
     ShowQuizComponent
   ]
 })
-export class SharedModule { }
+export class SharedModule {
+  constructor() {
+    console.log('conffff', JSON.stringify(firebaseConfig));
+    firebase.initializeApp(firebaseConfig);
+  }
+}

@@ -76,6 +76,12 @@
         <mat-divider></mat-divider>
     </mat-list>
 
+    <label class="image-upload-container btn btn-bwm">
+        <span>Select Image</span>
+        <input #imageInput type="file" accept="image/*" (change)="fileUploaderService.processFile(imageInput)">
+    </label>
+
+
     <br />
     <hr />
 
