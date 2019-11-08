@@ -47,13 +47,6 @@ export class QuizListComponent implements OnInit, OnDestroy {
     );
   }
 
-  showQuiz(quizId: string): void {
-    this.subscriptions.push(
-      this.navigationService.openDialog(ShowQuizComponent, undefined, quizId)
-        .subscribe()
-    );
-  }
-
   quizListChanged(newQuizList: Quiz[]) {
     this.quizList = _.concat(this.quizList, newQuizList);
   }

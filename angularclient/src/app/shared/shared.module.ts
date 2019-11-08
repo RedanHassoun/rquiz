@@ -61,7 +61,8 @@ import { QuizItemComponent } from './components/quiz-item/quiz-item.component';
     MatButtonModule,
     MatCheckboxModule,
     MatTooltipModule,
-    NgMultiSelectDropDownModule
+    NgMultiSelectDropDownModule,
+    QuizItemComponent
   ]
 })
 export class SharedModule {}
