@@ -26,7 +26,7 @@ const routes: Routes = [
   declarations: [
   ],
   imports: [
-    RouterModule.forRoot(routes /* , {useHash: true}  TODO: check if need to use this */ )
+    RouterModule.forRoot(routes, { useHash: true })
   ],
   exports: [RouterModule]
 })
