@@ -19,7 +19,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 })
 export class QuizListComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
-  private quizList: Quiz[] = [];
+  public quizList: Quiz[] = [];
   pagingStrategy: PagingDataFetchStrategy;
 
   constructor(private quizService: QuizService,

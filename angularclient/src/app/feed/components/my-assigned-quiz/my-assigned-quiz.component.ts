@@ -14,8 +14,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./my-assigned-quiz.component.scss']
 })
 export class MyAssignedQuizComponent implements OnInit {
-  private quizList: Quiz[] = [];
-  private pagingStrategy: PagingDataFetchStrategy;
+  public quizList: Quiz[] = [];
+  public pagingStrategy: PagingDataFetchStrategy;
 
   constructor(private userService: UserService,
               private navigationService: NavigationHelperService,

@@ -9,12 +9,6 @@ import { MyQuizListComponent } from './components/my-quiz-list/my-quiz-list.comp
 import { MyAssignedQuizComponent } from './components/my-assigned-quiz/my-assigned-quiz.component';
 
 @NgModule({
-  declarations: [
-    QuizListComponent,
-    ShowQuizComponent,
-    MyQuizListComponent,
-    MyAssignedQuizComponent
-  ],
   imports: [
     CommonModule,
     CoreModule,

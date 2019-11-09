@@ -17,7 +17,7 @@ import { Observable } from 'rxjs';
 export class QuizService extends ClientDataServiceService {
   public static readonly PAGE_SIZE = 15;
   constructor(public http: HttpClient, private authenticationService: AuthenticationService) {
-    super(`${AppConsts.BASE_URL}/v1/quiz/`, http);
+    super(`${AppConsts.BASE_URL}/api/v1/quiz/`, http);
   }
 
   getAllByPublic(isPublic: boolean, page: number) {

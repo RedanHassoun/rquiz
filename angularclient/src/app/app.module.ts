@@ -1,3 +1,4 @@
+import { ShowQuizComponent } from './shared/components/show-quiz/show-quiz.component';
 import { MyAssignedQuizComponent } from './feed/components/my-assigned-quiz/my-assigned-quiz.component';
 import { MyQuizListComponent } from './feed/components/my-quiz-list/my-quiz-list.component';
 import { QuizListComponent } from './feed/components/quiz-list/quiz-list.component';
@@ -18,8 +19,8 @@ import { AppJwtModule } from './app-jwt/app-jwt.module';
     AppComponent,
     LoginComponent,
     NotFoundComponent,
-    QuizListComponent, // TODO: check the lazy loading issue
-    MyQuizListComponent,
+    QuizListComponent,
+    MyQuizListComponent, // TODO: check the lazy loading issue
     MyAssignedQuizComponent
   ],
   imports: [

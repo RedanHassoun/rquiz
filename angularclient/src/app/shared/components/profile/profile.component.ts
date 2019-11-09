@@ -13,8 +13,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  private user: User;
-  private isCurrUser: boolean;
+  public user: User;
+  public isCurrUser: boolean;
 
   constructor(private route: ActivatedRoute,
     private usersService: UserService,

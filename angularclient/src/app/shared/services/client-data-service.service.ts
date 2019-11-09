@@ -6,9 +6,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
 export class ClientDataServiceService {
   constructor(public url: string, public http: HttpClient) {
   }

@@ -15,8 +15,8 @@ import * as _ from 'lodash';
 })
 export class MyQuizListComponent implements OnInit {
 
-  private quizList: Quiz[] = [];
-  private pagingStrategy: PagingDataFetchStrategy;
+  public quizList: Quiz[] = [];
+  public pagingStrategy: PagingDataFetchStrategy;
 
   constructor(private userService: UserService,
               private navigationService: NavigationHelperService,
