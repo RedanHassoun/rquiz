@@ -6,7 +6,6 @@ import com.raiseup.rquiz.models.Quiz;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import com.raiseup.rquiz.services.QuizService;
 import com.raiseup.rquiz.services.UserService;
-import javafx.util.Pair;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +86,8 @@ public class UserController {
                         HttpStatus.BAD_REQUEST, "In order to use pagination you must provide both page and size");
             }
 
-            HashMap<String, Object> queryParams = AppUtils.createQueryParametersMap(new Pair<>("creatorId", userId));
+            HashMap<String, Object> queryParams = new HashMap<>();
+            queryParams.put("creatorId", userId);
             return new ArrayList<>(this.quizService.readAll(queryParams, size, page));
         } catch (ResponseStatusException ex){
             logger.error("Cannot fetch quiz list." + ExceptionUtils.getStackTrace(ex));
