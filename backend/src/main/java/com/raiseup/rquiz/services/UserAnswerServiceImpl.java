@@ -1,8 +1,7 @@
 package com.raiseup.rquiz.services;
 
-import com.raiseup.rquiz.exceptions.AnswerAlreadyExistException;
-import com.raiseup.rquiz.exceptions.QuizNotFoundException;
-import com.raiseup.rquiz.exceptions.UserNotFoundException;
+import com.raiseup.rquiz.common.AppUtils;
+import com.raiseup.rquiz.exceptions.*;
 import com.raiseup.rquiz.models.User;
 import com.raiseup.rquiz.models.Quiz;
 import com.raiseup.rquiz.models.QuizAnswer;
@@ -35,14 +34,12 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     @Override
     @Transactional
     public UserAnswer create(String quizId, String userId, QuizAnswer quizAnswer)
-                                                     throws QuizNotFoundException,
-                                                            UserNotFoundException,
-                                                            AnswerAlreadyExistException{
+                                                     throws AppException {
         if(quizId == null || userId == null || quizAnswer == null){
             final String errorMsg = String.format("Bad input: quizId=%s, userId=%s, userAnswer=%s",
                                             quizId,
                                             userId,
-                                            quizAnswer.toString());
+                                            AppUtils.toStringNullSafe(quizAnswer));
             this.logger.error(errorMsg);
             throw new NullPointerException(errorMsg);
         }
@@ -58,18 +55,22 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
         Optional<Quiz> quiz = this.quizRepository.findById(quizId);
         if(!quiz.isPresent()){
-            final String errorMsg = String.format("Quiz %s was not found", quizId);
-            this.logger.error(errorMsg);
-            throw new QuizNotFoundException(errorMsg);
+            AppUtils.throwAndLogException(
+                    new QuizNotFoundException(
+                            String.format("Quiz %s was not found", quizId)));
+        }
+
+        if(quiz.get().getCreatorId().equals(userId)) {
+            AppUtils.throwAndLogException(
+                    new IllegalOperationException("Cannot solve an owned quiz"));
         }
 
         userAnswer.setQuiz(quiz.get());
 
         Optional<User> user = this.applicationUserRepository.findById(userId);
         if(!user.isPresent()){
-            final String errorMsg = String.format("user %s was not found", userId);
-            this.logger.error(errorMsg);
-            throw new UserNotFoundException(errorMsg);
+            AppUtils.throwAndLogException(
+                    new UserNotFoundException(String.format("user %s was not found", userId)));
         }
 
         userAnswer.setUser(user.get());

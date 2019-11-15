@@ -6,6 +6,8 @@ import { MAT_DIALOG_DATA } from '@angular/material';
 import { QuizService } from '../../../feed/services/quiz.service';
 import { Subscription } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
+import { AuthenticationService } from 'src/app/core/services/authentication.service';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-show-quiz',
@@ -17,12 +19,14 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
   quiz: Quiz;
   selectedAnswerId: string;
   isAlreadyAnswered: boolean;
+  currentUser: User;
 
   constructor(@Inject(MAT_DIALOG_DATA) public quizId: string,
     private quizService: QuizService,
+    private authenticationService :AuthenticationService,
     private dialogRef: MatDialogRef<ShowQuizComponent>) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.subscriptions.push(
       this.quizService.get(this.quizId)
         .subscribe((res: Quiz) => {
@@ -32,6 +36,8 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
           AppUtil.showError(err);
         })
     );
+
+    this.currentUser = await this.authenticationService.getCurrentUser();
   }
 
   ngOnDestroy(): void {
@@ -40,6 +46,15 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
 
   async checkIfQuizAlreadyAnswered(quiz: Quiz): Promise<void> {
     this.isAlreadyAnswered = await this.quizService.isAlreadyAnswered(quiz);
+  }
+
+  shouldHideSolveButton(): boolean {
+    if ( (this.isAlreadyAnswered && this.isAlreadyAnswered === true) ||
+          (!this.currentUser || this.currentUser.id === this.quiz.creatorId)) {
+      return true;
+    }
+
+    return false;
   }
 
   async solve(): Promise<void> {

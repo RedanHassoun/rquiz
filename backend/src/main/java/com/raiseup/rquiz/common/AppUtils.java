@@ -2,11 +2,15 @@ package com.raiseup.rquiz.common;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.raiseup.rquiz.exceptions.AppException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 
 public class AppUtils {
+    private static Logger logger = LoggerFactory.getLogger(AppUtils.class);
+
     public static String getUserIdFromAuthorizationHeader(String authorization){
         if(authorization == null){
             throw new NullPointerException("Authorization string cannot be null");
@@ -35,5 +39,17 @@ public class AppUtils {
             return true;
 
         return false;
+    }
+
+    public static String toStringNullSafe(Object object) {
+        if(object == null){
+            return null;
+        }
+        return object.toString();
+    }
+
+    public static void throwAndLogException(AppException exceptionToThrow) throws AppException {
+        logger.error(exceptionToThrow.getMessage());
+        throw exceptionToThrow;
     }
 }
