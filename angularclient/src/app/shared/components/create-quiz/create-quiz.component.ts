@@ -1,3 +1,5 @@
+import { AppNotificationMessage } from './../../../core/model/socket-consts';
+import { NotificationService } from './../../../core/services/notification.service';
 import { UserService } from './../../../core/services/user-service.service';
 import { User } from './../../models/user';
 import { AppUtil } from './../../util/app-util';
@@ -10,6 +12,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { QuizAnswer } from '../../models/quiz-answer';
 import { Subscription } from 'rxjs';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { AppConsts } from '../../util';
 
 @Component({
   selector: 'app-create-quiz',
@@ -28,7 +31,8 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
   constructor(private quizService: QuizService,
     private authenticationService: AuthenticationService,
     private dialogRef: MatDialogRef<CreateQuizComponent>,
-    private userService: UserService) { }
+    private userService: UserService,
+    private notificationService: NotificationService) { }
 
   async ngOnInit() {
     this.quiz = new Quiz();
@@ -97,6 +101,8 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.quizService.create(this.quiz)
         .subscribe(result => {
+          const addedQuiz = new AppNotificationMessage(JSON.stringify(result));
+          this.notificationService.send(AppConsts.TOPIC_QUIZ_LIST_UPDATE, addedQuiz);
           this.dialogRef.close();
         }, (err) => {
           AppUtil.showError(err);
