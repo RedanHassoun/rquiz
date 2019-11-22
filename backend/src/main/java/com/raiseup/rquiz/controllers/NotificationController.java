@@ -15,7 +15,7 @@ public class NotificationController {
     @MessageMapping("/quiz-list-update")
     @SendTo("/topic/quiz-list-update")
     public AppNotificationMessage quizListUpdate(AppNotificationMessage message) {
-        this.logger.debug(String.format("Received message: %s on 'quiz-list-update' socket topic",
+        this.logger.debug(String.format("Received socket message: %s on topic: 'quiz-list-update'",
                 message.content));
         return message;
     }
