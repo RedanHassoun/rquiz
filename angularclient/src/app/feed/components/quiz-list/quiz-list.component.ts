@@ -46,7 +46,10 @@ export class QuizListComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.notificationService.onMessage(AppConsts.TOPIC_QUIZ_LIST_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
-          console.log('added:', message.content);
+          if (message && message.content) {
+            const quiz: Quiz = JSON.parse(message.content);
+            this.quizList.unshift(quiz);
+          }
         })
     );
   }
