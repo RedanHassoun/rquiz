@@ -28,7 +28,7 @@ export class NotificationService implements OnDestroy {
       .pipe(first())
       .pipe(switchMap((client: Stomp.Client) => {
         const that = this;
-        return new Observable<any>((observer) => {
+        return Observable.create((observer) => {
           const subscription: Stomp.Subscription = client.subscribe(`/topic${topic}`, (message) => {
             observer.next(messageHandler(message));
             return () => client.unsubscribe(subscription.id);
