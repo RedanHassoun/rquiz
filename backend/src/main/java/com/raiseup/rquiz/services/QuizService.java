@@ -1,6 +1,6 @@
 package com.raiseup.rquiz.services;
 
-import com.raiseup.rquiz.models.Quiz;
+import com.raiseup.rquiz.models.db.Quiz;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Optional;

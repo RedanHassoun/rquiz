@@ -1,8 +1,8 @@
 package com.raiseup.rquiz;
 
-import com.raiseup.rquiz.models.User;
-import com.raiseup.rquiz.models.Quiz;
-import com.raiseup.rquiz.models.QuizAnswer;
+import com.raiseup.rquiz.models.db.User;
+import com.raiseup.rquiz.models.db.Quiz;
+import com.raiseup.rquiz.models.db.QuizAnswer;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import com.raiseup.rquiz.services.QuizService;
 import com.raiseup.rquiz.services.UserService;
@@ -12,7 +12,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.stream.Stream;
 
 @SpringBootApplication
@@ -24,11 +23,6 @@ public class DemoApplication
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
-	}
-
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
 	}
 
 	@Bean

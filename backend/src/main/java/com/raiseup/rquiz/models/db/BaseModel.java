@@ -1,4 +1,4 @@
-package com.raiseup.rquiz.models;
+package com.raiseup.rquiz.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

@@ -1,4 +1,4 @@
-package com.raiseup.rquiz.models;
+package com.raiseup.rquiz.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.raiseup.rquiz.common.AppConstants.*;

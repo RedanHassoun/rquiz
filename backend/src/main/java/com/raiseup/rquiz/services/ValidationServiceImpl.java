@@ -1,8 +1,8 @@
 package com.raiseup.rquiz.services;
 
-import com.raiseup.rquiz.models.BaseModel;
-import com.raiseup.rquiz.models.Quiz;
-import com.raiseup.rquiz.models.QuizAnswer;
+import com.raiseup.rquiz.models.db.BaseModel;
+import com.raiseup.rquiz.models.db.Quiz;
+import com.raiseup.rquiz.models.db.QuizAnswer;
 import org.springframework.stereotype.Service;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

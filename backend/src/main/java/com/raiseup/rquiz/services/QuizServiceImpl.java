@@ -1,7 +1,7 @@
 package com.raiseup.rquiz.services;
 
-import com.raiseup.rquiz.models.Quiz;
-import com.raiseup.rquiz.models.UserAnswer;
+import com.raiseup.rquiz.models.db.Quiz;
+import com.raiseup.rquiz.models.db.UserAnswer;
 import com.raiseup.rquiz.repo.QuizRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

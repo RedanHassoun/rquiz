@@ -1,8 +1,8 @@
 package com.raiseup.rquiz.controllers;
 
 import com.raiseup.rquiz.common.AppUtils;
-import com.raiseup.rquiz.models.User;
-import com.raiseup.rquiz.models.Quiz;
+import com.raiseup.rquiz.models.db.User;
+import com.raiseup.rquiz.models.db.Quiz;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import com.raiseup.rquiz.services.QuizService;
 import com.raiseup.rquiz.services.UserService;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.*;
 import java.util.stream.Collectors;
 

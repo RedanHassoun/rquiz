@@ -1,9 +1,8 @@
 package com.raiseup.rquiz.services;
 
-import com.raiseup.rquiz.models.BaseModel;
-import com.raiseup.rquiz.models.Quiz;
-import com.raiseup.rquiz.models.QuizAnswer;
-import com.raiseup.rquiz.models.UserAnswer;
+import com.raiseup.rquiz.models.db.BaseModel;
+import com.raiseup.rquiz.models.db.Quiz;
+import com.raiseup.rquiz.models.db.QuizAnswer;
 
 import java.util.List;
 import java.util.Optional;

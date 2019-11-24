@@ -1,11 +1,8 @@
 package com.raiseup.rquiz.services;
 
-import com.raiseup.rquiz.exceptions.AnswerAlreadyExistException;
 import com.raiseup.rquiz.exceptions.AppException;
-import com.raiseup.rquiz.exceptions.QuizNotFoundException;
-import com.raiseup.rquiz.exceptions.UserNotFoundException;
-import com.raiseup.rquiz.models.QuizAnswer;
-import com.raiseup.rquiz.models.UserAnswer;
+import com.raiseup.rquiz.models.db.QuizAnswer;
+import com.raiseup.rquiz.models.db.UserAnswer;
 import java.util.List;
 import java.util.Optional;
 

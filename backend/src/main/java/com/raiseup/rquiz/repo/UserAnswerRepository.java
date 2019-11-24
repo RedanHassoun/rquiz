@@ -1,6 +1,6 @@
 package com.raiseup.rquiz.repo;
 
-import com.raiseup.rquiz.models.UserAnswer;
+import com.raiseup.rquiz.models.db.UserAnswer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

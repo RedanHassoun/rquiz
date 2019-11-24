@@ -1,6 +1,6 @@
 package com.raiseup.rquiz.services;
 
-import com.raiseup.rquiz.models.User;
+import com.raiseup.rquiz.models.db.User;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;

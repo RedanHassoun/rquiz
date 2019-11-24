@@ -1,6 +1,6 @@
 package com.raiseup.rquiz.services;
 
-import com.raiseup.rquiz.models.User;
+import com.raiseup.rquiz.models.db.User;
 import java.util.Collection;
 import java.util.Optional;
 

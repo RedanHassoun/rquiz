@@ -1,7 +1,7 @@
 package com.raiseup.rquiz.security;
 
 import com.auth0.jwt.JWT;
-import com.raiseup.rquiz.models.User;
+import com.raiseup.rquiz.models.db.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import org.json.JSONObject;

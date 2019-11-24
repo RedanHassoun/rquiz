@@ -64,7 +64,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         CorsConfiguration configuration = new CorsConfiguration();
         // This Origin header you can see that in Network tab
         configuration.setAllowedOrigins(Arrays.asList(this.serverAddress, this.clientAddress));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("content-type", "Authorization"));
         configuration.setAllowCredentials(true);
 
