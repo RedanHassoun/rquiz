@@ -3,6 +3,7 @@ package com.raiseup.rquiz.common;
 import com.raiseup.rquiz.models.QuizAnswerDto;
 import com.raiseup.rquiz.models.QuizDto;
 import com.raiseup.rquiz.models.UserAnswerDto;
+import com.raiseup.rquiz.models.UserDto;
 import com.raiseup.rquiz.models.db.Quiz;
 import com.raiseup.rquiz.models.db.QuizAnswer;
 import com.raiseup.rquiz.models.db.User;
@@ -10,7 +11,9 @@ import com.raiseup.rquiz.models.db.UserAnswer;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class DtoMapper {
@@ -36,6 +39,15 @@ public class DtoMapper {
 
     public Quiz convertQuizDtoToEntity(QuizDto quizDto) {
         Quiz quiz = this.modelMapper.map(quizDto, Quiz.class);
+        Set<QuizAnswerDto> quizAnswersDto = quizDto.getAnswers();
+        List<QuizAnswer> quizAnswers = quizAnswersDto.stream()
+                .map(quizAnswerDto -> this.convertQuizAnswerDtoToEntity(quizAnswerDto))
+                .collect(Collectors.toList());
+
+        for(QuizAnswer quizAnswer : quizAnswers) {
+            quiz.addQuizAnswer(quizAnswer);
+        }
+        
         return quiz;
     }
 
@@ -78,5 +90,15 @@ public class DtoMapper {
         userAnswer.setQuizAnswer(quizAnswer);
 
         return userAnswer;
+    }
+
+    public UserDto convertUserToDto(User user){
+        UserDto userDto = this.modelMapper.map(user, UserDto.class);
+        userDto.setPassword(null);
+        return userDto;
+    }
+
+    public User convertUserDtoToEntity(UserDto userDto){
+        return this.modelMapper.map(userDto, User.class);
     }
 }

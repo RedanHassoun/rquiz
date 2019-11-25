@@ -1,6 +1,9 @@
 package com.raiseup.rquiz.controllers;
 
 import com.raiseup.rquiz.common.AppUtils;
+import com.raiseup.rquiz.common.DtoMapper;
+import com.raiseup.rquiz.models.QuizDto;
+import com.raiseup.rquiz.models.UserDto;
 import com.raiseup.rquiz.models.db.User;
 import com.raiseup.rquiz.models.db.Quiz;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
@@ -26,26 +29,27 @@ public class UserController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private UserService usersService;
     private QuizService quizService;
+    private DtoMapper dtoMapper;
 
     public UserController(ApplicationUserRepository applicationUserRepository,
                           BCryptPasswordEncoder bCryptPasswordEncoder,
                           UserService usersService,
-                          QuizService quizService) {
+                          QuizService quizService,
+                          DtoMapper dtoMapper) {
         this.applicationUserRepository = applicationUserRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.usersService = usersService;
         this.quizService = quizService;
+        this.dtoMapper = dtoMapper;
     }
 
     @GetMapping("/all")
-    public List<User> getUsers(){
+    public List<UserDto> getUsers(){
         try{
             return this.usersService.readAll()
                     .stream()
-                    .map(user -> {
-                        user.setPassword(null);
-                        return user;
-                    }).collect(Collectors.toList());
+                    .map(user -> this.dtoMapper.convertUserToDto(user))
+                    .collect(Collectors.toList());
         }catch (Exception ex){
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cant fetch users list", ex);
@@ -53,7 +57,7 @@ public class UserController {
     }
 
     @GetMapping("{id}")
-    public User getUser(@PathVariable("id") String id){
+    public UserDto getUser(@PathVariable("id") String id){
         if (id ==  null){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "User id should not be null");
@@ -64,18 +68,19 @@ public class UserController {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "User not found");
         }
-        return res.get();
+        return this.dtoMapper.convertUserToDto(res.get());
     }
 
     @PostMapping("/sign-up")
-    public void signUp(@RequestBody User user) {
+    public void signUp(@RequestBody UserDto userDto) {
+        User user = this.dtoMapper.convertUserDtoToEntity(userDto);
         this.usersService.create(user);
     }
 
     @GetMapping("/{userId}/quiz")
-    public List<Quiz> getQuizList(@PathVariable("userId") String userId,
-                                  @RequestParam(required = false) Integer page,
-                                  @RequestParam(required = false) Integer size){
+    public List<QuizDto> getUserQuizList(@PathVariable("userId") String userId,
+                                     @RequestParam(required = false) Integer page,
+                                     @RequestParam(required = false) Integer size){
         try{
             this.logger.debug(String.format("Getting all quiz list for user: %s. page: %d size: %d",
                                             userId, page, size));
@@ -87,7 +92,10 @@ public class UserController {
 
             HashMap<String, Object> queryParams = new HashMap<>();
             queryParams.put("creatorId", userId);
-            return new ArrayList<>(this.quizService.readAll(queryParams, size, page));
+            return this.quizService.readAll(queryParams, size, page)
+                    .stream()
+                    .map(quiz -> this.dtoMapper.convertQuizToDto(quiz))
+                    .collect(Collectors.toList());
         } catch (ResponseStatusException ex){
             logger.error("Cannot fetch quiz list." + ExceptionUtils.getStackTrace(ex));
             throw ex;
@@ -99,7 +107,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/assignedQuiz")
-    public List<Quiz> getAssignedQuizList(@PathVariable("userId") String userId,
+    public List<QuizDto> getUserAssignedQuizList(@PathVariable("userId") String userId,
                                   @RequestParam(required = false) Integer page,
                                   @RequestParam(required = false) Integer size){
         try{
@@ -111,12 +119,10 @@ public class UserController {
                         HttpStatus.BAD_REQUEST, "In order to use pagination you must provide both page and size");
             }
 
-            List<Quiz> res = this.quizService.readAllAssignedToUser(userId,size,page)
+            List<QuizDto> res = this.quizService.readAllAssignedToUser(userId,size,page)
                     .stream()
-                    .map(quiz -> {
-                        quiz.setAssignedUsers(null);
-                        return quiz;
-                    }).collect(Collectors.toList());
+                    .map(quiz -> this.dtoMapper.convertQuizToDto(quiz))
+                    .collect(Collectors.toList());
 
             this.logger.debug(String.format("Returning %d quiz for user: %s", res.size(), userId));
 

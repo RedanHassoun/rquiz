@@ -14,6 +14,14 @@ public class QuizDto {
     private Integer totalNumberOfAnswers;
     private Set<QuizAnswerDto> answers = new HashSet<>();
 
+    public Boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
     public Set<QuizAnswerDto> getAnswers() {
         return answers;
     }
@@ -52,14 +60,6 @@ public class QuizDto {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public Boolean getPublic() {
-        return isPublic;
-    }
-
-    public void setPublic(Boolean aPublic) {
-        isPublic = aPublic;
     }
 
     public String getCreatorId() {

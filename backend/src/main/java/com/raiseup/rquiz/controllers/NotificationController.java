@@ -20,4 +20,11 @@ public class NotificationController {
         return message;
     }
 
+    @MessageMapping("/quiz-answers-update")
+    @SendTo("/topic/quiz-answers-update")
+    public AppNotificationMessage quizAnswersUpdate(AppNotificationMessage message) {
+        this.logger.debug(String.format("Received socket message: %s on topic: 'quiz-answers-update'",
+                message.content));
+        return message;
+    }
 }
