@@ -10,7 +10,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
   templateUrl: './quiz-item.component.html',
   styleUrls: ['./quiz-item.component.scss']
 })
-export class QuizItemComponent implements OnInit {
+export class QuizItemComponent implements OnInit, OnDestroy {
   @Input() public quiz: Quiz;
   private subscriptions: Subscription[] = [];
 

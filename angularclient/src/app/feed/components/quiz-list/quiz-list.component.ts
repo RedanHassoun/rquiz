@@ -10,8 +10,7 @@ import * as _ from 'lodash';
 import { ParameterFetchingStrategy } from 'src/app/core/strategies/parameter-fetching-strategy';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { AppConsts } from 'src/app/shared/util';
-import { AppNotificationMessage } from './../../../core/model/socket-consts';
+import { AppNotificationMessage, TOPIC_QUIZ_LIST_UPDATE, TOPIC_QUIZ_ANSWERS_UPDATE } from './../../../core/model/socket-consts';
 import { NotificationService } from './../../../core/services/notification.service';
 
 @Component({
@@ -44,14 +43,39 @@ export class QuizListComponent implements OnInit, OnDestroy {
       QuizService.PAGE_SIZE);
 
     this.subscriptions.push(
-      this.notificationService.onMessage(AppConsts.TOPIC_QUIZ_LIST_UPDATE)
+      this.notificationService.onMessage(TOPIC_QUIZ_LIST_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
-          if (message && message.content) {
-            const quiz: Quiz = JSON.parse(message.content);
-            this.quizList.unshift(quiz);
-          }
+          this.handleQuizListUpdate(message);
         })
     );
+
+    this.subscriptions.push(
+      this.notificationService.onMessage(TOPIC_QUIZ_ANSWERS_UPDATE)
+        .subscribe((message: AppNotificationMessage) => {
+          this.handleQuizAnswersUpdate(message);
+        })
+    );
+  }
+
+  private handleQuizListUpdate(message: AppNotificationMessage): void {
+    if (!message || !message.content) {
+      return;
+    }
+    const quiz: Quiz = JSON.parse(message.content);
+    this.quizList.unshift(quiz);
+  }
+
+  private handleQuizAnswersUpdate(message: AppNotificationMessage): void {
+    if (!message || !message.content) {
+      return;
+    }
+
+    const quiz: Quiz = JSON.parse(message.content);
+    const indexOfQuiz = this.quizList.findIndex(currQuiz => currQuiz.id === quiz.id);
+
+    if (indexOfQuiz !== -1) {
+      this.quizList[indexOfQuiz] = quiz;
+    }
   }
 
   openCreateQuizDialog() {

@@ -16,8 +16,15 @@ export function textHandler(message: StompMessage): string {
 }
 
 export class AppNotificationMessage {
-    content: any;
+    content: string;
     constructor(data: any) {
+        if (typeof data !== 'string') {
+            data = JSON.stringify(data);
+        }
+
         this.content = data;
     }
 }
+
+export const TOPIC_QUIZ_LIST_UPDATE = '/quiz-list-update';
+export const TOPIC_QUIZ_ANSWERS_UPDATE = '/quiz-answers-update';

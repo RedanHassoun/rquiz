@@ -1,3 +1,5 @@
+import { AppNotificationMessage } from './../../../core/model/socket-consts';
+import { NotificationService } from './../../../core/services/notification.service';
 import { QuizAnswer } from '../../models/quiz-answer';
 import { AppUtil } from '../../util/app-util';
 import { Quiz } from '../../models/quiz';
@@ -8,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { User } from '../../models/user';
+import { TOPIC_QUIZ_ANSWERS_UPDATE } from 'src/app/core/model/socket-consts';
 
 @Component({
   selector: 'app-show-quiz',
@@ -24,7 +27,8 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
   constructor(@Inject(MAT_DIALOG_DATA) public quizId: string,
     private quizService: QuizService,
     private authenticationService :AuthenticationService,
-    private dialogRef: MatDialogRef<ShowQuizComponent>) { }
+    private dialogRef: MatDialogRef<ShowQuizComponent>,
+    private notificationService: NotificationService) { }
 
   async ngOnInit() {
     this.subscriptions.push(
@@ -70,7 +74,9 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
     }
 
     this.quizService.solve(this.quiz.id, answer)
-      .subscribe(res => {
+      .subscribe(solvedQuiz => {
+        const solvedQuizNotification = new AppNotificationMessage(solvedQuiz);
+        this.notificationService.send(TOPIC_QUIZ_ANSWERS_UPDATE, solvedQuizNotification);
         this.dialogRef.close();
       }, err => {
         AppUtil.showError(err.toString());
