@@ -3,6 +3,7 @@ package com.raiseup.rquiz.controllers;
 import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.common.DtoMapper;
 import com.raiseup.rquiz.exceptions.AnswerAlreadyExistException;
+import com.raiseup.rquiz.exceptions.IllegalOperationException;
 import com.raiseup.rquiz.exceptions.QuizNotFoundException;
 import com.raiseup.rquiz.exceptions.UserNotFoundException;
 import com.raiseup.rquiz.models.QuizAnswerDto;
@@ -17,6 +18,7 @@ import com.raiseup.rquiz.services.ValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.*;
@@ -48,7 +50,7 @@ public class QuizController {
     @PostMapping(path = "",
                 consumes = "application/json",
                 produces = "application/json")
-    public QuizDto createQuiz(@RequestBody QuizDto quizDto) {
+    public ResponseEntity<QuizDto> createQuiz(@RequestBody QuizDto quizDto) {
         Quiz quiz = this.dtoMapper.convertQuizDtoToEntity(quizDto);
         this.logger.debug("Creating quiz: " + quiz.toString());
         try{
@@ -60,9 +62,9 @@ public class QuizController {
                         this.validationService.buildValidationMessage(validations.get()));
             }
 
-            // TODO : return status 201
             Quiz quizFromDB = this.quizService.create(quiz);
-            return this.dtoMapper.convertQuizToDto(quizFromDB);
+            QuizDto quizToReturn = this.dtoMapper.convertQuizToDto(quizFromDB);
+            return new ResponseEntity<>(quizToReturn, HttpStatus.CREATED);
         } catch (ResponseStatusException ex){
             logger.error("Cannot create quiz. " + ex.toString());
             throw ex;
@@ -149,7 +151,6 @@ public class QuizController {
                         this.validationService.buildValidationMessage(validations.get()));
             }
 
-            // TODO: need to check if the answer exists on the quiz
             String userId = AppUtils.getUserIdFromAuthorizationHeader(authorization);
             this.userAnswerService.create(quizId, userId, quizAnswer);
             Optional<Quiz> quizOptional = this.quizService.read(quizId);
@@ -161,8 +162,8 @@ public class QuizController {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     ex.getMessage());
-        } catch (AnswerAlreadyExistException ex){
-            final String errorMsg = "Quiz already answered.";
+        } catch (AnswerAlreadyExistException | IllegalOperationException ex){
+            final String errorMsg = String.format("Cannot add quiz answer, error: %s", ex.getMessage());
             this.logger.error(errorMsg);
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,

@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -73,5 +74,19 @@ public class QuizAnswer extends BaseModel{
 
     public void setUserAnswers(Set<UserAnswer> userAnswers) {
         this.userAnswers = userAnswers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        QuizAnswer that = (QuizAnswer) o;
+        return Objects.equals(getId().toLowerCase(), that.getId().toLowerCase()) &&
+                Objects.equals(getContent().toLowerCase(), that.getContent().toLowerCase());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getContent());
     }
 }

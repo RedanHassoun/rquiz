@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserAnswerServiceImpl implements UserAnswerService {
@@ -35,6 +36,7 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     @Transactional
     public UserAnswer create(String quizId, String userId, QuizAnswer quizAnswer)
                                                      throws AppException {
+        this.logger.debug(String.format("Adding answer for quiz: %s, user id: %s", quizId, userId));
         if(quizId == null || userId == null || quizAnswer == null){
             final String errorMsg = String.format("Bad input: quizId=%s, userId=%s, userAnswer=%s",
                                             quizId,
@@ -49,8 +51,7 @@ public class UserAnswerServiceImpl implements UserAnswerService {
             throw new AnswerAlreadyExistException("Answer already exist");
         }
 
-        UserAnswer userAnswer = new UserAnswer();
-
+        final UserAnswer userAnswer = new UserAnswer();
         userAnswer.setQuizAnswer(quizAnswer);
 
         Optional<Quiz> quiz = this.quizRepository.findById(quizId);
@@ -59,14 +60,9 @@ public class UserAnswerServiceImpl implements UserAnswerService {
                     new QuizNotFoundException(
                             String.format("Quiz %s was not found", quizId)));
         }
-
-        if(quiz.get().getCreatorId().equals(userId)) {
-            AppUtils.throwAndLogException(
-                    new IllegalOperationException("Cannot solve an owned quiz"));
-        }
+        this.validateAnswerIsSuitableForQuiz(quiz.get(), quizAnswer, userId);
 
         userAnswer.setQuiz(quiz.get());
-
         Optional<User> user = this.applicationUserRepository.findById(userId);
         if(!user.isPresent()){
             AppUtils.throwAndLogException(
@@ -74,9 +70,9 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         }
 
         userAnswer.setUser(user.get());
-
-        UserAnswer userAnswerResult = this.userAnswerRepository.save(userAnswer);
-        return userAnswerResult;
+        UserAnswer userAnswerFromDB = this.userAnswerRepository.save(userAnswer);
+        this.logger.debug(String.format("Created user answer: %s", userAnswerFromDB.getId()));
+        return userAnswerFromDB;
     }
 
     @Override
@@ -99,5 +95,21 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         }
 
         return Optional.of(correctCount);
+    }
+
+    private void validateAnswerIsSuitableForQuiz(Quiz quiz, QuizAnswer quizAnswer,
+                                            String userId) throws AppException {
+        Set<QuizAnswer> quizAnswerSet = quiz.getAnswers();
+        if(!quizAnswerSet.contains(quizAnswer)) {
+            AppUtils.throwAndLogException(
+                    new IllegalOperationException(
+                            String.format("Cannot perform operation because answer %s is not part of quiz %s",
+                                    quizAnswer.getId(), quiz.getId())));
+        }
+
+        if(quiz.getCreatorId().equals(userId)) {
+            AppUtils.throwAndLogException(
+                    new IllegalOperationException("Cannot solve an owned quiz"));
+        }
     }
 }
