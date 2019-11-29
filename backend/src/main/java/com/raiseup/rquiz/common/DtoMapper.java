@@ -94,7 +94,6 @@ public class DtoMapper {
 
     public UserDto convertUserToDto(User user){
         UserDto userDto = this.modelMapper.map(user, UserDto.class);
-        userDto.setPassword(null);
         return userDto;
     }
 

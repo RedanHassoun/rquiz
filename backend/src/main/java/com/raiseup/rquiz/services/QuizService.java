@@ -13,6 +13,6 @@ public interface QuizService {
     Collection<Quiz> readAll (Boolean isPublic, Integer size, Integer page);
     Collection<Quiz> readAll (HashMap<String, Object> filterParams, Integer size, Integer page);
     Collection<Quiz> readAllAssignedToUser (String userId, Integer size, Integer page);
-    void update (Quiz obj);
+    void update (Quiz obj) throws AppException;
     void delete (String id) throws AppException;
 }

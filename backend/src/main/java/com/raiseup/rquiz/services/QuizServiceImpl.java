@@ -1,6 +1,8 @@
 package com.raiseup.rquiz.services;
 
+import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.exceptions.AppException;
+import com.raiseup.rquiz.exceptions.IllegalOperationException;
 import com.raiseup.rquiz.exceptions.QuizNotFoundException;
 import com.raiseup.rquiz.models.db.Quiz;
 import com.raiseup.rquiz.models.db.UserAnswer;
@@ -106,8 +108,26 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     @Transactional
-    public void update(Quiz obj) {
+    public void update(Quiz quiz) throws AppException {
+        if(quiz == null) {
+            AppUtils.throwAndLogException(
+                    new IllegalOperationException("Cannot update quiz because it is not defined"));
+        }
 
+        if(quiz.getId() == null || quiz.getId().equals("")){
+            AppUtils.throwAndLogException(
+                    new IllegalOperationException("Cannot update quiz without id"));
+        }
+
+        Optional<Quiz> quizFromDBOptional =
+                this.quizRepository.findById(quiz.getId());
+
+        if (!quizFromDBOptional.isPresent()){
+            AppUtils.throwAndLogException(
+                    new QuizNotFoundException("Cannot update quiz because it is not found in DB"));
+        }
+
+        this.quizRepository.save(quiz);
     }
 
     @Override
@@ -115,10 +135,9 @@ public class QuizServiceImpl implements QuizService {
     public void delete(String id) throws AppException {
         Optional<Quiz> quizOptional = this.quizRepository.findById(id);
         if(!quizOptional.isPresent()){
-            final String message = String.format(
-                    "Cannot remove quiz %s because it doesn't exist", id);
-            this.logger.error(message);
-            throw new QuizNotFoundException(message);
+            AppUtils.throwAndLogException(
+                    new QuizNotFoundException(String.format(
+                            "Cannot remove quiz %s because it doesn't exist", id)));
         }
 
         this.quizRepository.delete(quizOptional.get());
