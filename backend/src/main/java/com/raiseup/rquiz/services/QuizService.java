@@ -1,5 +1,6 @@
 package com.raiseup.rquiz.services;
 
+import com.raiseup.rquiz.exceptions.AppException;
 import com.raiseup.rquiz.models.db.Quiz;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,5 +14,5 @@ public interface QuizService {
     Collection<Quiz> readAll (HashMap<String, Object> filterParams, Integer size, Integer page);
     Collection<Quiz> readAllAssignedToUser (String userId, Integer size, Integer page);
     void update (Quiz obj);
-    void delete (String id);
+    void delete (String id) throws AppException;
 }

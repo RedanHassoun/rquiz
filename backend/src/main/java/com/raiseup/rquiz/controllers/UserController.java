@@ -5,7 +5,6 @@ import com.raiseup.rquiz.common.DtoMapper;
 import com.raiseup.rquiz.models.QuizDto;
 import com.raiseup.rquiz.models.UserDto;
 import com.raiseup.rquiz.models.db.User;
-import com.raiseup.rquiz.models.db.Quiz;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import com.raiseup.rquiz.services.QuizService;
 import com.raiseup.rquiz.services.UserService;

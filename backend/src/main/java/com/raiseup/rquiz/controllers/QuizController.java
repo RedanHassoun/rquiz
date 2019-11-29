@@ -2,10 +2,7 @@ package com.raiseup.rquiz.controllers;
 
 import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.common.DtoMapper;
-import com.raiseup.rquiz.exceptions.AnswerAlreadyExistException;
-import com.raiseup.rquiz.exceptions.IllegalOperationException;
-import com.raiseup.rquiz.exceptions.QuizNotFoundException;
-import com.raiseup.rquiz.exceptions.UserNotFoundException;
+import com.raiseup.rquiz.exceptions.*;
 import com.raiseup.rquiz.models.QuizAnswerDto;
 import com.raiseup.rquiz.models.QuizDto;
 import com.raiseup.rquiz.models.UserAnswerDto;
@@ -133,7 +130,36 @@ public class QuizController {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cannot get quiz object", ex);
         }
+    }
 
+    @DeleteMapping(path = "{id}",
+            produces = "application/json")
+    public ResponseEntity deleteQuiz(@PathVariable("id") String quizId) {
+        this.logger.debug(String.format("Deleting quiz: %s", quizId));
+
+        try{
+            Optional<String> validation = this.validationService.validateString(quizId, "Quiz id");
+
+            if(validation.isPresent()){
+                throw new IllegalOperationException(validation.get());
+            }
+
+            this.quizService.delete(quizId);
+            this.logger.info(String.format("Quiz %s has been deleted", quizId));
+
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (IllegalOperationException | QuizNotFoundException ex){
+            this.logger.error(String.format("Cannot delete quiz. error: %s",
+                    ExceptionUtils.getStackTrace(ex)));
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+        } catch (Exception ex){
+            this.logger.error(String.format("Cannot delete quiz. error: %s",
+                    ExceptionUtils.getStackTrace(ex)));
+
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Cannot get quiz object", ex);
+        }
     }
 
     @PostMapping(path = "/{id}/answer",

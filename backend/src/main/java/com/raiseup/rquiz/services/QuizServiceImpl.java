@@ -1,5 +1,7 @@
 package com.raiseup.rquiz.services;
 
+import com.raiseup.rquiz.exceptions.AppException;
+import com.raiseup.rquiz.exceptions.QuizNotFoundException;
 import com.raiseup.rquiz.models.db.Quiz;
 import com.raiseup.rquiz.models.db.UserAnswer;
 import com.raiseup.rquiz.repo.QuizRepository;
@@ -110,8 +112,16 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     @Transactional
-    public void delete(String id) {
+    public void delete(String id) throws AppException {
+        Optional<Quiz> quizOptional = this.quizRepository.findById(id);
+        if(!quizOptional.isPresent()){
+            final String message = String.format(
+                    "Cannot remove quiz %s because it doesn't exist", id);
+            this.logger.error(message);
+            throw new QuizNotFoundException(message);
+        }
 
+        this.quizRepository.delete(quizOptional.get());
     }
 
     private void initQuizListAnswersCount(Collection<Quiz> quizList){
