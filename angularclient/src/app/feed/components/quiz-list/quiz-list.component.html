@@ -11,7 +11,7 @@
 <div class="container list-article">
   <div class="row">
     <div *ngFor="let quiz of quizList" class="col-xs-12 article-wrapper">
-      <app-quiz-item [quiz]="quiz"></app-quiz-item>
+      <app-quiz-item [currentUserId]="currentUserId" [quiz]="quiz"></app-quiz-item>
     </div>
   </div>
 </div>

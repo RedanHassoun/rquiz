@@ -27,4 +27,12 @@ public class NotificationController {
                 message.content));
         return message;
     }
+
+    @MessageMapping("/quiz-deleted-update")
+    @SendTo("/topic/quiz-deleted-update")
+    public AppNotificationMessage quizDeletedUpdate(AppNotificationMessage message) {
+        this.logger.debug(String.format("Received socket message: %s on topic: 'quiz-deleted-update'",
+                message.content));
+        return message;
+    }
 }

@@ -81,18 +81,18 @@ article{
     font-family: "Pacifico";
     @include text-shadow(0 1px 1px #AAA);
   }
-   &:hover{
-    .img-wrapper{
-      padding:5px;
-      @include transform(rotate(5deg));
-      img{
-        width: $size + 10;
-      }
-    }
-    a{
-      opacity:1;
-    }
-  }
+  //  &:hover{     TODO: fix the hover issue
+  //   .img-wrapper{
+  //     padding:5px;
+  //     @include transform(rotate(5deg));
+  //     img{
+  //       width: $size + 10;
+  //     }
+  //   }
+  //   a{
+  //     opacity:1;
+  //   }
+  // }
 }
 
 .bloc{

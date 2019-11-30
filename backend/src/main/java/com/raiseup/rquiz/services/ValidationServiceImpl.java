@@ -59,6 +59,13 @@ public class ValidationServiceImpl implements ValidationService {
             return Optional.of(validations);
         }
 
+        if(!quiz.getIsPublic() && (quiz.getAssignedUsers() == null ||
+                quiz.getAssignedUsers().size() == 0)){
+            final List<String> validations = new ArrayList<>();
+            validations.add("Non-public quiz should be assigned at least to one user");
+            return Optional.of(validations);
+        }
+
         return Optional.empty();
     }
 

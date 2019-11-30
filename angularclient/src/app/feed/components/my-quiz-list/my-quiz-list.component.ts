@@ -16,6 +16,7 @@ import * as _ from 'lodash';
 export class MyQuizListComponent implements OnInit {
 
   public quizList: Quiz[] = [];
+  public currentUserId: string;
   public pagingStrategy: PagingDataFetchStrategy;
 
   constructor(private userService: UserService,
@@ -24,8 +25,8 @@ export class MyQuizListComponent implements OnInit {
   }
 
   async ngOnInit() {
-    const currentUserId: string = (await this.authService.getCurrentUser()).id;
-    const urlForFetchingQuizList = `${currentUserId}/quiz`;
+    this.currentUserId = (await this.authService.getCurrentUser()).id;
+    const urlForFetchingQuizList = `${this.currentUserId}/quiz`;
     this.pagingStrategy = new CustomUrlFetchingStrategy(this.userService,
       urlForFetchingQuizList,
       QuizService.PAGE_SIZE);

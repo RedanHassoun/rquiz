@@ -15,6 +15,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MyAssignedQuizComponent implements OnInit {
   public quizList: Quiz[] = [];
+  public currentUserId: string;
   public pagingStrategy: PagingDataFetchStrategy;
 
   constructor(private userService: UserService,
@@ -23,8 +24,8 @@ export class MyAssignedQuizComponent implements OnInit {
   }
 
   async ngOnInit() {
-    const currentUserId: string = (await this.authService.getCurrentUser()).id;
-    const urlForFetchingQuizList = `${currentUserId}/assignedQuiz`;
+    this.currentUserId = (await this.authService.getCurrentUser()).id;
+    const urlForFetchingQuizList = `${this.currentUserId}/assignedQuiz`;
     this.pagingStrategy = new CustomUrlFetchingStrategy(this.userService,
       urlForFetchingQuizList,
       QuizService.PAGE_SIZE);
