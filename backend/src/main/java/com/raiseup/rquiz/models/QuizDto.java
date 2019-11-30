@@ -13,6 +13,7 @@ public class QuizDto {
     private Integer numberOfCorrectAnswers;
     private Integer totalNumberOfAnswers;
     private Set<QuizAnswerDto> answers = new HashSet<>();
+    private Set<UserDto> assignedUsers = new HashSet<>();
 
     public Boolean getIsPublic() {
         return isPublic;
@@ -84,5 +85,13 @@ public class QuizDto {
 
     public void setTotalNumberOfAnswers(Integer totalNumberOfAnswers) {
         this.totalNumberOfAnswers = totalNumberOfAnswers;
+    }
+
+    public Set<UserDto> getAssignedUsers() {
+        return assignedUsers;
+    }
+
+    public void setAssignedUsers(Set<UserDto> assignedUsers) {
+        this.assignedUsers = assignedUsers;
     }
 }

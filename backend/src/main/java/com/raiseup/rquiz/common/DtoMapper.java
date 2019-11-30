@@ -34,6 +34,9 @@ public class DtoMapper {
             }
         }
         quizDto.setAnswers(answers);
+
+        quizDto.setAssignedUsers(null);
+        
         return quizDto;
     }
 
@@ -47,7 +50,14 @@ public class DtoMapper {
         for(QuizAnswer quizAnswer : quizAnswers) {
             quiz.addQuizAnswer(quizAnswer);
         }
-        
+
+        Set<UserDto> assignedUsers = quizDto.getAssignedUsers();
+        Set<User> users = assignedUsers.stream()
+                .map(userDto -> this.convertUserDtoToEntity(userDto))
+                .collect(Collectors.toSet());
+
+        quiz.setAssignedUsers(users);
+
         return quiz;
     }
 
