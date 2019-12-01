@@ -6,13 +6,15 @@ import { CommonModule } from '@angular/common';
 import { AppJwtModule } from '../app-jwt/app-jwt.module';
 import { ProfileComponent } from '../shared/components/profile/profile.component';
 import { PageableComponent } from './components/pageable/pageable.component';
+import { RegisterComponent } from './components/register/register.component';
 
 @NgModule({
   declarations: [
     UserListComponent,
     UserFormComponent,
     ProfileComponent,
-    PageableComponent
+    PageableComponent,
+    RegisterComponent
   ],
   imports: [
     CommonModule,
