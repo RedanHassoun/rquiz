@@ -39,7 +39,10 @@ public class DemoApplication
 						User user = new User();
 						user.setUsername(name);
 						user.setPassword("123");
-						userService.create(user);
+						try{
+							userService.create(user);
+						}catch (Exception ex){
+						}
 					});
 			String tempId = userRepository.findAll().get(0).getId();
 			Stream.of("quiz a", "quiz b", "quiz c", "quiz d", "quiz e", "quiz f", "quiz g", "quiz k", "quiz l", "quiz m", "quiz n", "quiz o",

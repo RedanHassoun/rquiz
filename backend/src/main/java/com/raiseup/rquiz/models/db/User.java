@@ -2,6 +2,8 @@ package com.raiseup.rquiz.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.raiseup.rquiz.common.AppConstants.*;
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -15,10 +17,14 @@ public class User extends BaseModel{
     @Id
     @Column(name=DBConsts.USER_ID)
     private String id;
+
     @Column(unique=true)
     @NotNull(message = "Username cannot be null")
+    @Length(min = 3)
     private String username;
+
     @NotNull(message = "Password cannot be null")
+    @Length(min = 3)
     private String password;
     private String imageUrl;
 

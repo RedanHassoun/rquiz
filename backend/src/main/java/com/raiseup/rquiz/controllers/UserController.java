@@ -2,12 +2,15 @@ package com.raiseup.rquiz.controllers;
 
 import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.common.DtoMapper;
+import com.raiseup.rquiz.exceptions.UserAlreadyExistException;
 import com.raiseup.rquiz.models.QuizDto;
+import com.raiseup.rquiz.models.RegisterRequest;
 import com.raiseup.rquiz.models.UserDto;
 import com.raiseup.rquiz.models.db.User;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import com.raiseup.rquiz.services.QuizService;
 import com.raiseup.rquiz.services.UserService;
+import com.raiseup.rquiz.services.UserValidationService;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/users")
 @CrossOrigin
 public class UserController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -28,21 +30,24 @@ public class UserController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private UserService usersService;
     private QuizService quizService;
+    private UserValidationService userValidationService;
     private DtoMapper dtoMapper;
 
     public UserController(ApplicationUserRepository applicationUserRepository,
                           BCryptPasswordEncoder bCryptPasswordEncoder,
                           UserService usersService,
                           QuizService quizService,
+                          UserValidationService userValidationService,
                           DtoMapper dtoMapper) {
         this.applicationUserRepository = applicationUserRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.usersService = usersService;
         this.quizService = quizService;
         this.dtoMapper = dtoMapper;
+        this.userValidationService = userValidationService;
     }
 
-    @GetMapping("/all")
+    @GetMapping("/api/v1/users/all")
     public List<UserDto> getUsers(){
         try{
             return this.usersService.readAll()
@@ -55,7 +60,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/api/v1/users/{id}")
     public UserDto getUser(@PathVariable("id") String id){
         if (id ==  null){
             throw new ResponseStatusException(
@@ -71,12 +76,30 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")
-    public void signUp(@RequestBody UserDto userDto) {
-        User user = this.dtoMapper.convertUserDtoToEntity(userDto);
-        this.usersService.create(user);
+    public void signUp(@RequestBody RegisterRequest registerRequest) {
+        try {
+            Optional<List<String>> validations = this.userValidationService.validateRegisterRequest(registerRequest);
+            if(validations.isPresent()) {
+                final String errorMsg = this.userValidationService.buildValidationMessage(validations.get());
+                this.logger.error(errorMsg);
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, errorMsg);
+            }
+
+            User user = this.dtoMapper.convertRegisterRequestToUserEntity(registerRequest);
+            this.usersService.create(user);
+        }catch (UserAlreadyExistException ex){
+            logger.error("Cannot register.", ex);
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ex.getMessage());
+        }catch (Exception ex) {
+            logger.error("Cannot register.", ex);
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage() , ex);
+        }
     }
 
-    @GetMapping("/{userId}/quiz")
+    @GetMapping("/api/v1/users/{userId}/quiz")
     public List<QuizDto> getUserQuizList(@PathVariable("userId") String userId,
                                      @RequestParam(required = false) Integer page,
                                      @RequestParam(required = false) Integer size){
@@ -105,7 +128,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{userId}/assignedQuiz")
+    @GetMapping("/api/v1/users/{userId}/assignedQuiz")
     public List<QuizDto> getUserAssignedQuizList(@PathVariable("userId") String userId,
                                   @RequestParam(required = false) Integer page,
                                   @RequestParam(required = false) Integer size){
