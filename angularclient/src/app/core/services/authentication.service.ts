@@ -1,3 +1,4 @@
+import { RegisterRequest } from './../../shared/models/register-message';
 import { User } from './../../shared/models/user';
 import { AppUtil } from '../../shared/util/app-util';
 import { LoginMessage } from '../../shared/models/login-message';
@@ -29,6 +30,17 @@ export class AuthenticationService {
   logout() {
     localStorage.removeItem(AppConsts.KEY_USER_TOKEN);
     this.router.navigate(['/login'], { replaceUrl: true });
+  }
+
+  register(register: RegisterRequest): Observable<HttpResponse<any>> {
+    if (!register) {
+      throw new Error('Cannot register, request is not defined');
+    }
+
+    return this.http.post(`${AppConsts.BASE_URL}/sign-up`,
+      register,
+      { observe: 'response' })
+      .pipe(catchError(AppUtil.handleError));
   }
 
   isLoggedIn() {
