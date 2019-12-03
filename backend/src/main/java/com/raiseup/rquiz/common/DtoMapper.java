@@ -112,6 +112,7 @@ public class DtoMapper {
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setPassword(registerRequest.getPassword());
+        user.setEmail(registerRequest.getEmail());
 
         return user;
     }

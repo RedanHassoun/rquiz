@@ -1,3 +1,4 @@
+import { AppUtil } from './../../../shared/util/app-util';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { RegisterRequest } from './../../../shared/models/register-message';
 import { FormBuilder, FormGroup, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
@@ -31,6 +32,7 @@ export class RegisterComponent implements OnInit {
 
     this.registerForm = this.formBuilder.group({
       username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(3)]],
       confirmPassword: ['']
     }, { validator: this.checkPasswordsValidator });
@@ -44,12 +46,15 @@ export class RegisterComponent implements OnInit {
     const registerRequest = new RegisterRequest();
     registerRequest.username = this.registerForm.value.username;
     registerRequest.password = this.registerForm.value.password;
+    registerRequest.email = this.registerForm.value.email;
 
     this.loading = true;
     this.authService.register(registerRequest).subscribe(response => {
-      console.log(response);
+      this.loading = false;
+      this.router.navigate(['/login']);
     }, (err) => {
       this.loading = false;
+      AppUtil.showError(err);
     });
   }
 

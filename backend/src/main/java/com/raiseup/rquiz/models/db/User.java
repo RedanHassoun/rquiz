@@ -3,8 +3,8 @@ package com.raiseup.rquiz.models.db;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.raiseup.rquiz.common.AppConstants.*;
 import org.hibernate.validator.constraints.Length;
-
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Objects;
@@ -22,6 +22,11 @@ public class User extends BaseModel{
     @NotNull(message = "Username cannot be null")
     @Length(min = 3)
     private String username;
+
+    @Column(unique=true)
+    @Email(message = "The given string is not a well-formed email address")
+    @NotNull(message = "Email cannot be null")
+    private String email;
 
     @NotNull(message = "Password cannot be null")
     @Length(min = 3)
@@ -59,6 +64,14 @@ public class User extends BaseModel{
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

@@ -5,6 +5,7 @@ import java.util.Date;
 public class UserDto {
     private String id;
     private String username;
+    private String email;
     private String imageUrl;
     private Date createdAt;
 
@@ -22,6 +23,14 @@ public class UserDto {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getImageUrl() {

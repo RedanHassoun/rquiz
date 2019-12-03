@@ -6,6 +6,7 @@ import com.raiseup.rquiz.models.db.QuizAnswer;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import com.raiseup.rquiz.services.QuizService;
 import com.raiseup.rquiz.services.UserService;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -38,10 +39,12 @@ public class DemoApplication
 					.forEach(name -> {
 						User user = new User();
 						user.setUsername(name);
+						user.setEmail(String.format("%s@mail.com", name));
 						user.setPassword("123");
 						try{
 							userService.create(user);
 						}catch (Exception ex){
+							System.err.println(ExceptionUtils.getFullStackTrace(ex));
 						}
 					});
 			String tempId = userRepository.findAll().get(0).getId();
