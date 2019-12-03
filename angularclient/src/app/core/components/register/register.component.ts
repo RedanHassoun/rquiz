@@ -1,6 +1,6 @@
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { RegisterRequest } from './../../../shared/models/register-message';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -13,6 +13,11 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   loading = false;
   submitted = false;
+  checkPasswordsValidator: ValidatorFn = (group: FormGroup): ValidationErrors | null => {
+    const pass = group.controls.password.value;
+    const confirmPass = group.controls.confirmPassword.value;
+    return pass === confirmPass ? null : { notSame: true };
+  }
 
   constructor(private authService: AuthenticationService,
     private formBuilder: FormBuilder,
@@ -26,8 +31,9 @@ export class RegisterComponent implements OnInit {
 
     this.registerForm = this.formBuilder.group({
       username: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(3)]]
-    });
+      password: ['', [Validators.required, Validators.minLength(3)]],
+      confirmPassword: ['']
+    }, { validator: this.checkPasswordsValidator });
   }
 
   onSubmit() {
@@ -49,6 +55,13 @@ export class RegisterComponent implements OnInit {
 
   isRegisterButtonDisabled(): boolean {
     return this.loading || this.registerForm.invalid;
+  }
+
+  passwordsMatch(): boolean {
+    if (this.registerForm.errors && this.registerForm.errors['notSame']) {
+      return false;
+    }
+    return true;
   }
 
   get form() {
