@@ -8,7 +8,7 @@ import { QuizService } from './../../../feed/services/quiz.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Quiz } from '../../models/quiz';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { QuizAnswer } from '../../models/quiz-answer';
 import { Subscription } from 'rxjs';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
@@ -29,6 +29,7 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
 
   constructor(private quizService: QuizService,
     private authenticationService: AuthenticationService,
+    private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<CreateQuizComponent>,
     private userService: UserService,
     private notificationService: NotificationService) { }
@@ -36,18 +37,9 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.quiz = new Quiz();
     this.quiz.reset();
-    this.addQuizForm = new FormGroup({
-      'title': new FormControl(this.quiz.title, [
-        Validators.required,
-        Validators.minLength(4)
-      ]),
-      'description': new FormControl(this.quiz.description, [
-        Validators.required,
-        Validators.minLength(4)])
-      //   ,
-      // 'newAnswer': new FormControl(this.quiz.description, [
-      //   Validators.required,
-      //   Validators.minLength(4)])
+    this.addQuizForm = this.formBuilder.group({
+      title: ['', [Validators.required, Validators.minLength(4)]],
+      description: ['', [Validators.required, Validators.minLength(4)]]
     });
 
     this.currentUserId = (await this.authenticationService.getCurrentUser()).id;
@@ -70,8 +62,8 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
     );
   }
 
-  get title() { return this.quiz.title; }
-  get description() { return this.quiz.description; }
+  get title() { return this.addQuizForm.controls.title; }
+  get description() { return this.addQuizForm.controls.description; }
 
 
   addAnswer(answerContent: string): void {
