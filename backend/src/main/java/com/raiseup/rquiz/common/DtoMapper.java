@@ -1,9 +1,6 @@
 package com.raiseup.rquiz.common;
 
-import com.raiseup.rquiz.models.QuizAnswerDto;
-import com.raiseup.rquiz.models.QuizDto;
-import com.raiseup.rquiz.models.UserAnswerDto;
-import com.raiseup.rquiz.models.UserDto;
+import com.raiseup.rquiz.models.*;
 import com.raiseup.rquiz.models.db.Quiz;
 import com.raiseup.rquiz.models.db.QuizAnswer;
 import com.raiseup.rquiz.models.db.User;
@@ -36,7 +33,7 @@ public class DtoMapper {
         quizDto.setAnswers(answers);
 
         quizDto.setAssignedUsers(null);
-        
+
         return quizDto;
     }
 
@@ -109,5 +106,14 @@ public class DtoMapper {
 
     public User convertUserDtoToEntity(UserDto userDto){
         return this.modelMapper.map(userDto, User.class);
+    }
+
+    public User convertRegisterRequestToUserEntity(RegisterRequest registerRequest) {
+        User user = new User();
+        user.setUsername(registerRequest.getUsername());
+        user.setPassword(registerRequest.getPassword());
+        user.setEmail(registerRequest.getEmail());
+
+        return user;
     }
 }

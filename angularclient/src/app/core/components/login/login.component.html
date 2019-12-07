@@ -1,34 +1,20 @@
-<form class="form-signin" #f="ngForm" (ngSubmit)="signIn(f.value)">
-  
-  <h2 class="form-signin-heading">Please sign in</h2>
-  
-  <div *ngIf="invalidLogin" 
-        class="alert alert-danger">Invalid username and/or password.
-  </div>
-  
-  <label for="inputEmail" 
-        class="sr-only">Username</label>
-  <input type="text" 
-          id="inputEmail" 
-          name="username" 
-          ngModel 
-          class="form-control" 
-          placeholder="Username" 
-          required 
-          autofocus>
+<div class="container">
+        <form class="form-signin" #f="ngForm" (ngSubmit)="signIn(f.value)">
 
-  <label for="inputPassword" 
-          class="sr-only">Password</label>
-  <input type="password" 
-          id="inputPassword" 
-          name="password" 
-          ngModel 
-          class="form-control" 
-          placeholder="Password" 
-          required>
-  <button class="btn btn-lg btn-primary btn-block" 
-          [disabled]="!f.valid"
-          type="submit">Sign in
-  </button>
-</form>
-<!-- <div>Not a member?</div><a routerLink="/register">register</a> -->
+                <h2 class="form-signin-heading">Please sign in</h2>
+
+                <div *ngIf="invalidLogin" class="alert alert-danger">Invalid username and/or password.
+                </div>
+
+                <label for="inputEmail" class="sr-only">Username</label>
+                <input type="text" id="inputEmail" name="username" ngModel class="form-control" placeholder="Username"
+                        required autofocus>
+
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" id="inputPassword" name="password" ngModel class="form-control"
+                        placeholder="Password" required>
+                <button class="btn btn-lg btn-primary btn-block" [disabled]="!f.valid" type="submit">Sign in
+                </button>
+        </form>
+        <div>Not a member? &nbsp;<a [routerLink]="['/register']" routerLinkActive="active">register</a></div>
+</div>
