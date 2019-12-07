@@ -57,7 +57,13 @@ export class AppUtil {
             alert('Access denied!');
             return;
         }
-        alert(`${err.message}`);
+
+        if (err.message) {
+            alert(`${err.message}`);
+            return;
+        }
+
+        alert('Something went wrong...');
     }
 
     public static appTokenGetter() {
