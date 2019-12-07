@@ -1,5 +1,3 @@
-import { User } from './../models/user';
-import { AppError } from './../app-errors/app-error';
 import { AccessDeniedError } from './../app-errors/access-denied-error';
 import { NotFoundError } from './../app-errors/not-found-error';
 import { BadInputError } from './../app-errors/bad-input-error';
@@ -7,6 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { AppConsts } from './app-consts';
 import { throwError } from 'rxjs';
 import * as _ from 'lodash';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export class AppUtil {
     public static extractAndSaveToken(response: any): void {
@@ -35,28 +34,30 @@ export class AppUtil {
         });
     }
 
-    public static handleError(error: Response): Observable<never> {
+    public static handleError(error: HttpErrorResponse): Observable<never> {
+        const bodyContent: string = error.message;
+
         if (error.status === 400) {
-            return throwError(new BadInputError(error));
+            return throwError(new BadInputError(bodyContent));
         }
 
         if (error.status === 404) {
-            return throwError(new NotFoundError());
+            return throwError(new NotFoundError(bodyContent));
         }
 
-        if (error.status === 403) {
-            return throwError(new AccessDeniedError());
+        if (error.status === 403 || error.status === 401) {
+            return throwError(new AccessDeniedError(bodyContent));
         }
 
-        return throwError(new AppError(error));
+        return throwError(new Error(bodyContent));
     }
 
-    public static showError(err: AppError): void {
+    public static showError(err: Error): void {
         if (err instanceof AccessDeniedError) {
             alert('Access denied!');
             return;
         }
-        alert('Something went wrong...');
+        alert(`${err.message}`);
     }
 
     public static appTokenGetter() {

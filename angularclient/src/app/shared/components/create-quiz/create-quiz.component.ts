@@ -1,3 +1,5 @@
+import { take } from 'rxjs/operators';
+import { AlreadyExistError } from './../../app-errors/already-exist-error';
 import { AppNotificationMessage, TOPIC_QUIZ_LIST_UPDATE } from './../../../core/model/socket-consts';
 import { NotificationService } from './../../../core/services/notification.service';
 import { UserService } from './../../../core/services/user-service.service';
@@ -5,13 +7,14 @@ import { User } from './../../models/user';
 import { AppUtil } from './../../util/app-util';
 import { AuthenticationService } from './../../../core/services/authentication.service';
 import { QuizService } from './../../../feed/services/quiz.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Quiz } from '../../models/quiz';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { QuizAnswer } from '../../models/quiz-answer';
 import { Subscription } from 'rxjs';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-create-quiz',
@@ -19,6 +22,7 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
   styleUrls: ['./create-quiz.component.scss']
 })
 export class CreateQuizComponent implements OnInit, OnDestroy {
+  @ViewChild('answerInput') answerInput: ElementRef;
   private subscriptions: Subscription[] = [];
   dropdownSettings: IDropdownSettings;
   quiz: Quiz;
@@ -73,7 +77,18 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
     const answer = new QuizAnswer();
     answer.content = answerContent;
     answer.isCorrect = false;
-    this.quiz.addAnswer(answer);
+
+    try {
+      this.quiz.addAnswer(answer);
+    } catch (ex) {
+      if (ex instanceof AlreadyExistError) {
+        AppUtil.showError(ex);
+      } else {
+        throw ex;
+      }
+    } finally {
+      this.answerInput.nativeElement.value = '';
+    }
   }
 
   publicChanged(isPublic: boolean): void {
@@ -81,9 +96,14 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
   }
 
   async addQuiz(): Promise<void> {
+    if (this.quiz.answers.length < 2) {
+      AppUtil.showWarningMessage('The quiz should have at least two answers');
+      return;
+    }
+
     const hasCorrectAnswer: boolean = await this.quizService.hasCorrectAnswer(this.quiz);
     if (!hasCorrectAnswer) {
-      alert('You must choose a correct answer');
+      AppUtil.showWarningMessage('You must choose a correct answer');
       return;
     }
 
@@ -91,6 +111,7 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
     this.quiz.assignedUsers = this.selectedUsers;
     this.subscriptions.push(
       this.quizService.create(this.quiz)
+        .pipe(take(1))
         .subscribe(result => {
           const addedQuiz = new AppNotificationMessage(result);
           this.notificationService.send(TOPIC_QUIZ_LIST_UPDATE, addedQuiz);
@@ -109,6 +130,12 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
         ans.isCorrect = false;
       }
     }
+  }
+
+  deleteAnswer(answer: QuizAnswer): void {
+    this.quiz.answers = _.remove(this.quiz.answers, (quizAnswer) => {
+      return quizAnswer.content !== answer.content;
+    });
   }
 
   ngOnDestroy(): void {

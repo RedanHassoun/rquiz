@@ -1,11 +1,24 @@
-#cancel-btn{
-    float: left;
+#cancel-btn {
+  float: left;
 }
 
-#add-person-btn{
-    float: right;
+#add-quiz-btn {
+  float: right;
 }
 
-#gender-div{
-    margin: 10px
+.header {
+  text-align: center;
+}
+
+.add-input-container input {
+    width: 80%;
+    padding: 5px;
+}
+
+.add-input-container span {
+    width: 20%;
+}
+
+.mat-icon {
+  font-size: 5px;
 }

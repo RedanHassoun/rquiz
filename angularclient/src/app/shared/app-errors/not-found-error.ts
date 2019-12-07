@@ -1,5 +1,7 @@
-import { AppError } from './app-error';
 
-export class NotFoundError extends AppError{
-    
+export class NotFoundError extends Error {
+    constructor(message: string) {
+        super(message);
+        Object.setPrototypeOf(this, NotFoundError.prototype);
+    }
 }

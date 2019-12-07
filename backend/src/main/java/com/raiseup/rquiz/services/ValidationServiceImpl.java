@@ -33,9 +33,9 @@ public class ValidationServiceImpl implements ValidationService {
     @Override
     public Optional<List<String>> validateQuiz(Quiz quiz) {
         Set<ConstraintViolation<BaseModel>> violations = validator.validate(quiz);
+        final List<String> validations = new ArrayList<>();
 
         if(violations != null && violations.size() > 0) {
-            final List<String> validations = new ArrayList<>();
             for (ConstraintViolation<BaseModel> violation : violations) {
                 validations.add(violation.getMessage());
             }
@@ -45,7 +45,6 @@ public class ValidationServiceImpl implements ValidationService {
         for(QuizAnswer answer: quiz.getAnswers()){
             violations = validator.validate(answer);
             if(violations != null && violations.size() > 0) {
-                final List<String> validations = new ArrayList<>();
                 for (ConstraintViolation<BaseModel> violation : violations) {
                     validations.add(violation.getMessage());
                 }
@@ -53,15 +52,18 @@ public class ValidationServiceImpl implements ValidationService {
             }
         }
 
+        if(quiz.getAnswers().size() < 2) {
+            validations.add("The quiz should have at least two answers");
+            return Optional.of(validations);
+        }
+
         if(!this.hasOneCorrectAnswer(quiz)){
-            final List<String> validations = new ArrayList<>();
             validations.add("Quiz must have one correct answer");
             return Optional.of(validations);
         }
 
         if(!quiz.getIsPublic() && (quiz.getAssignedUsers() == null ||
                 quiz.getAssignedUsers().size() == 0)){
-            final List<String> validations = new ArrayList<>();
             validations.add("Non-public quiz should be assigned at least to one user");
             return Optional.of(validations);
         }

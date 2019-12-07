@@ -1,3 +1,7 @@
-import { AppError } from './app-error';
 
-export class AccessDeniedError extends AppError{}
+export class AccessDeniedError extends Error {
+    constructor(message: string) {
+        super(message);
+        Object.setPrototypeOf(this, AccessDeniedError.prototype);
+    }
+}

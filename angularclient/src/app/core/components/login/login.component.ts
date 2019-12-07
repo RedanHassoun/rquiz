@@ -1,4 +1,3 @@
-import { AppError } from './../../../shared/app-errors/app-error';
 import { AccessDeniedError } from './../../../shared/app-errors/access-denied-error';
 import { LoginMessage } from '../../../shared/models/login-message';
 import { AppUtil } from '../../../shared/util/app-util';
@@ -23,12 +22,12 @@ export class LoginComponent implements OnInit {
       .subscribe(response => {
         AppUtil.extractAndSaveToken(response);
         this.router.navigate(['/quizList']);
-      }, (err: AppError) => {
+      }, (err: Error) => {
         if (err instanceof AccessDeniedError) {
           this.invalidLogin = true;
           return;
         }
-        alert('Something went wrong...');
+        AppUtil.showError(err);
       });
   }
 
