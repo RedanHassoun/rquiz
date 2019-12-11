@@ -22,3 +22,18 @@
 .mat-icon {
   font-size: 5px;
 }
+
+.quiz-answer-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-flow: row wrap;
+}
+
+.action-btn {
+  width: 10%;
+}
+
+.answer-content {
+  width: 80%;
+}

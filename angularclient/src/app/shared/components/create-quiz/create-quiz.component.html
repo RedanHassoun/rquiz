@@ -50,16 +50,17 @@
         <h3 mat-subheader>Answers</h3>
         <mat-list-item *ngFor="let answer of quiz.answers">
             <div class="quiz-answer-list-item" (click)="setCorrect(answer)">
-                <div *ngIf="answer.isCorrect;else not_correct">
+                <div class="action-btn" *ngIf="answer.isCorrect;else not_correct">
                     <mat-icon mat-list-icon>done</mat-icon>
                 </div>
 
-                <ng-template #not_correct>
+                <ng-template class="action-btn" #not_correct>
                     <mat-icon mat-list-icon>arrow_forward_ios</mat-icon>
                 </ng-template>
-                <mat-icon (click)="deleteAnswer(answer)" svgIcon="delete"></mat-icon>
                 
-                <p>{{answer.content}}</p>
+                <p class="answer-content">{{answer.content}}</p>
+
+                <mat-icon class="action-btn" (click)="deleteAnswer(answer)" svgIcon="delete"></mat-icon>
             </div>
         </mat-list-item>
         <mat-divider></mat-divider>
