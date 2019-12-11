@@ -100,9 +100,9 @@ public class User extends BaseModel{
 
     @Override
     public String toString(){
-        return String.format("[ username: %s , password: %s]",
+        return String.format("[ username: %s , email: %s]",
                 this.username,
-                this.password);
+                this.email);
     }
 
     @Override

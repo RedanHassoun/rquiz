@@ -8,6 +8,8 @@ import com.raiseup.rquiz.services.QuizService;
 import com.raiseup.rquiz.services.UserService;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +19,9 @@ import java.util.stream.Stream;
 
 @Configuration
 public class BeanConfiguration {
+
+    private Logger logger = LoggerFactory.getLogger(BeanConfiguration.class);
+
     @Value("${rquiz.shouldSeedDatabase}")
     private boolean shouldSeedDatabase;
 
@@ -45,9 +50,10 @@ public class BeanConfiguration {
                             User user = new User();
                             user.setUsername(name);
                             user.setPassword("123");
+                            user.setEmail(String.format("%s@mail.com", name));
                             userService.create(user);
                         }catch (Exception ex){
-                            System.err.println(String.format("Cannot create user. error: %s",
+                            this.logger.error(String.format("Cannot create user. error: %s",
                                     ExceptionUtils.getStackTrace(ex)));
                         }
                     });
@@ -76,9 +82,11 @@ public class BeanConfiguration {
 
                         quizService.create(q);
                     });
-            userRepository.findAll().forEach(System.out::println);
-            System.out.println("---------------------------");
-            quizService.readAll().forEach(System.out::println);
+            this.logger.info("Users:");
+            userRepository.findAll().forEach(user -> this.logger.info(user.toString()));
+            this.logger.info("---------------------------");
+            this.logger.info("Quiz:");
+            quizService.readAll().forEach(quiz -> this.logger.info(quiz.toString()));
         };
     }
 }
