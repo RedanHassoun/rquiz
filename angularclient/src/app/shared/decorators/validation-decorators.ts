@@ -17,5 +17,9 @@ export function InputValidationChecker(): (Function) {
         target.prototype.getInputBorderStyle = (inputControl) => {
             return isInputValidationFailed(inputControl) ? '2px solid red' : '';
         };
+
+        target.prototype.setInputBorderStyleInvalid = (isInvalid) => {
+            return isInvalid === true ? '2px solid red' : '';
+        };
     };
 }
