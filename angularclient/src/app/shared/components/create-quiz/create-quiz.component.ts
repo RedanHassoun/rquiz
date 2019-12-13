@@ -10,17 +10,19 @@ import { QuizService } from './../../../feed/services/quiz.service';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Quiz } from '../../models/quiz';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { QuizAnswer } from '../../models/quiz-answer';
 import { Subscription } from 'rxjs';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import * as _ from 'lodash';
+import { InputValidationChecker } from '../../decorators/validation-decorators';
 
 @Component({
   selector: 'app-create-quiz',
   templateUrl: './create-quiz.component.html',
   styleUrls: ['./create-quiz.component.scss']
 })
+@InputValidationChecker()
 export class CreateQuizComponent implements OnInit, OnDestroy {
   @ViewChild('answerInput') answerInput: ElementRef;
   private subscriptions: Subscription[] = [];

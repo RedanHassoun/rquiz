@@ -2,10 +2,9 @@
 <form *ngIf="addQuizForm && quiz" #theForm="ngForm" [formGroup]="addQuizForm">
     <div class="form-group">
         <label class="input-label-small" for="title">Title</label>
-        <input [(ngModel)]="quiz.title" name="title" class="form-control" formControlName="title">
+        <input [style.border]="getBorderStyle(title)" [(ngModel)]="quiz.title" name="title" class="form-control" formControlName="title">
 
-        <div *ngIf="title.invalid && 
-                                (title.dirty || title.touched)" class="alert alert-danger">
+        <div *ngIf="isInputValidationFailed(title)" class="validation-err-container">
             <div *ngIf="title.errors.required">
                 Title is required.
             </div>
@@ -17,10 +16,9 @@
 
     <div class="form-group">
         <label class="input-label-small" for="description">Description</label>
-        <input [(ngModel)]="quiz.description" name="description" class="form-control" formControlName="description" />
+        <input [style.border]="getBorderStyle(title)" [(ngModel)]="quiz.description" name="description" class="form-control" formControlName="description" />
 
-        <div *ngIf="description.invalid && 
-                                (description.dirty || description.touched)" class="alert alert-danger">
+        <div *ngIf="isInputValidationFailed(description)" class="validation-err-container">
             <div *ngIf="description.errors.required">
                 Description is required.
             </div>
