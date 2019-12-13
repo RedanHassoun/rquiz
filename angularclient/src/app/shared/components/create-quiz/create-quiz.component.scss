@@ -27,7 +27,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
 }
 
 .action-btn {

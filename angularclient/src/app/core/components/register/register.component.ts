@@ -4,15 +4,14 @@ import { RegisterRequest } from './../../../shared/models/register-message';
 import { FormBuilder, FormGroup, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { InputValidationChecker } from './../../../shared/decorators/validation-decorators';
+import { FormInputComponent } from './../../../shared/components/form-input/form-input.component';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-@InputValidationChecker()
-export class RegisterComponent implements OnInit {
+export class RegisterComponent extends FormInputComponent implements OnInit {
   registerForm: FormGroup;
   loading = false;
   submitted = false;
@@ -25,7 +24,9 @@ export class RegisterComponent implements OnInit {
   constructor(private authService: AuthenticationService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private authenticationService: AuthenticationService) { }
+    private authenticationService: AuthenticationService) { 
+      super();
+    }
 
   ngOnInit() {
     if (this.authenticationService.isLoggedIn()) {

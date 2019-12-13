@@ -9,6 +9,7 @@ import { ProfileComponent } from '../shared/components/profile/profile.component
 import { PageableComponent } from './components/pageable/pageable.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormInputComponent } from '../shared/components/form-input/form-input.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     UserFormComponent,
     ProfileComponent,
     PageableComponent,
-    RegisterComponent
+    RegisterComponent,
+    FormInputComponent
   ],
   imports: [
     CommonModule,

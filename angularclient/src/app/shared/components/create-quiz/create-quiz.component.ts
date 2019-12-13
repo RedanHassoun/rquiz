@@ -15,15 +15,14 @@ import { QuizAnswer } from '../../models/quiz-answer';
 import { Subscription } from 'rxjs';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import * as _ from 'lodash';
-import { InputValidationChecker } from '../../decorators/validation-decorators';
+import { FormInputComponent } from './../form-input/form-input.component';
 
 @Component({
   selector: 'app-create-quiz',
   templateUrl: './create-quiz.component.html',
   styleUrls: ['./create-quiz.component.scss']
 })
-@InputValidationChecker()
-export class CreateQuizComponent implements OnInit, OnDestroy {
+export class CreateQuizComponent extends FormInputComponent implements OnInit, OnDestroy {
   @ViewChild('answerInput') answerInput: ElementRef;
   private subscriptions: Subscription[] = [];
   dropdownSettings: IDropdownSettings;
@@ -38,7 +37,9 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<CreateQuizComponent>,
     private userService: UserService,
-    private notificationService: NotificationService) { }
+    private notificationService: NotificationService) {
+    super();
+  }
 
   async ngOnInit() {
     this.quiz = new Quiz();

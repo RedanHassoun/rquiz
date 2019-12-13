@@ -1,10 +1,10 @@
+import { FormInputComponent } from './../../../shared/components/form-input/form-input.component';
 import { AccessDeniedError } from './../../../shared/app-errors/access-denied-error';
 import { LoginMessage } from '../../../shared/models/login-message';
 import { AppUtil } from '../../../shared/util/app-util';
 import { AuthenticationService } from '../../services/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { InputValidationChecker } from './../../../shared/decorators/validation-decorators';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
@@ -12,15 +12,16 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-@InputValidationChecker()
-export class LoginComponent implements OnInit {
+export class LoginComponent extends FormInputComponent implements OnInit {
   loginForm: FormGroup;
   invalidLogin: boolean;
 
   constructor(
     private router: Router,
     private authService: AuthenticationService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder) {
+      super();
+    }
 
   signIn(credentials: LoginMessage) {
     this.authService.login(credentials)
