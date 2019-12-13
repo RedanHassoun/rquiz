@@ -6,8 +6,6 @@
 
 <h1 id="header" class="text-primary">RQuiz</h1>
 
-<button mat-mini-fab class="fabAddButton" color="primary" (click)="openCreateQuizDialog()">+</button>
-
 <div class="container list-article">
   <div class="row">
     <div *ngFor="let quiz of quizList" class="col-xs-12 article-wrapper">
@@ -16,6 +14,8 @@
   </div>
 </div>
 
-<app-pageable [pagingStrategy]='pagingStrategy' 
-              (dataListChanged)="quizListChanged($event)">
+<app-pageable [pagingStrategy]='pagingStrategy' (dataListChanged)="quizListChanged($event)">
 </app-pageable>
+
+<button mat-mini-fab class="fab-add-button" matTooltip="Add Quiz" color="primary"
+  (click)="openCreateQuizDialog()">+</button>
