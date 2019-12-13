@@ -4,12 +4,14 @@ import { RegisterRequest } from './../../../shared/models/register-message';
 import { FormBuilder, FormGroup, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { InputValidationChecker } from './../../../shared/decorators/validation-decorators';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
+@InputValidationChecker()
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   loading = false;

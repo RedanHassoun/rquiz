@@ -1,17 +1,20 @@
-import { AppUtil } from './../util/app-util';
 import { AbstractControl } from '@angular/forms';
 
 const isInputValidationFailed = (inputControl: AbstractControl): boolean => {
+    if (!inputControl) {
+        return false;
+    }
+
     return inputControl.invalid && (inputControl.dirty || inputControl.touched);
 };
 
-export function InputValidationChecker(): Function {
+export function InputValidationChecker(): (Function) {
     return (target: Function): void => {
         target.prototype.isInputValidationFailed = (inputControl) => {
             return isInputValidationFailed(inputControl);
         };
 
-        target.prototype.getBorderStyle = (inputControl) => {
+        target.prototype.getInputBorderStyle = (inputControl) => {
             return isInputValidationFailed(inputControl) ? '2px solid red' : '';
         };
     };

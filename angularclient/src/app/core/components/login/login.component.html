@@ -1,15 +1,21 @@
-<div class="container">
-        <form class="form-signin" #f="ngForm" (ngSubmit)="signIn(f.value)">
+<div class="centered-form-container">
+        <form *ngIf="loginForm" [formGroup]="loginForm" class="form-signin" #f="ngForm" (ngSubmit)="signIn(f.value)">
 
                 <h2 class="form-signin-heading">Please sign in</h2>
 
                 <label for="inputEmail" class="sr-only">Username</label>
-                <input type="text" id="inputEmail" name="username" ngModel class="form-control" placeholder="Username"
-                        required autofocus>
+                <input type="text" [style.border]="getInputBorderStyle(username)" name="username"
+                        formControlName="username" class="form-control" placeholder="Username" required autofocus>
+                <div *ngIf="isInputValidationFailed(username)" class="validation-err-container">
+                        <div *ngIf="username.errors.required">Username is required</div>
+                </div>
 
                 <label for="inputPassword" class="sr-only">Password</label>
-                <input type="password" id="inputPassword" name="password" ngModel class="form-control"
-                        placeholder="Password" required>
+                <input type="password" [style.border]="getInputBorderStyle(password)" name="password" class="form-control"
+                        formControlName="password" placeholder="Password">
+                <div *ngIf="isInputValidationFailed(password)" class="validation-err-container">
+                        <div *ngIf="password.errors.required">Password is required</div>
+                </div>
 
                 <div *ngIf="invalidLogin" class="alert alert-danger">Invalid username and/or password.
                 </div>

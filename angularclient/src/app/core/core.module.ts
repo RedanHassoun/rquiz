@@ -8,7 +8,7 @@ import { AppJwtModule } from '../app-jwt/app-jwt.module';
 import { ProfileComponent } from '../shared/components/profile/profile.component';
 import { PageableComponent } from './components/pageable/pageable.component';
 import { RegisterComponent } from './components/register/register.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,8 +22,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     SharedModule,
     AppJwtModule,
-    AppRoutingModule,
-    ReactiveFormsModule
+    AppRoutingModule
   ],
   exports: [
     PageableComponent

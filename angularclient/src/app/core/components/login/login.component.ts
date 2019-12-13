@@ -4,18 +4,23 @@ import { AppUtil } from '../../../shared/util/app-util';
 import { AuthenticationService } from '../../services/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { InputValidationChecker } from './../../../shared/decorators/validation-decorators';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
+@InputValidationChecker()
 export class LoginComponent implements OnInit {
+  loginForm: FormGroup;
   invalidLogin: boolean;
 
   constructor(
     private router: Router,
-    private authService: AuthenticationService) { }
+    private authService: AuthenticationService,
+    private formBuilder: FormBuilder) { }
 
   signIn(credentials: LoginMessage) {
     this.authService.login(credentials)
@@ -35,5 +40,13 @@ export class LoginComponent implements OnInit {
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/quizList']);
     }
+
+    this.loginForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+    });
   }
+
+  get username() { return this.loginForm.controls.username; }
+  get password() { return this.loginForm.controls.password; }
 }

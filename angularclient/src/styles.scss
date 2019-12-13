@@ -35,6 +35,20 @@
   padding-left: 5px;
 }
 
+.centered-form-container {
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column wrap;
+  min-width: 100vh;
+  padding-bottom: 30px;
+}
+
+.centered-form-container * {
+  margin: 10px;
+}
+
 // .quiz-answer-list-item {
 //   height: 10px;
 // } TODO: fix UI design

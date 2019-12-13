@@ -2,7 +2,8 @@
 <form *ngIf="addQuizForm && quiz" #theForm="ngForm" [formGroup]="addQuizForm">
     <div class="form-group">
         <label class="input-label-small" for="title">Title</label>
-        <input [style.border]="getBorderStyle(title)" [(ngModel)]="quiz.title" name="title" class="form-control" formControlName="title">
+        <input [style.border]="getInputBorderStyle(title)" [(ngModel)]="quiz.title" name="title" class="form-control"
+            formControlName="title">
 
         <div *ngIf="isInputValidationFailed(title)" class="validation-err-container">
             <div *ngIf="title.errors.required">
@@ -16,7 +17,8 @@
 
     <div class="form-group">
         <label class="input-label-small" for="description">Description</label>
-        <input [style.border]="getBorderStyle(title)" [(ngModel)]="quiz.description" name="description" class="form-control" formControlName="description" />
+        <input [style.border]="getInputBorderStyle(description)" [(ngModel)]="quiz.description" name="description"
+            class="form-control" formControlName="description" />
 
         <div *ngIf="isInputValidationFailed(description)" class="validation-err-container">
             <div *ngIf="description.errors.required">
@@ -46,6 +48,9 @@
 
     <mat-list>
         <h3 mat-subheader>Answers</h3>
+        <div mat-subheader *ngIf="quiz.answers.length === 0">
+            Please add answers to the quiz
+        </div>
         <mat-list-item *ngFor="let answer of quiz.answers">
             <div class="quiz-answer-list-item" (click)="setCorrect(answer)">
                 <div class="action-btn" *ngIf="answer.isCorrect;else not_correct">
@@ -55,7 +60,7 @@
                 <ng-template class="action-btn" #not_correct>
                     <mat-icon mat-list-icon>arrow_forward_ios</mat-icon>
                 </ng-template>
-                
+
                 <p class="answer-content">{{answer.content}}</p>
 
                 <mat-icon class="action-btn" (click)="deleteAnswer(answer)" svgIcon="delete"></mat-icon>

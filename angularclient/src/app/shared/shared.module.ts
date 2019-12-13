@@ -52,6 +52,7 @@ import { QuizItemComponent } from './components/quiz-item/quiz-item.component';
   exports: [
     FormsModule,
     CommonModule,
+    ReactiveFormsModule,
     InfiniteScrollModule,
     MatSidenavModule,
     MatIconModule,
