@@ -80,7 +80,12 @@ public class BeanConfiguration {
 
                         q.addQuizAnswer(ans);
 
-                        quizService.create(q);
+                        try{
+                            quizService.create(q);
+                        }catch (Exception ex){
+                            this.logger.error(String.format("Cannot create quiz %s, error: %s",
+                                    title, ExceptionUtils.getStackTrace(ex)));
+                        }
                     });
             this.logger.info("Users:");
             userRepository.findAll().forEach(user -> this.logger.info(user.toString()));

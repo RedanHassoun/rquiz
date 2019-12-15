@@ -21,25 +21,15 @@ export class QuizItemComponent implements OnInit, OnDestroy {
   @Input() public quiz: Quiz;
   @Input() currentUserId: string;
   private subscriptions: Subscription[] = [];
-  quizOwner: User;
 
   constructor(private navigationService: NavigationHelperService,
     private quizService: QuizService,
     private authService: AuthenticationService,
     private notificationService: NotificationService,
-    private userService: UserService,
     private router: Router) {
   }
 
-  async ngOnInit() {
-    const quizCreatorId: string = this.quiz.creator.id;
-    this.subscriptions.push(
-      this.userService.get(quizCreatorId)
-        .subscribe((user: User) => {
-          this.quizOwner = user;
-          console.log('us', JSON.stringify(this.quizOwner));
-        })
-    );
+  ngOnInit() {
   }
 
   getQuizImage() {

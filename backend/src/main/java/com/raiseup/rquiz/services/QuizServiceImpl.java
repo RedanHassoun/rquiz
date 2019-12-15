@@ -5,7 +5,9 @@ import com.raiseup.rquiz.exceptions.AppException;
 import com.raiseup.rquiz.exceptions.IllegalOperationException;
 import com.raiseup.rquiz.exceptions.QuizNotFoundException;
 import com.raiseup.rquiz.models.db.Quiz;
+import com.raiseup.rquiz.models.db.User;
 import com.raiseup.rquiz.models.db.UserAnswer;
+import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import com.raiseup.rquiz.repo.QuizRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,17 +26,28 @@ public class QuizServiceImpl implements QuizService {
     private Logger logger = LoggerFactory.getLogger(QuizServiceImpl.class);
     private QuizRepository quizRepository;
     private UserAnswerService userAnswerService;
+    private ApplicationUserRepository applicationUserRepository;
 
     public QuizServiceImpl(QuizRepository quizRepository,
-                           UserAnswerService userAnswerService){
+                           UserAnswerService userAnswerService,
+                           ApplicationUserRepository applicationUserRepository){
         this.quizRepository = quizRepository;
         this.userAnswerService = userAnswerService;
+        this.applicationUserRepository = applicationUserRepository;
     }
 
     @Override
     @Transactional
-    public Quiz create(Quiz quiz) {
+    public Quiz create(Quiz quiz) throws AppException {
         quiz.getAnswers().forEach(answer -> answer.setQuiz(quiz));
+
+        Optional<User> creator = this.applicationUserRepository.findById(quiz.getCreator().getId());
+
+        if(!creator.isPresent()) {
+            AppUtils.throwAndLogException(new IllegalOperationException(
+                    String.format("Cannot create quiz because the quiz creator (%s) doesn't exist in DB",
+                            quiz.getCreator().getId())));
+        }
 
         return this.quizRepository.save(quiz);
     }

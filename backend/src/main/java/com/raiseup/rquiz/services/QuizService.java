@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 public interface QuizService {
-    Quiz create (Quiz obj);
+    Quiz create (Quiz obj) throws AppException;
     Optional<Quiz> read (String id);
     Collection<Quiz> readAll ();
     Collection<Quiz> readAll (Boolean isPublic, Integer size, Integer page);
