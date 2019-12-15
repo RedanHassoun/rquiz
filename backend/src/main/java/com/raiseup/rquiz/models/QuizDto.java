@@ -9,11 +9,19 @@ public class QuizDto {
     private String description;
     private String imageUrl;
     private Boolean isPublic;
-    private String creatorId;
+    private UserDto creator;
     private Integer numberOfCorrectAnswers;
     private Integer totalNumberOfAnswers;
     private Set<QuizAnswerDto> answers = new HashSet<>();
     private Set<UserDto> assignedUsers = new HashSet<>();
+
+    public UserDto getCreator() {
+        return creator;
+    }
+
+    public void setCreator(UserDto creator) {
+        this.creator = creator;
+    }
 
     public Boolean getIsPublic() {
         return isPublic;
@@ -61,14 +69,6 @@ public class QuizDto {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public String getCreatorId() {
-        return creatorId;
-    }
-
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
     }
 
     public Integer getNumberOfCorrectAnswers() {

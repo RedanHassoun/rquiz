@@ -30,7 +30,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
   addQuizForm: FormGroup;
   users: User[];
   selectedUsers: User[] = [];
-  currentUserId: string;
+  currentUser: User;
 
   constructor(private quizService: QuizService,
     private authenticationService: AuthenticationService,
@@ -49,7 +49,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
       description: ['', [Validators.required, Validators.minLength(4)]]
     });
 
-    this.currentUserId = (await this.authenticationService.getCurrentUser()).id;
+    this.currentUser = await this.authenticationService.getCurrentUser();
 
     this.dropdownSettings = {
       singleSelection: false,
@@ -64,7 +64,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     this.subscriptions.push(
       this.userService.getAll()
         .subscribe((users: any[]) => {
-          this.users = AppUtil.removeById(users, this.currentUserId);
+          this.users = AppUtil.removeById(users, this.currentUser.id);
         })
     );
   }
@@ -110,7 +110,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
       return;
     }
 
-    this.quiz.creatorId = this.currentUserId;
+    this.quiz.creator = { ...this.currentUser };
     this.quiz.assignedUsers = this.selectedUsers;
     this.subscriptions.push(
       this.quizService.create(this.quiz)

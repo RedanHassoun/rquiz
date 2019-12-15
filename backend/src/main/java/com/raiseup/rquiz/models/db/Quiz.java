@@ -41,9 +41,9 @@ public class Quiz extends BaseModel{
             inverseJoinColumns = @JoinColumn(name = DBConsts.USER_ID))
     private Set<User> assignedUsers;
 
-    @Column(nullable = false)
-    @NotNull(message = "Creator id cannot be null")
-    private String creatorId;
+    @ManyToOne
+    @JoinColumn(name=DBConsts.USER_ID, nullable=false)
+    private User creator;
 
     @OneToMany(mappedBy = "quiz",
                cascade = CascadeType.ALL)
@@ -65,6 +65,14 @@ public class Quiz extends BaseModel{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
     }
 
     public String getTitle() {
@@ -97,14 +105,6 @@ public class Quiz extends BaseModel{
 
     public void setIsPublic(Boolean aPublic) {
         isPublic = aPublic;
-    }
-
-    public String getCreatorId() {
-        return creatorId;
-    }
-
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
     }
 
     public Set<QuizAnswer> getAnswers() {
@@ -154,12 +154,12 @@ public class Quiz extends BaseModel{
         if (o == null || getClass() != o.getClass()) return false;
         Quiz quiz = (Quiz) o;
         return Objects.equals(id, quiz.id) &&
-                Objects.equals(creatorId, quiz.creatorId);
+                Objects.equals(this.creator.getId(), quiz.getCreator().getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, creatorId);
+        return Objects.hash(this.id, this.creator.getId());
     }
 
     @Override
@@ -174,6 +174,6 @@ public class Quiz extends BaseModel{
             answers = new ArrayList<>();
         }
         return String.format("[ quiz id: %s , title: %s, creator id: %s, answers: %s]",
-                this.id,this.title,this.creatorId, String.join(",", answers));
+                this.id,this.title,this.creator.getId(), String.join(",", answers));
     }
 }

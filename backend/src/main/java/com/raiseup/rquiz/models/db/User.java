@@ -42,6 +42,10 @@ public class User extends BaseModel{
     @JsonIgnore
     private Set<Quiz> assignedQuizList = new HashSet<>();
 
+    @OneToMany(mappedBy = "creator")
+    @JsonIgnore
+    private Set<Quiz> ownedQuizList = new HashSet<>();
+
     public Set<UserAnswer> getUserAnswers() {
         return userAnswers;
     }

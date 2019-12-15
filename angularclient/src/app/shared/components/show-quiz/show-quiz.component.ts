@@ -54,7 +54,7 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
 
   shouldHideSolveButton(): boolean {
     if ( (this.isAlreadyAnswered && this.isAlreadyAnswered === true) ||
-          (!this.currentUser || this.currentUser.id === this.quiz.creatorId)) {
+          (!this.currentUser || this.currentUser.id === this.quiz.creator.id)) {
       return true;
     }
 

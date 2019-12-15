@@ -1,3 +1,6 @@
+import { Router } from '@angular/router';
+import { User } from './../../models/user';
+import { UserService } from './../../../core/services/user-service.service';
 import { AppNotificationMessage, TOPIC_QUIZ_DELETED_UPDATE } from './../../../core/model/socket-consts';
 import { NotificationService } from './../../../core/services/notification.service';
 import { AuthenticationService } from './../../../core/services/authentication.service';
@@ -18,14 +21,25 @@ export class QuizItemComponent implements OnInit, OnDestroy {
   @Input() public quiz: Quiz;
   @Input() currentUserId: string;
   private subscriptions: Subscription[] = [];
+  quizOwner: User;
 
   constructor(private navigationService: NavigationHelperService,
     private quizService: QuizService,
     private authService: AuthenticationService,
-    private notificationService: NotificationService) {
+    private notificationService: NotificationService,
+    private userService: UserService,
+    private router: Router) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const quizCreatorId: string = this.quiz.creator.id;
+    this.subscriptions.push(
+      this.userService.get(quizCreatorId)
+        .subscribe((user: User) => {
+          this.quizOwner = user;
+          console.log('us', JSON.stringify(this.quizOwner));
+        })
+    );
   }
 
   getQuizImage() {
@@ -64,11 +78,19 @@ export class QuizItemComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    if (this.quiz.creatorId === this.currentUserId) {
+    if (this.quiz.creator.id === this.currentUserId) {
       return true;
     }
 
     return false;
+  }
+
+  showUser(user: User) {
+    if (!user) {
+      AppUtil.handleNullError('User');
+    }
+
+    this.router.navigate(['users', user.id]);
   }
 
   ngOnDestroy(): void {

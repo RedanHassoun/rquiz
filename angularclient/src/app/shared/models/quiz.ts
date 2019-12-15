@@ -9,7 +9,7 @@ export class Quiz {
     imageUrl: string;
     isPublic: boolean;
     assignedUsers: User[];
-    creatorId: string;
+    creator: User;
     answers: QuizAnswer[] = [];
     userAnswers: UserAnswer[] = [];
     numberOfCorrectAnswers: number;

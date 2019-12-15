@@ -1,18 +1,19 @@
 <article>
-  <a class="more">Show</a>
   <div class="img-wrapper">
     <img (click)="showQuiz(quiz.id)" src={{getQuizImage()}} alt="" />
   </div>
 
-  <h1>{{quiz.title}}</h1>
-  <p>{{ quiz.description }}</p>
-
-  <div>
-    <mat-icon svgIcon="done"></mat-icon> {{ quiz.numberOfCorrectAnswers }}
-    <mat-icon svgIcon="clear"></mat-icon> {{ quiz.totalNumberOfAnswers - quiz.numberOfCorrectAnswers }}
-    <div *ngIf="canDeleteQuiz()" (click)="deleteQuiz(quiz.id)">
-      <mat-icon svgIcon="delete"></mat-icon>
+  <div class="content-wrapper">
+    <h1>{{quiz.title}}</h1>
+    <p>{{ quiz.description }}</p>
+    <a (click)="showQuiz(quiz.id)" class="more">Show</a>
+    <div>
+      Posted by: <a (click)="showUser(quiz.creator)">{{ quiz.creator.username }}</a>
     </div>
-
+    <div class="action-btns-container">
+      <mat-icon svgIcon="done"></mat-icon> {{ quiz.numberOfCorrectAnswers }}
+      <mat-icon svgIcon="clear"></mat-icon> {{ quiz.totalNumberOfAnswers - quiz.numberOfCorrectAnswers }}
+      <mat-icon *ngIf="canDeleteQuiz()" (click)="deleteQuiz(quiz.id)" svgIcon="delete"></mat-icon>
+    </div>
   </div>
 </article>

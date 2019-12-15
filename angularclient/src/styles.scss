@@ -3,18 +3,10 @@
 
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
+$app-background: white !important;
 
-.addButtonRegular {
-  padding: 10px;
-  width: 25%;
-  background: #d9d9d9;
-  color: #555;
-  float: left;
-  text-align: center;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
-  border-radius: 0;
+body {
+  background-color: $app-background;
 }
 
 .secondary-Bbtton {
@@ -41,26 +33,3 @@
 .centered-form-container * {
   margin: 10px;
 }
-
-// .quiz-answer-list-item {
-//   height: 10px;
-// } TODO: fix UI design
-
-
-
-// .quiz-answer-list-item .answer-content {
-//   background-color: rgb(202, 29, 29);
-//   text-align: left;
-//   // float: left;
-// }
-
-// .quiz-answer-list-item .icon-container {
-//     background-color: rgb(23, 246, 90);
-//   font-size: 200px;
-//   float: right;
-// }
-
-// .input-label-small {
-//   margin: 0px;
-//   padding: 0px;
-// }

@@ -31,7 +31,7 @@ public class DtoMapper {
             }
         }
         quizDto.setAnswers(answers);
-
+        quizDto.setCreator(this.convertUserToDto(quiz.getCreator()));
         quizDto.setAssignedUsers(null);
 
         return quizDto;
@@ -53,6 +53,8 @@ public class DtoMapper {
                 .map(userDto -> this.convertUserDtoToEntity(userDto))
                 .collect(Collectors.toSet());
 
+        User quizCreator = this.convertUserDtoToEntity(quizDto.getCreator());
+        quiz.setCreator(quizCreator);
         quiz.setAssignedUsers(users);
 
         return quiz;

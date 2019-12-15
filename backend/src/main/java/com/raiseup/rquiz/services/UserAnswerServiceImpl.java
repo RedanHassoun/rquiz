@@ -107,7 +107,7 @@ public class UserAnswerServiceImpl implements UserAnswerService {
                                     quizAnswer.getId(), quiz.getId())));
         }
 
-        if(quiz.getCreatorId().equals(userId)) {
+        if(quiz.getCreator().getId().equals(userId)) {
             AppUtils.throwAndLogException(
                     new IllegalOperationException("Cannot solve an owned quiz"));
         }

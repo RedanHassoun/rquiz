@@ -63,10 +63,10 @@ public class QuizController {
             QuizDto quizToReturn = this.dtoMapper.convertQuizToDto(quizFromDB);
             return new ResponseEntity<>(quizToReturn, HttpStatus.CREATED);
         } catch (ResponseStatusException ex){
-            logger.error("Cannot create quiz. " + ex.toString());
+            logger.error("Cannot create quiz. ", ex);
             throw ex;
         } catch (Exception ex){
-            logger.error("Cannot create quiz. " + ex.toString());
+            logger.error("Cannot create quiz. ", ex);
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cannot create quiz object", ex);
         }
