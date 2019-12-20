@@ -105,7 +105,7 @@ public class QuizController {
 
     @GetMapping(path = "{id}",
             produces = "application/json")
-    public Quiz findQuiz(@PathVariable("id") String quizId) {
+    public QuizDto findQuiz(@PathVariable("id") String quizId) {
         this.logger.debug(String.format("Reading quiz: %s", quizId));
 
         try{
@@ -126,7 +126,7 @@ public class QuizController {
                         "Quiz not found");
             }
 
-            return quizOptional.get();
+            return this.dtoMapper.convertQuizToDto(quizOptional.get());
         } catch (ResponseStatusException ex){
             logger.error("Cannot get quiz. " + ExceptionUtils.getStackTrace(ex));
             throw ex;
