@@ -26,7 +26,7 @@ public class DtoMapper {
 
         if(quiz.getAnswers() != null){
             for(QuizAnswer quizAnswer : quiz.getAnswers()){
-                QuizAnswerDto quizAnswerDto = this.modelMapper.map(quizAnswer, QuizAnswerDto.class);
+                QuizAnswerDto quizAnswerDto = this.convertQuizAnswerToDto(quizAnswer);
                 answers.add(quizAnswerDto);
             }
         }
@@ -66,6 +66,8 @@ public class DtoMapper {
         if(quizAnswer.getQuiz() != null) {
             quizAnswerDto.setQuizId(quizAnswer.getQuiz().getId());
         }
+
+        quizAnswerDto.setIsCorrect(null); // Never return the correct state to the client
         return quizAnswerDto;
     }
 
