@@ -1,45 +1,25 @@
-<!-- <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"> -->
-
-<ng-container *ngIf="user" >
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3 col-sm-6">
-    
-                <div class="card hovercard">
-                    <div class="cardheader">
-    
-                    </div>
-                    <div class="avatar">
-                        <img alt="" src={{user.imageUrl}}>
-                    </div>
-                    <div class="info">
-                        <div class="title">
-                            <a target="_blank" href="https://scripteden.com/">{{user.username}}</a>
-                        </div>
-                        <div class="desc">Passionate designer</div>
-                        <button *ngIf="isCurrUser && isCurrUser === true" >Edit</button>
-                        <div class="desc">Tech geek</div>
-                    </div>
-                    <div class="bottom">
-                        <a class="btn btn-primary btn-twitter btn-sm" href="https://twitter.com/webmaniac">
-                            <i class="fa fa-twitter"></i>
-                        </a>
-                        <a class="btn btn-danger btn-sm" rel="publisher"
-                           href="https://plus.google.com/+ahmshahnuralam">
-                            <i class="fa fa-google-plus"></i>
-                        </a>
-                        <a class="btn btn-primary btn-sm" rel="publisher"
-                           href="https://plus.google.com/shahnuralam">
-                            <i class="fa fa-facebook"></i>
-                        </a>
-                        <a class="btn btn-warning btn-sm" rel="publisher" href="https://plus.google.com/shahnuralam">
-                            <i class="fa fa-behance"></i>
-                        </a>
-                    </div>
-                </div>
-    
-            </div>
-    
+<ng-container *ngIf="user">
+    <div class="profile-container">
+        <div class="photo-container">
+            <img alt="" src={{user.imageUrl}} class="photo">
         </div>
     </div>
+
+    <h1 class="username">{{user.username}}</h1>
+    <h2 class="email">{{user.email}}</h2>
+
+    <div class="description">
+        <div *ngIf="user.description; else noDescription">
+            <p> {{user.description}}</p>
+        </div>
+
+        <ng-template #noDescription>
+            <p>No description available.</p>
+        </ng-template>
+    </div>
+
+    <button *ngIf="isCurrUser && isCurrUser === true" mat-mini-fab class="fab-edit-button" matTooltip="Edit details" color="primary"
+        (click)="editDetails()">
+        <mat-icon svgIcon="edit"></mat-icon>
+    </button>
 </ng-container>

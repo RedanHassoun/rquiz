@@ -1,3 +1,5 @@
+import { DomSanitizer } from '@angular/platform-browser'
+import { MatIconRegistry } from '@angular/material/icon';
 import { NotFoundError } from './../../app-errors/not-found-error';
 import { AuthenticationService } from './../../../core/services/authentication.service';
 import { UserService } from '../../../core/services/user-service.service';
@@ -17,7 +19,12 @@ export class ProfileComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private usersService: UserService,
-    private authService: AuthenticationService) {
+    private authService: AuthenticationService,
+    private iconRegistry: MatIconRegistry,
+    private sanitizer: DomSanitizer) {
+      this.iconRegistry.addSvgIcon( // TODO: make more general
+        'edit',
+        this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/edit-24px.svg'));
   }
 
   ngOnInit() {
@@ -51,5 +58,9 @@ export class ProfileComponent implements OnInit {
     } else {
       this.isCurrUser = false;
     }
+  }
+
+  editDetails(): void {
+    // TODO : implement
   }
 }
