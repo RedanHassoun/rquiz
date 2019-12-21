@@ -119,10 +119,10 @@ public class UserController {
                     .map(quiz -> this.dtoMapper.convertQuizToDto(quiz))
                     .collect(Collectors.toList());
         } catch (ResponseStatusException ex){
-            logger.error("Cannot fetch quiz list." + ExceptionUtils.getStackTrace(ex));
+            logger.error("Cannot fetch quiz list.", ex);
             throw ex;
         } catch (Exception ex){
-            logger.error("Cannot fetch quiz list." + ExceptionUtils.getStackTrace(ex));
+            logger.error("Cannot fetch quiz list.", ex);
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Cannot fetch quiz list", ex);
         }

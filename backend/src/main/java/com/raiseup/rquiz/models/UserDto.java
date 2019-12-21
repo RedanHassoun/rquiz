@@ -7,6 +7,7 @@ public class UserDto {
     private String username;
     private String email;
     private String imageUrl;
+    private String about;
     private Date createdAt;
 
     public String getId() {
@@ -39,6 +40,14 @@ public class UserDto {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
     }
 
     public Date getCreatedAt() {
