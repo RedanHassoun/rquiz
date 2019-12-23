@@ -5,6 +5,7 @@ import com.raiseup.rquiz.common.DtoMapper;
 import com.raiseup.rquiz.exceptions.UserAlreadyExistException;
 import com.raiseup.rquiz.models.QuizDto;
 import com.raiseup.rquiz.models.RegisterRequest;
+import com.raiseup.rquiz.models.UpdateUserRequestDto;
 import com.raiseup.rquiz.models.UserDto;
 import com.raiseup.rquiz.models.db.User;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
@@ -96,6 +97,30 @@ public class UserController {
             logger.error("Cannot register.", ex);
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage() , ex);
+        }
+    }
+
+    @PutMapping("/api/v1/users/{userId}")
+    public void updateUserDetails(@PathVariable("userId") String userId,
+                                         @RequestBody UpdateUserRequestDto updateUserRequestDto){
+        try{
+            Optional<List<String>> validation = this.userValidationService.validateObject(updateUserRequestDto);
+
+            if(validation.isPresent()){
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        this.userValidationService.buildValidationMessage(validation.get()));
+            }
+
+            User userToUpdate = this.dtoMapper.convertUpdateUserRequestTOUserEntity(updateUserRequestDto);
+            this.usersService.update(userToUpdate);
+        } catch (ResponseStatusException ex){
+            logger.error("Cannot update user. ", ex);
+            throw ex;
+        } catch (Exception ex){
+            logger.error("Cannot update user. ", ex);
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Cannot get quiz object", ex);
         }
     }
 

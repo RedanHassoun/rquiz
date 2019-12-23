@@ -32,6 +32,7 @@ public class User extends BaseModel{
     @Length(min = 3)
     private String password;
     private String imageUrl;
+    private String about;
 
     @OneToMany(mappedBy = "user",
                cascade = CascadeType.ALL)
@@ -92,6 +93,14 @@ public class User extends BaseModel{
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
     }
 
     public Set<Quiz> getAssignedQuizList() {

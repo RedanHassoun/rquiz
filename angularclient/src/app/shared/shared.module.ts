@@ -18,13 +18,15 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { QuizItemComponent } from './components/quiz-item/quiz-item.component';
+import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 
 @NgModule({
   declarations: [
     ConfirmationDialogComponent,
     CreateQuizComponent,
     ShowQuizComponent,
-    QuizItemComponent
+    QuizItemComponent,
+    EditProfileComponent
   ],
   imports: [
     CommonModule,
@@ -47,6 +49,7 @@ import { QuizItemComponent } from './components/quiz-item/quiz-item.component';
   entryComponents: [
     ConfirmationDialogComponent,
     CreateQuizComponent,
+    EditProfileComponent,
     ShowQuizComponent // TODO: check if this must be in shared
   ],
   exports: [

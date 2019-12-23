@@ -1,0 +1,18 @@
+<form *ngIf="editProfileForm" [formGroup]="editProfileForm" #f="ngForm" (ngSubmit)="editProfile(f.value)">
+
+  <h3>Edit profile details</h3>
+
+  <div class="form-group">
+    <input type="text" formControlName="about" class="form-control" placeholder="About"
+      [style.border]="getInputBorderStyle(form.about)" />
+    <div *ngIf="isInputValidationFailed(form.about)" class="validation-err-container">
+      <div *ngIf="form.about.errors.minlength">About must be at least {{ form.about.minlength.requiredLength }}
+        characters long.</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <button [disabled]="!f.valid" class="btn btn-primary" type="submit">Update details</button>
+    <button id="cancel-btn" class="btn btn-default" mat-dialog-close>Cancel</button>
+  </div>
+</form>

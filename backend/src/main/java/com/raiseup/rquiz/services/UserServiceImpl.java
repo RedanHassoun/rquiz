@@ -1,7 +1,10 @@
 package com.raiseup.rquiz.services;
 
+import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.exceptions.AppException;
+import com.raiseup.rquiz.exceptions.IllegalOperationException;
 import com.raiseup.rquiz.exceptions.UserAlreadyExistException;
+import com.raiseup.rquiz.exceptions.UserNotFoundException;
 import com.raiseup.rquiz.models.db.User;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import org.hibernate.exception.ConstraintViolationException;
@@ -61,8 +64,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void update(User user) {
+    public void update(User user) throws AppException {
+        if(user == null || user.getId() == null) {
+            AppUtils.throwAndLogException(
+                    new IllegalOperationException("Cannot update user, user must be defined and has an Id"));
+        }
 
+        Optional<User> userFromDBOptional = this.applicationUserRepository.findById(user.getId());
+        if(!userFromDBOptional.isPresent()){
+            AppUtils.throwAndLogException(new UserNotFoundException(String.format(
+                    "Cannot update user %s because it is not found", user.getId())));
+        }
+
+        User userFromDB = userFromDBOptional.get();
+        userFromDB.setImageUrl(user.getImageUrl()); // TODO: the images should be uploaded to storage
+        userFromDB.setAbout(user.getAbout());
+        this.applicationUserRepository.save(userFromDB);
     }
 
     @Override

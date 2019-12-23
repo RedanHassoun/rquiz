@@ -10,6 +10,6 @@ public interface UserService {
     Optional<User> read (String id);
     Collection<User> readAll ();
     Collection<User> readAll (int size, int page);
-    void update (User dummy);
+    void update (User user) throws AppException;
     void delete (String id);
 }

@@ -112,6 +112,10 @@ public class DtoMapper {
         return this.modelMapper.map(userDto, User.class);
     }
 
+    public User convertUpdateUserRequestTOUserEntity(UpdateUserRequestDto updateUserRequest) {
+        return this.modelMapper.map(updateUserRequest, User.class);
+    }
+
     public User convertRegisterRequestToUserEntity(RegisterRequest registerRequest) {
         User user = new User();
         user.setUsername(registerRequest.getUsername());

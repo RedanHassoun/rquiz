@@ -33,6 +33,11 @@ export class ClientDataServiceService {
       .pipe(catchError(AppUtil.handleError));
   }
 
+  update(id: string, resource: any) {
+    return this.http.put(`${this.url}id`, resource, { headers: this.createAuthorizationHeader() })
+      .pipe(catchError(AppUtil.handleError));
+  }
+
   get(id: string) {
     return this.http.get(this.url + id, { headers: this.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));

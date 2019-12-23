@@ -1,7 +1,7 @@
 import { AppUtil } from './../../../shared/util/app-util';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { RegisterRequest } from './../../../shared/models/register-message';
-import { FormBuilder, FormGroup, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormInputComponent } from './../../../shared/components/form-input/form-input.component';
@@ -15,18 +15,13 @@ export class RegisterComponent extends FormInputComponent implements OnInit {
   registerForm: FormGroup;
   loading = false;
   submitted = false;
-  checkPasswordsValidator: ValidatorFn = (group: FormGroup): ValidationErrors | null => {
-    const pass = group.controls.password.value;
-    const confirmPass = group.controls.confirmPassword.value;
-    return pass === confirmPass ? null : { notSame: true };
-  }
 
   constructor(private authService: AuthenticationService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private authenticationService: AuthenticationService) { 
-      super();
-    }
+    private authenticationService: AuthenticationService) {
+    super();
+  }
 
   ngOnInit() {
     if (this.authenticationService.isLoggedIn()) {
@@ -63,13 +58,6 @@ export class RegisterComponent extends FormInputComponent implements OnInit {
 
   isRegisterButtonDisabled(): boolean {
     return this.loading || this.registerForm.invalid;
-  }
-
-  passwordsMatch(): boolean {
-    if (this.registerForm.errors && this.registerForm.errors['notSame']) {
-      return false;
-    }
-    return true;
   }
 
   get form() {

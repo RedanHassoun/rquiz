@@ -1,11 +1,21 @@
 package com.raiseup.rquiz.services;
 
 import com.raiseup.rquiz.models.RegisterRequest;
+import com.raiseup.rquiz.models.UpdateUserRequestDto;
+import com.raiseup.rquiz.models.db.BaseModel;
 import org.springframework.stereotype.Service;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.*;
 
 @Service
 public class UserValidationServiceImpl implements UserValidationService {
+    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private Validator validator = factory.getValidator();
+
     @Override
     public Optional<List<String>> validateRegisterRequest(RegisterRequest registerRequest) {
         List<String> validationsList = new ArrayList<>();
@@ -27,5 +37,20 @@ public class UserValidationServiceImpl implements UserValidationService {
 
         return "Validation failed. errors: " +
                 String.join(" , ", validations);
+    }
+
+    @Override
+    public Optional<List<String>> validateObject(Object beanObject) {
+        Set<ConstraintViolation<Object>> violations = validator.validate(beanObject);
+
+        if(violations != null && violations.size() > 0) {
+            final List<String> validations = new ArrayList<>();
+            for (ConstraintViolation<Object> violation : violations) {
+                validations.add(violation.getMessage());
+            }
+            return Optional.of(validations);
+        }
+
+        return Optional.empty();
     }
 }
