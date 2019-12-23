@@ -111,6 +111,14 @@ public class User extends BaseModel{
         this.assignedQuizList = assignedQuizList;
     }
 
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
     @Override
     public String toString(){
         return String.format("[ username: %s , email: %s]",
