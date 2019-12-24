@@ -35,4 +35,12 @@ public class NotificationController {
                 message.content));
         return message;
     }
+
+    @MessageMapping("/user-update")
+    @SendTo("/topic/user-update")
+    public AppNotificationMessage userUpdate(AppNotificationMessage message) {
+        this.logger.debug(String.format("Received socket message: %s on topic: 'user-update'",
+                message.content));
+        return message;
+    }
 }

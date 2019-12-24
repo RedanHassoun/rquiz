@@ -1,3 +1,5 @@
+import { AppNotificationMessage, TOPIC_USER_UPDATE } from './../../../core/model/socket-consts';
+import { NotificationService } from './../../../core/services/notification.service';
 import { EditProfileComponent } from './../edit-profile/edit-profile.component';
 import { NavigationHelperService } from './../../services/navigation-helper.service';
 import { DomSanitizer } from '@angular/platform-browser'
@@ -22,24 +24,42 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(private route: ActivatedRoute,
-    private usersService: UserService,
-    private authService: AuthenticationService,
-    private iconRegistry: MatIconRegistry,
-    private sanitizer: DomSanitizer,
-    private navigationService: NavigationHelperService) {
-      this.iconRegistry.addSvgIcon( // TODO: make more general
-        'edit',
-        this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/edit-24px.svg'));
+              private usersService: UserService,
+              private authService: AuthenticationService,
+              private iconRegistry: MatIconRegistry,
+              private sanitizer: DomSanitizer,
+              private navigationService: NavigationHelperService,
+              private notificationService: NotificationService) {
+    this.iconRegistry.addSvgIcon( // TODO: make more general
+      'edit',
+      this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/edit-24px.svg'));
   }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(paramsMap => {
-      const userId = paramsMap.get('id');
-      if (!userId) {
-        AppUtil.handleNullError('User id');
-        return;
-      }
+    this.subscriptions.push(
+      this.route.paramMap.subscribe(paramsMap => {
+        const userId = paramsMap.get('id');
+        if (!userId) {
+          AppUtil.handleNullError('User id');
+          return;
+        }
 
+        this.fetchUser(userId);
+      })
+    );
+
+    this.subscriptions.push(
+      this.notificationService.onMessage(TOPIC_USER_UPDATE)
+        .subscribe((message: AppNotificationMessage) => {
+          if (message && message.content) {
+            this.fetchUser(message.content);
+          }
+        })
+    );
+  }
+
+  private fetchUser(userId: string): void {
+    this.subscriptions.push(
       this.usersService.get(userId)
         .subscribe((user: User) => {
           this.recognizeUser(user);
@@ -51,8 +71,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
             return;
           }
           AppUtil.showWarningMessage('An error occurred');
-        });
-    });
+        })
+    );
   }
 
   async recognizeUser(user: User): Promise<void> {

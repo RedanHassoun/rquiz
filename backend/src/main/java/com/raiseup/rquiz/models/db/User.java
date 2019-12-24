@@ -95,14 +95,6 @@ public class User extends BaseModel{
         this.imageUrl = imageUrl;
     }
 
-    public String getAbout() {
-        return about;
-    }
-
-    public void setAbout(String about) {
-        this.about = about;
-    }
-
     public Set<Quiz> getAssignedQuizList() {
         return assignedQuizList;
     }

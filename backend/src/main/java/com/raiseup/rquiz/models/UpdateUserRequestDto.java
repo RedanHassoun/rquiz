@@ -4,9 +4,9 @@ import javax.validation.constraints.NotNull;
 
 public class UpdateUserRequestDto {
     @NotNull(message = "User id cannot be null")
-    protected String id;
-    protected String imageUrl;
-    protected String about;
+    private String id;
+    private String imageUrl;
+    private String about;
     private String password;
 
     public String getId() {
