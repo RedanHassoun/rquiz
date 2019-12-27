@@ -32,16 +32,22 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User create(User user) throws AppException {
-        try{
-            String id = UUID.randomUUID().toString();
-            user.setId(id);
-            user.setImageUrl("https://www.hindustantimes.com/rf/image_size_960x540/HT/p2/2018/09/27/Pictures/_0ab52210-c22f-11e8-ac2f-8b6cbdfc246f.PNG");
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            applicationUserRepository.save(user);
-            return this.applicationUserRepository.findByUsername(user.getUsername());
-        }catch (ConstraintViolationException ex){
-            throw new UserAlreadyExistException(ex.getMessage());
+        if (user == null) {
+            throw new IllegalOperationException("Cannot create user because it is not defined");
         }
+
+        User UserFromDB = this.applicationUserRepository.findByUsername(user.getUsername());
+        if (UserFromDB != null) {
+            final String errorMsg = String.format("Cannot create user %s because it already exist", user.getUsername());
+            throw new UserAlreadyExistException(errorMsg);
+        }
+
+        String id = UUID.randomUUID().toString();
+        user.setId(id);
+        user.setImageUrl("https://www.hindustantimes.com/rf/image_size_960x540/HT/p2/2018/09/27/Pictures/_0ab52210-c22f-11e8-ac2f-8b6cbdfc246f.PNG");
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        applicationUserRepository.save(user);
+        return this.applicationUserRepository.findByUsername(user.getUsername());
     }
 
     @Override

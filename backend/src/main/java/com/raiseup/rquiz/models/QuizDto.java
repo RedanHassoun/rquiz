@@ -94,4 +94,15 @@ public class QuizDto {
     public void setAssignedUsers(Set<UserDto> assignedUsers) {
         this.assignedUsers = assignedUsers;
     }
+
+    @Override
+    public String toString() {
+        String quizCreator = creator != null ? creator.toString() : "";
+        return "QuizDto{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", isPublic=" + isPublic +
+                ", creator=" + quizCreator +
+                '}';
+    }
 }

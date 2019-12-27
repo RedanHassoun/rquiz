@@ -42,7 +42,7 @@ public class Quiz extends BaseModel{
     private Set<User> assignedUsers;
 
     @ManyToOne
-    @JoinColumn(name=DBConsts.USER_ID, nullable=false)
+    @JoinColumn(name="creator", nullable=false)
     private User creator;
 
     @OneToMany(mappedBy = "quiz",

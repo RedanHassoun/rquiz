@@ -37,4 +37,13 @@ public class QuizAnswerDto {
     public void setIsCorrect(Boolean isCorrect) {
         this.isCorrect = isCorrect;
     }
+
+    @Override
+    public String toString() {
+        return "QuizAnswerDto{" +
+                "id='" + id + '\'' +
+                ", content='" + content + '\'' +
+                ", quizId='" + quizId + '\'' +
+                '}';
+    }
 }
