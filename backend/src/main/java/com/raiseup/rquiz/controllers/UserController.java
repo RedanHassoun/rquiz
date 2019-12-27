@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
+import com.raiseup.rquiz.common.AppConstants.*;
 
 @RestController
 @CrossOrigin
@@ -130,7 +131,7 @@ public class UserController {
             HashMap<String, Object> queryParams = new HashMap<>();
             User creator = new User();
             creator.setId(userId);
-            queryParams.put("creator", creator);
+            queryParams.put(DBConsts.QUIZ_CREATOR_FIELD, creator);
             return this.quizService.readAll(queryParams, size, page)
                     .stream()
                     .map(quiz -> this.dtoMapper.convertQuizToDto(quiz))

@@ -34,16 +34,16 @@ public class User extends BaseModel{
     private String imageUrl;
     private String about;
 
-    @OneToMany(mappedBy = "user",
+    @OneToMany(mappedBy = DBConsts.USER_FIELD,
                cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<UserAnswer> userAnswers = new HashSet<>();
 
-    @ManyToMany(mappedBy = "assignedUsers")
+    @ManyToMany(mappedBy = DBConsts.QUIZ_ASSIGNED_USERS_FIELD)
     @JsonIgnore
     private Set<Quiz> assignedQuizList = new HashSet<>();
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = DBConsts.QUIZ_CREATOR_FIELD)
     @JsonIgnore
     private Set<Quiz> ownedQuizList = new HashSet<>();
 

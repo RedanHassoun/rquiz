@@ -34,7 +34,7 @@ public class QuizAnswer extends BaseModel{
     @Column(nullable = false)
     private Boolean isCorrect;
 
-    @OneToMany(mappedBy = "quizAnswer",
+    @OneToMany(mappedBy = DBConsts.QUIZ_ANSWER_FIELD,
                cascade = CascadeType.ALL)
     private Set<UserAnswer> userAnswers = new HashSet<>();
 

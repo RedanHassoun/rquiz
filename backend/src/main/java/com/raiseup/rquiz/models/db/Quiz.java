@@ -36,20 +36,20 @@ public class Quiz extends BaseModel{
 
     @ManyToMany
     @JoinTable(
-            name = "user_quiz_assignment",
+            name = DBConsts.TABLE_USER_QUIZ_ASSIGNMENT,
             joinColumns = @JoinColumn(name = DBConsts.QUIZ_ID),
             inverseJoinColumns = @JoinColumn(name = DBConsts.USER_ID))
     private Set<User> assignedUsers;
 
     @ManyToOne
-    @JoinColumn(name="creator", nullable=false)
+    @JoinColumn(name=DBConsts.QUIZ_CREATOR_FIELD, nullable=false)
     private User creator;
 
-    @OneToMany(mappedBy = "quiz",
+    @OneToMany(mappedBy = DBConsts.QUIZ_FIELD,
                cascade = CascadeType.ALL)
     private Set<QuizAnswer> answers = new HashSet<>();
 
-    @OneToMany(mappedBy = "quiz",
+    @OneToMany(mappedBy = DBConsts.QUIZ_FIELD,
                cascade = CascadeType.ALL)
     private Set<UserAnswer> userAnswers = new HashSet<>();
 
