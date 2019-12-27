@@ -1,5 +1,6 @@
-package com.raiseup.rquiz.common;
+package com.raiseup.rquiz.controllers;
 
+import com.raiseup.rquiz.common.ErrorResponse;
 import com.raiseup.rquiz.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +15,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @ControllerAdvice
-public class AppResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class AppControllerAdviceExceptionHandler extends ResponseEntityExceptionHandler {
     private static String ERROR_DATE_FORMAT = "dd-MM-yyyy hh:mm:ss";
-    private Logger logger = LoggerFactory.getLogger(AppResponseEntityExceptionHandler.class);
+    private Logger logger = LoggerFactory.getLogger(AppControllerAdviceExceptionHandler.class);
 
     @ExceptionHandler(value = { IllegalOperationException.class })
     protected ResponseEntity<Object> handleIllegalOperation(
