@@ -46,15 +46,16 @@ public class QuizController {
                 consumes = "application/json",
                 produces = "application/json")
     public ResponseEntity<QuizDto> createQuiz(@RequestBody QuizDto quizDto) throws Exception {
-        Quiz quiz = this.dtoMapper.convertQuizDtoToEntity(quizDto);
-        this.logger.debug("Creating quiz: " + quiz.toString());
+        this.logger.debug(String.format("Creating quiz: %s", quizDto.toString()));
         try{
-            Optional<List<String>> validations = this.validationService.validateQuiz(quiz);
+            Optional<List<String>> validations = this.validationService.validateQuiz(quizDto);
 
             if(validations.isPresent()){
                 throw new IllegalOperationException(
                         this.validationService.buildValidationMessage(validations.get()));
             }
+
+            Quiz quiz = this.dtoMapper.convertQuizDtoToEntity(quizDto);
 
             Quiz quizFromDB = this.quizService.create(quiz);
             QuizDto quizToReturn = this.dtoMapper.convertQuizToDto(quizFromDB);
@@ -143,12 +144,12 @@ public class QuizController {
                          @PathVariable("id") String quizId,
                          @RequestBody QuizAnswerDto quizAnswerDto) throws Exception {
         try {
-            QuizAnswer quizAnswer = this.dtoMapper.convertQuizAnswerDtoToEntity(quizAnswerDto);
-            Optional<List<String>> validations = this.validationService.validateUserAnswer(quizAnswer, quizId);
+            Optional<List<String>> validations = this.validationService.validateUserAnswer(quizAnswerDto, quizId);
             if(validations.isPresent()){
                 throw new IllegalOperationException(
                         this.validationService.buildValidationMessage(validations.get()));
             }
+            QuizAnswer quizAnswer = this.dtoMapper.convertQuizAnswerDtoToEntity(quizAnswerDto);
 
             String userId = AppUtils.getUserIdFromAuthorizationHeader(authorization);
             this.userAnswerService.create(quizId, userId, quizAnswer);

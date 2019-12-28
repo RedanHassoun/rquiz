@@ -1,7 +1,10 @@
 package com.raiseup.rquiz.models;
 
-public class QuizAnswerDto {
+import javax.validation.constraints.NotNull;
+
+public class QuizAnswerDto extends BaseDto{
     private String id;
+    @NotNull(message = "Content cannot be null")
     private String content;
     private String quizId;
     private Boolean isCorrect;

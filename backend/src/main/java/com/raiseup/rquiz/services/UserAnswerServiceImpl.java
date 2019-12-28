@@ -7,6 +7,7 @@ import com.raiseup.rquiz.models.db.Quiz;
 import com.raiseup.rquiz.models.db.QuizAnswer;
 import com.raiseup.rquiz.models.db.UserAnswer;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
+import com.raiseup.rquiz.repo.QuizAnswerRepository;
 import com.raiseup.rquiz.repo.UserAnswerRepository;
 import com.raiseup.rquiz.repo.QuizRepository;
 import org.slf4j.Logger;
@@ -23,13 +24,16 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     private UserAnswerRepository userAnswerRepository;
     private QuizRepository quizRepository;
     private ApplicationUserRepository applicationUserRepository;
+    private QuizAnswerRepository quizAnswerRepository;
 
     public UserAnswerServiceImpl(UserAnswerRepository userAnswerRepository,
                                  QuizRepository quizRepository,
-                                 ApplicationUserRepository applicationUserRepository){
+                                 ApplicationUserRepository applicationUserRepository,
+                                 QuizAnswerRepository quizAnswerRepository){
         this.userAnswerRepository = userAnswerRepository;
         this.quizRepository = quizRepository;
         this.applicationUserRepository = applicationUserRepository;
+        this.quizAnswerRepository = quizAnswerRepository;
     }
 
     @Override
@@ -37,40 +41,23 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     public UserAnswer create(String quizId, String userId, QuizAnswer quizAnswer)
                                                      throws AppException {
         this.logger.debug(String.format("Adding answer for quiz: %s, user id: %s", quizId, userId));
-        if(quizId == null || userId == null || quizAnswer == null){
-            final String errorMsg = String.format("Bad input: quizId=%s, userId=%s, userAnswer=%s",
-                                            quizId,
-                                            userId,
-                                            AppUtils.toStringNullSafe(quizAnswer));
-            this.logger.error(errorMsg);
-            throw new NullPointerException(errorMsg);
+        this.validateUserAnswerDataForCreation(quizId, userId, quizAnswer);
+
+        Optional<QuizAnswer> quizAnswerOps = this.quizAnswerRepository.findById(quizAnswer.getId());
+        if (!quizAnswerOps.isPresent()){
+            throw new IllegalOperationException("TODO");
         }
+        final UserAnswer userAnswerToCreate = new UserAnswer();
+        userAnswerToCreate.setQuizAnswer(quizAnswerOps.get());
 
-        Optional<UserAnswer> ans = this.userAnswerRepository.find(quizId, userId);
-        if(ans.isPresent()){
-            throw new AnswerAlreadyExistException("Answer already exist");
-        }
-
-        final UserAnswer userAnswer = new UserAnswer();
-        userAnswer.setQuizAnswer(quizAnswer);
-
-        Optional<Quiz> quiz = this.quizRepository.findById(quizId);
-        if(!quiz.isPresent()){
-            AppUtils.throwAndLogException(
-                    new QuizNotFoundException(
-                            String.format("Quiz %s was not found", quizId)));
-        }
-        this.validateAnswerIsSuitableForQuiz(quiz.get(), quizAnswer, userId);
-
-        userAnswer.setQuiz(quiz.get());
         Optional<User> user = this.applicationUserRepository.findById(userId);
         if(!user.isPresent()){
             AppUtils.throwAndLogException(
                     new UserNotFoundException(String.format("user %s was not found", userId)));
         }
 
-        userAnswer.setUser(user.get());
-        UserAnswer userAnswerFromDB = this.userAnswerRepository.save(userAnswer);
+        userAnswerToCreate.setUser(user.get());
+        UserAnswer userAnswerFromDB = this.userAnswerRepository.save(userAnswerToCreate);
         this.logger.debug(String.format("Created user answer: %s", userAnswerFromDB.getId()));
         return userAnswerFromDB;
     }
@@ -95,6 +82,30 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         }
 
         return Optional.of(correctCount);
+    }
+
+    private void validateUserAnswerDataForCreation(String quizId, String userId, QuizAnswer quizAnswer) throws AppException {
+        if(quizId == null || userId == null || quizAnswer == null) {
+            final String errorMsg = String.format("Bad input: quizId=%s, userId=%s, userAnswer=%s",
+                    quizId,
+                    userId,
+                    AppUtils.toStringNullSafe(quizAnswer));
+            this.logger.error(errorMsg);
+            throw new NullPointerException(errorMsg);
+        }
+
+        Optional<UserAnswer> ans = this.userAnswerRepository.find(quizId, userId);
+        if(ans.isPresent()){
+            throw new AnswerAlreadyExistException("Answer already exist");
+        }
+
+        Optional<Quiz> quiz = this.quizRepository.findById(quizId);
+        if(!quiz.isPresent()){
+            AppUtils.throwAndLogException(
+                    new QuizNotFoundException(
+                            String.format("Quiz %s was not found", quizId)));
+        }
+        this.validateAnswerIsSuitableForQuiz(quiz.get(), quizAnswer, userId);
     }
 
     private void validateAnswerIsSuitableForQuiz(Quiz quiz, QuizAnswer quizAnswer,

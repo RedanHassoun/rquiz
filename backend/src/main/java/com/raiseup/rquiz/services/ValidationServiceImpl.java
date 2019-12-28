@@ -1,7 +1,8 @@
 package com.raiseup.rquiz.services;
 
-import com.raiseup.rquiz.models.db.BaseModel;
-import com.raiseup.rquiz.models.db.Quiz;
+import com.raiseup.rquiz.models.BaseDto;
+import com.raiseup.rquiz.models.QuizAnswerDto;
+import com.raiseup.rquiz.models.QuizDto;
 import com.raiseup.rquiz.models.db.QuizAnswer;
 import org.springframework.stereotype.Service;
 import javax.validation.ConstraintViolation;
@@ -16,12 +17,12 @@ public class ValidationServiceImpl implements ValidationService {
     private Validator validator = factory.getValidator();
 
     @Override
-    public Optional<List<String>> validateObject(BaseModel beanObject) {
-        Set<ConstraintViolation<BaseModel>> violations = validator.validate(beanObject);
+    public Optional<List<String>> validateObject(BaseDto beanObject) {
+        Set<ConstraintViolation<BaseDto>> violations = validator.validate(beanObject);
 
         if(violations != null && violations.size() > 0) {
             final List<String> validations = new ArrayList<>();
-            for (ConstraintViolation<BaseModel> violation : violations) {
+            for (ConstraintViolation<BaseDto> violation : violations) {
                 validations.add(violation.getMessage());
             }
             return Optional.of(validations);
@@ -31,21 +32,21 @@ public class ValidationServiceImpl implements ValidationService {
     }
 
     @Override
-    public Optional<List<String>> validateQuiz(Quiz quiz) {
-        Set<ConstraintViolation<BaseModel>> violations = validator.validate(quiz);
+    public Optional<List<String>> validateQuiz(QuizDto quiz) {
+        Set<ConstraintViolation<BaseDto>> violations = validator.validate(quiz);
         final List<String> validations = new ArrayList<>();
 
         if(violations != null && violations.size() > 0) {
-            for (ConstraintViolation<BaseModel> violation : violations) {
+            for (ConstraintViolation<BaseDto> violation : violations) {
                 validations.add(violation.getMessage());
             }
             return Optional.of(validations);
         }
 
-        for(QuizAnswer answer: quiz.getAnswers()){
+        for(QuizAnswerDto answer: quiz.getAnswers()){
             violations = validator.validate(answer);
             if(violations != null && violations.size() > 0) {
-                for (ConstraintViolation<BaseModel> violation : violations) {
+                for (ConstraintViolation<BaseDto> violation : violations) {
                     validations.add(violation.getMessage());
                 }
                 return Optional.of(validations);
@@ -91,7 +92,7 @@ public class ValidationServiceImpl implements ValidationService {
                     String.join(" , ", validations);
     }
 
-    public Optional<List<String>> validateUserAnswer(QuizAnswer quizAnswer, String quizId){
+    public Optional<List<String>> validateUserAnswer(QuizAnswerDto quizAnswer, String quizId){
         if(quizId == null){
             return Optional.of(Collections.singletonList("Quiz id cannot be null"));
         }
@@ -103,12 +104,12 @@ public class ValidationServiceImpl implements ValidationService {
         return this.validateObject(quizAnswer);
     }
 
-    private boolean hasOneCorrectAnswer(Quiz quiz){
+    private boolean hasOneCorrectAnswer(QuizDto quiz){
         Iterator answersIterator = quiz.getAnswers().iterator();
 
         int correctCount = 0;
         while(answersIterator.hasNext()){
-            QuizAnswer q = (QuizAnswer) answersIterator.next();
+            QuizAnswerDto q = (QuizAnswerDto) answersIterator.next();
             if(q.getIsCorrect()){
                 correctCount++;
             }

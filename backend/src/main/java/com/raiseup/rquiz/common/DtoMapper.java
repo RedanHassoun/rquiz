@@ -67,7 +67,7 @@ public class DtoMapper {
             quizAnswerDto.setQuizId(quizAnswer.getQuiz().getId());
         }
 
-        quizAnswerDto.setIsCorrect(null); // Never return the correct state to the client
+        quizAnswerDto.setIsCorrect(null); // Never return the quiz correct state to the client
         return quizAnswerDto;
     }
 
@@ -79,7 +79,6 @@ public class DtoMapper {
     public UserAnswerDto convertUserAnswerToDto(UserAnswer userAnswer) {
         UserAnswerDto userAnswerDto = new UserAnswerDto();
         userAnswerDto.setId(userAnswer.getId());
-        userAnswerDto.setQuizId(userAnswer.getQuiz().getId());
         userAnswerDto.setAnswerId(userAnswer.getQuizAnswer().getId());
         userAnswerDto.setUserId(userAnswer.getUser().getId());
 
@@ -90,7 +89,6 @@ public class DtoMapper {
         UserAnswer userAnswer = new UserAnswer();
         Quiz quiz = new Quiz();
         quiz.setId(userAnswerDto.getQuizId());
-        userAnswer.setQuiz(quiz);
 
         User user = new User();
         user.setId(userAnswerDto.getUserId());

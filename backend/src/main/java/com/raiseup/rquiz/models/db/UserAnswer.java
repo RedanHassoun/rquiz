@@ -20,11 +20,6 @@ public class UserAnswer extends BaseModel{
 
     @ManyToOne
     @JoinColumn
-    @JsonIgnore
-    private Quiz quiz;
-
-    @ManyToOne
-    @JoinColumn
     private User user;
 
     @ManyToOne
@@ -38,14 +33,6 @@ public class UserAnswer extends BaseModel{
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public Quiz getQuiz() {
-        return quiz;
-    }
-
-    public void setQuiz(Quiz quiz) {
-        this.quiz = quiz;
     }
 
     public User getUser() {
@@ -69,13 +56,11 @@ public class UserAnswer extends BaseModel{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserAnswer that = (UserAnswer) o;
-        return Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getQuiz(), that.getQuiz());
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(getId(), getQuiz());
+        return Objects.hash(getId());
     }
 }

@@ -49,10 +49,6 @@ public class Quiz extends BaseModel{
                cascade = CascadeType.ALL)
     private Set<QuizAnswer> answers = new HashSet<>();
 
-    @OneToMany(mappedBy = DBConsts.QUIZ_FIELD,
-               cascade = CascadeType.ALL)
-    private Set<UserAnswer> userAnswers = new HashSet<>();
-
     @Transient
     private Integer numberOfCorrectAnswers;
 
@@ -114,14 +110,6 @@ public class Quiz extends BaseModel{
     public void addQuizAnswer(QuizAnswer quizAnswer) {
         quizAnswer.setQuiz(this);
         this.answers.add(quizAnswer);
-    }
-
-    public Set<UserAnswer> getUserAnswers() {
-        return userAnswers;
-    }
-
-    public void setUserAnswers(Set<UserAnswer> userAnswers) {
-        this.userAnswers = userAnswers;
     }
 
     public Integer getNumberOfCorrectAnswers() {

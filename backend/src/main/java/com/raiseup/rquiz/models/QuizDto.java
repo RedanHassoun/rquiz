@@ -3,7 +3,7 @@ package com.raiseup.rquiz.models;
 import java.util.HashSet;
 import java.util.Set;
 
-public class QuizDto {
+public class QuizDto extends BaseDto {
     private String id;
     private String title;
     private String description;
