@@ -45,7 +45,9 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
         Optional<QuizAnswer> quizAnswerOps = this.quizAnswerRepository.findById(quizAnswer.getId());
         if (!quizAnswerOps.isPresent()){
-            throw new IllegalOperationException("TODO");
+            throw new IllegalOperationException(
+                    String.format("Cannot add answer %s for quiz %s because the requested quiz answer doesn't exist",
+                            quizAnswer.getId(), quizId));
         }
         final UserAnswer userAnswerToCreate = new UserAnswer();
         userAnswerToCreate.setQuizAnswer(quizAnswerOps.get());
