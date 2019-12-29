@@ -166,11 +166,20 @@ public class QuizController {
 
 
     @GetMapping(path = "/{id}/user-answer",
-            consumes = "application/json",
             produces = "application/json")
-    public List<UserAnswerDto> getQuizUserAnswers(@PathVariable("id") String quizId) throws Exception {
+    public List<UserAnswerDto> getQuizUserAnswers(@PathVariable("id") String quizId,
+                                                  @RequestParam(required = false) String userId) throws Exception {
         try{
-            List<UserAnswer> userAnswers = this.userAnswerService.getUserAnswersForQuiz(quizId);
+            List<UserAnswer> userAnswers = new ArrayList<>();
+            if(userId != null) {
+                Optional<UserAnswer> userAnswer = this.userAnswerService.getQuizAnswerForUser(quizId, userId);
+                if(userAnswer.isPresent()){
+                    userAnswers = Arrays.asList(userAnswer.get());
+                }
+
+            } else {
+                userAnswers = this.userAnswerService.getUserAnswersForQuiz(quizId);
+            }
 
             return userAnswers.stream()
                     .map(userAnswer -> this.dtoMapper.convertUserAnswerToDto(userAnswer))

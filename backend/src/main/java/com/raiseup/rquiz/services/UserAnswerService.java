@@ -10,4 +10,5 @@ public interface UserAnswerService {
     UserAnswer create(String quizId, String userId, QuizAnswer quizAnswer) throws AppException;
     List<UserAnswer> getUserAnswersForQuiz(String quizId);
     Optional<Integer> getCorrectCount(List<UserAnswer> userAnswers);
+    Optional<UserAnswer> getQuizAnswerForUser(String quizId, String userId) throws AppException;
 }

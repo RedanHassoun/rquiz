@@ -40,9 +40,9 @@ export class QuizItemComponent implements OnInit, OnDestroy {
     return 'assets/img/quiz-place-holder.svg';
   }
 
-  showQuiz(quizId: string): void {
+  showQuiz(): void {
     this.subscriptions.push(
-      this.navigationService.openDialog(ShowQuizComponent, undefined, quizId)
+      this.navigationService.openDialog(ShowQuizComponent, undefined, this.quiz)
         .subscribe()
     );
   }

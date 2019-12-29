@@ -1,25 +1,40 @@
 <div *ngIf="quiz">
   <form #quizForm="ngForm">
-    <h2>{{ quiz.title }}</h2>
-    <p>{{ quiz.description }}</p>
+    <div class="grid-container">
+      <div class="grid-item-full-width">
+        <h2>{{ quiz.title }}</h2>
+      </div>
 
-    <mat-radio-group name="quizAnswers" class="quiz-radio-group" aria-label="Select an answer" [selected]="null"
-      [(ngModel)]="selectedAnswerId">
-      <mat-radio-button class="quiz-radio-button" *ngFor="let answer of quiz.answers" [value]="answer.id"
-        [disabled]="false">
-        {{answer.content}}
-      </mat-radio-button>
-    </mat-radio-group>
+      <div class="grid-item-full-width">
+        <p>{{ quiz.description }}</p>
+        <p class="text-warning" *ngIf="isAlreadyAnswered && isAlreadyAnswered === true">
+          You already solved this quiz
+        </p>
+      </div>
+
+      <div class="grid-item-full-width">
+        <mat-radio-group name="quizAnswers" class="quiz-radio-group" aria-label="Select an answer" [selected]="null"
+          [(ngModel)]="selectedAnswerId">
+          <mat-radio-button class="quiz-radio-button" *ngFor="let answer of quiz.answers" [value]="answer.id"
+            [disabled]="false">
+            {{answer.content}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
 
 
-    <button id="cancel-btn" class="btn btn-default" mat-dialog-close>
-      Cancel
-    </button>
+      <div class="grid-item-cancel-btn">
+        <button id="cancel-btn" class="btn btn-default btn-block" mat-dialog-close>
+          Cancel
+        </button>
+      </div>
 
-    <!-- TODO: Fix the tooltip issue -->
-    <button class="btn btn-primary" id="submit-btn" [disabled]="shouldHideSolveButton()" (click)="solve()">
-      Solve!
-    </button>
-
+      <div class="grid-item-solve">
+        <!-- TODO: Fix the tooltip issue -->
+        <button class="btn btn-primary btn-block" id="submit-btn" [disabled]="shouldHideSolveButton()" (click)="solve()">
+          Solve!
+        </button>
+      </div>
+    </div>
   </form>
 </div>

@@ -6,7 +6,7 @@
   <div class="content-wrapper">
     <h1>{{quiz.title}}</h1>
     <p>{{ quiz.description }}</p>
-    <a (click)="showQuiz(quiz.id)" class="more">Show</a>
+    <a (click)="showQuiz()" class="more">Show</a>
     <div>
       Posted by: <a (click)="showUser(quiz.creator)">{{ quiz.creator.username }}</a>
     </div>

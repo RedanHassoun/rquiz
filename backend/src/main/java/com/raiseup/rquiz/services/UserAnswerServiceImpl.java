@@ -65,6 +65,7 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserAnswer> getUserAnswersForQuiz(String quizId) {
         if(quizId == null){
             throw new IllegalArgumentException("quiz id cannot be null");
@@ -86,6 +87,29 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         return Optional.of(correctCount);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<UserAnswer> getQuizAnswerForUser(String quizId, String userId) {
+        if (userId == null || quizId == null) {
+            this.logger.error(String.format("Cannot get quiz answer for user %s", userId));
+            throw new IllegalArgumentException(
+                    "Cannot get quiz answer for user, userId and quizId must be defined");
+        }
+
+        List<UserAnswer> userAnswers = this.userAnswerRepository.find(quizId, userId);
+        if(userAnswers.size() > 0) {
+            if(userAnswers.size() > 1) {
+                this.logger.error(String.format(
+                        "Found more than one answer for quiz %s and user %s, looks like there is a corruption in the database",
+                        quizId, userId));
+            }
+
+            return Optional.of(userAnswers.get(0));
+        }
+
+        return Optional.empty();
+    }
+
     private void validateUserAnswerDataForCreation(String quizId, String userId, QuizAnswer quizAnswer) throws AppException {
         if(quizId == null || userId == null || quizAnswer == null) {
             final String errorMsg = String.format("Bad input: quizId=%s, userId=%s, userAnswer=%s",
@@ -96,8 +120,13 @@ public class UserAnswerServiceImpl implements UserAnswerService {
             throw new NullPointerException(errorMsg);
         }
 
-        Optional<UserAnswer> ans = this.userAnswerRepository.find(quizId, userId);
-        if(ans.isPresent()){
+        List<UserAnswer> ansList = this.userAnswerRepository.find(quizId, userId);
+        if(ansList.size() > 0){
+            if(ansList.size() > 1) {
+                this.logger.error(String.format(
+                        "Found more than one answer for quiz %s and user %s, looks like there is a corruption in the database",
+                        quizId, userId));
+            }
             throw new AnswerAlreadyExistException("Answer already exist");
         }
 

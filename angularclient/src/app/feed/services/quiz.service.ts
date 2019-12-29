@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { AppConsts } from './../../shared/util/app-consts';
 import { ClientDataServiceService } from './../../shared/services/client-data-service.service';
 import { Injectable } from '@angular/core';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { UserAnswer } from 'src/app/shared/models/user-answer';
 import { Observable } from 'rxjs';
 
@@ -44,14 +44,22 @@ export class QuizService extends ClientDataServiceService {
       .pipe(catchError(AppUtil.handleError));
   }
 
-  async isAlreadyAnswered(quiz: Quiz): Promise<boolean> {
-    const currentUser: User = await this.authenticationService.getCurrentUser();
-    const userAnswersList: UserAnswer[] = quiz.userAnswers;
-    for (const userAnswer of userAnswersList) {
-        if (currentUser.id.toString() === userAnswer.user.id.toString()) {
-            return true;
-        }
+  public async isAlreadyAnswered(quiz: Quiz, userId: string): Promise<boolean> {
+    const currentUserAnswersForQuiz: UserAnswer[] = await this.getUserAnswerForQuiz(quiz.id, userId).toPromise();
+    if (currentUserAnswersForQuiz.length > 0) {
+      return true;
     }
+
     return false;
+  }
+
+  public getUserAnswerForQuiz(quizId: string, userId: string): Observable<UserAnswer[]> {
+    if (!quizId || !userId) {
+      throw new Error(`Cannot get user answers for quiz, parameters must be defined`);
+    }
+    const url = `${this.url}${quizId}/user-answer?userId=${userId}`;
+    return this.http.get(url, { headers: super.createAuthorizationHeader() })
+      .pipe(map(result => result as UserAnswer[]))
+      .pipe(catchError(AppUtil.handleError));
   }
 }

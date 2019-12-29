@@ -19,42 +19,36 @@ import { TOPIC_QUIZ_ANSWERS_UPDATE } from 'src/app/core/model/socket-consts';
 })
 export class ShowQuizComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
-  quiz: Quiz;
   selectedAnswerId: string;
   isAlreadyAnswered: boolean;
   currentUser: User;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public quizId: string,
+  constructor(@Inject(MAT_DIALOG_DATA) public quiz: Quiz,
     private quizService: QuizService,
     private authenticationService :AuthenticationService,
     private dialogRef: MatDialogRef<ShowQuizComponent>,
     private notificationService: NotificationService) { }
 
   async ngOnInit() {
-    this.subscriptions.push(
-      this.quizService.get(this.quizId)
-        .subscribe((res: Quiz) => {
-          this.quiz = res;
-          this.checkIfQuizAlreadyAnswered(res);
-        }, (err) => {
-          AppUtil.showError(err);
-        })
-    );
-
     this.currentUser = await this.authenticationService.getCurrentUser();
+    this.checkIfQuizAlreadyAnswered();
   }
 
   ngOnDestroy(): void {
     AppUtil.releaseSubscriptions(this.subscriptions);
   }
 
-  async checkIfQuizAlreadyAnswered(quiz: Quiz): Promise<void> {
-    this.isAlreadyAnswered = await this.quizService.isAlreadyAnswered(quiz);
+  async checkIfQuizAlreadyAnswered(): Promise<void> {
+    this.isAlreadyAnswered = await this.quizService.isAlreadyAnswered(this.quiz, this.currentUser.id);
   }
 
   shouldHideSolveButton(): boolean {
-    if ( (this.isAlreadyAnswered && this.isAlreadyAnswered === true) ||
-          (!this.currentUser || this.currentUser.id === this.quiz.creator.id)) {
+    if (typeof this.isAlreadyAnswered === 'undefined' || this.isAlreadyAnswered === null) {
+      return true;
+    }
+
+    if (!!this.isAlreadyAnswered ||
+        (!this.currentUser || this.currentUser.id === this.quiz.creator.id)) {
       return true;
     }
 
