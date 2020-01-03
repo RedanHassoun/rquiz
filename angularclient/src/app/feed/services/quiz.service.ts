@@ -39,8 +39,9 @@ export class QuizService extends ClientDataServiceService {
     return Promise.resolve(false);
   }
 
-  solve(quizId: string, quizAnswer: QuizAnswer): Observable<any> { // TODO: replace any
+  public solve(quizId: string, quizAnswer: QuizAnswer): Observable<Quiz> {
     return this.http.post(`${this.url}${quizId}/answer`, quizAnswer, { headers: super.createAuthorizationHeader() })
+      .pipe(map(quiz => quiz as Quiz))
       .pipe(catchError(AppUtil.handleError));
   }
 

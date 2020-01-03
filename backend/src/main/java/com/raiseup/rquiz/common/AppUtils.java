@@ -52,4 +52,14 @@ public class AppUtils {
         logger.error(exceptionToThrow.getMessage());
         throw exceptionToThrow;
     }
+
+    public static String getEnvironmentVariable(String variableName) {
+        try{
+            return System.getenv(variableName);
+        }catch (Exception ex) {
+            logger.error(String.format("Cannot get variable %s from system environment",
+                    variableName), ex);
+            return null;
+        }
+    }
 }
