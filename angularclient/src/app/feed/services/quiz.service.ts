@@ -1,3 +1,4 @@
+import { CoreUtil } from './../../core/common/core-util';
 import { User } from './../../shared/models/user';
 import { AuthenticationService } from './../../core/services/authentication.service';
 import { QuizAnswer } from './../../shared/models/quiz-answer';
@@ -25,7 +26,7 @@ export class QuizService extends ClientDataServiceService {
     if (page != null && typeof page !== undefined) {
       url += `&page=${page}&size=${QuizService.PAGE_SIZE}`;
     }
-    return this.http.get(url, { headers: super.createAuthorizationHeader() })
+    return this.http.get(url, { headers: CoreUtil.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
   }
 
@@ -40,7 +41,7 @@ export class QuizService extends ClientDataServiceService {
   }
 
   public solve(quizId: string, quizAnswer: QuizAnswer): Observable<Quiz> {
-    return this.http.post(`${this.url}${quizId}/answer`, quizAnswer, { headers: super.createAuthorizationHeader() })
+    return this.http.post(`${this.url}${quizId}/answer`, quizAnswer, { headers: CoreUtil.createAuthorizationHeader() })
       .pipe(map(quiz => quiz as Quiz))
       .pipe(catchError(AppUtil.handleError));
   }
@@ -59,7 +60,7 @@ export class QuizService extends ClientDataServiceService {
       throw new Error(`Cannot get user answers for quiz, parameters must be defined`);
     }
     const url = `${this.url}${quizId}/user-answer?userId=${userId}`;
-    return this.http.get(url, { headers: super.createAuthorizationHeader() })
+    return this.http.get(url, { headers: CoreUtil.createAuthorizationHeader() })
       .pipe(map(result => result as UserAnswer[]))
       .pipe(catchError(AppUtil.handleError));
   }

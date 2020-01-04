@@ -1,45 +1,36 @@
-import { User } from './../models/user';
+import { CoreUtil } from './../../core/common/core-util';
 import { AppUtil } from '../util/app-util';
-import { Injectable } from '@angular/core';
 import { AppConsts } from '../util/app-consts';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 export class ClientDataServiceService {
   constructor(public url: string, public http: HttpClient) {
   }
-
-  public createAuthorizationHeader(): HttpHeaders {
-    let headers = new HttpHeaders(); // TODO: take from 'jwt' interceptor
-    const authorizationToken: string = localStorage.getItem(AppConsts.KEY_USER_TOKEN);
-    headers = headers.set('Authorization', authorizationToken);
-    return headers;
-  }
-
+  // TODO: take headers from interceptor
   getAll() {
-    return this.http.get(`${this.url}all`, { headers: this.createAuthorizationHeader() })
+    return this.http.get(`${this.url}all`, { headers: CoreUtil.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
   }
 
   delete(id: string) {
-    return this.http.delete(this.url + id, { headers: this.createAuthorizationHeader() })
+    return this.http.delete(this.url + id, { headers: CoreUtil.createAuthorizationHeader() })
       .pipe(map((response: string) => JSON.parse(response)))
       .pipe(catchError(AppUtil.handleError));
   }
 
   create(resource) {
-    return this.http.post(this.url, resource, { headers: this.createAuthorizationHeader() })
+    return this.http.post(this.url, resource, { headers: CoreUtil.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
   }
 
   update(id: string, resource: any) {
-    return this.http.put(`${this.url}id`, resource, { headers: this.createAuthorizationHeader() })
+    return this.http.put(`${this.url}id`, resource, { headers: CoreUtil.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
   }
 
   get(id: string) {
-    return this.http.get(this.url + id, { headers: this.createAuthorizationHeader() })
+    return this.http.get(this.url + id, { headers: CoreUtil.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
   }
 
@@ -71,7 +62,7 @@ export class ClientDataServiceService {
       url += `page=${page}&size=${size}`;
     }
 
-    return this.http.get(url, { headers: this.createAuthorizationHeader() })
+    return this.http.get(url, { headers: CoreUtil.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
   }
 
@@ -81,7 +72,7 @@ export class ClientDataServiceService {
       resourceUrl += `?page=${page}&size=${size}`;
     }
 
-    return this.http.get(resourceUrl, { headers: this.createAuthorizationHeader() })
+    return this.http.get(resourceUrl, { headers: CoreUtil.createAuthorizationHeader() })
       .pipe(catchError(AppUtil.handleError));
   }
 }

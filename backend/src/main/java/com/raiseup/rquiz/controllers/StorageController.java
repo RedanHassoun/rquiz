@@ -2,6 +2,8 @@ package com.raiseup.rquiz.controllers;
 
 import com.raiseup.rquiz.exceptions.IllegalOperationException;
 import com.raiseup.rquiz.services.AmazonClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,12 +17,13 @@ public class StorageController {
     }
 
     @PostMapping("")
-    public String uploadFile(@RequestPart(value = "file") MultipartFile file) throws IllegalOperationException {
+    public ResponseEntity<String> uploadFile(@RequestPart(value = "file") MultipartFile file) throws IllegalOperationException {
         if (file == null) {
             throw new IllegalOperationException("Cannot upload file because it is not defined");
         }
 
-        return this.amazonClient.uploadFile(file);
+        String imageUrl = this.amazonClient.uploadFile(file);
+        return new ResponseEntity<>(imageUrl, HttpStatus.CREATED);
     }
 
     @DeleteMapping("")

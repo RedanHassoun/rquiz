@@ -47,24 +47,15 @@ public class AmazonClient {
     public String uploadFile(MultipartFile multipartFile) {
         File fileToUpload = null;
         String fileUrl = "";
-        boolean deleteSuccess = true;
+
         try {
             fileToUpload = convertMultiPartToFile(multipartFile);
             String fileName = generateFileName(multipartFile);
             fileUrl = String.format("https://s3.%s.amazonaws.com/%s/%s", this.AWS_S3_REGION, this.bucketName, fileName);
             uploadFileTos3bucket(fileName, fileToUpload);
-            deleteSuccess = fileToUpload.delete();
         } catch (Exception ex) {
             final String fileName = multipartFile != null ? multipartFile.getOriginalFilename() : null;
             this.logger.error(String.format("Cannot upload file: %s to amazon s3", fileName), ex);
-        } finally {
-            if (fileToUpload != null) {
-                deleteSuccess = fileToUpload.delete();
-            }
-        }
-
-        if(!deleteSuccess) {
-            throw new RuntimeException(String.format("Cannot delete file %s", multipartFile.getOriginalFilename()));
         }
 
         return fileUrl;
@@ -77,7 +68,7 @@ public class AmazonClient {
             throw new IllegalOperationException(errorMsg);
         }
         String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
-        s3client.deleteObject(new DeleteObjectRequest(bucketName + "/", fileName));
+        s3client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
     }
 
     private File convertMultiPartToFile(MultipartFile multiPartFile) throws IOException {

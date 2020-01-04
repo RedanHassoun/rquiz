@@ -13,6 +13,12 @@
   </div>
 
   <div class="form-group">
+    <label for="image">Image</label>
+    <input type="file" class="form-control" formControlName="image" placeholder="Image"
+      accept=".png, .jpg, .jpeg" (change)="handleSelectedImage($event.target.files)">
+  </div>
+
+  <div class="form-group">
     <button [disabled]="!f.valid" class="btn btn-primary form-button" type="submit">Update details</button>
     <button id="cancel-btn" class="btn btn-default form-button" mat-dialog-close>Cancel</button>
   </div>
