@@ -52,6 +52,8 @@ public class BeanConfiguration {
                             user.setPassword("123");
                             user.setEmail(String.format("%s@mail.com", name));
                             userService.create(user);
+                            user.setImageUrl("https://www.hindustantimes.com/rf/image_size_960x540/HT/p2/2018/09/27/Pictures/_0ab52210-c22f-11e8-ac2f-8b6cbdfc246f.PNG");
+                            userService.update(user);
                         }catch (Exception ex){
                             this.logger.error(String.format("Cannot create user. error: %s",
                                     ExceptionUtils.getStackTrace(ex)));

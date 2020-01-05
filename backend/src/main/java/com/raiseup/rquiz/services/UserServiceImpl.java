@@ -44,7 +44,6 @@ public class UserServiceImpl implements UserService {
 
         String id = UUID.randomUUID().toString();
         user.setId(id);
-        user.setImageUrl("https://www.hindustantimes.com/rf/image_size_960x540/HT/p2/2018/09/27/Pictures/_0ab52210-c22f-11e8-ac2f-8b6cbdfc246f.PNG");
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         applicationUserRepository.save(user);
         return this.applicationUserRepository.findByUsername(user.getUsername());

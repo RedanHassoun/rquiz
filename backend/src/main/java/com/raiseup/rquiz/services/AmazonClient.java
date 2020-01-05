@@ -56,6 +56,10 @@ public class AmazonClient {
         } catch (Exception ex) {
             final String fileName = multipartFile != null ? multipartFile.getOriginalFilename() : null;
             this.logger.error(String.format("Cannot upload file: %s to amazon s3", fileName), ex);
+        } finally {
+            if (fileToUpload != null) {
+                fileToUpload.delete();
+            }
         }
 
         return fileUrl;
