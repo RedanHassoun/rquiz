@@ -1,80 +1,90 @@
 <h4>Add a new quiz</h4>
 <form *ngIf="addQuizForm && quiz" #theForm="ngForm" [formGroup]="addQuizForm">
-    <div class="form-group">
-        <label class="input-label-small" for="title">Title</label>
-        <input [style.border]="getInputBorderStyle(title)" [(ngModel)]="quiz.title" name="title" class="form-control"
-            formControlName="title">
+    <div class="grid-container">
+        <div class="grid-item-full-width">
+            <div class="form-group">
+                <label class="input-label-small" for="title">Title</label>
+                <input [style.border]="getInputBorderStyle(title)" [(ngModel)]="quiz.title" name="title"
+                    class="form-control" formControlName="title">
 
-        <div *ngIf="isInputValidationFailed(title)" class="validation-err-container">
-            <div *ngIf="title.errors.required">
-                Title is required.
-            </div>
-            <div *ngIf="title.errors.minlength">
-                Title must be at least {{ title.errors.minlength.requiredLength }} characters long.
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="input-label-small" for="description">Description</label>
-        <input [style.border]="getInputBorderStyle(description)" [(ngModel)]="quiz.description" name="description"
-            class="form-control" formControlName="description" />
-
-        <div *ngIf="isInputValidationFailed(description)" class="validation-err-container">
-            <div *ngIf="description.errors.required">
-                Description is required.
-            </div>
-            <div *ngIf="description.errors.minlength">
-                Description must be at least {{ description.minlength.requiredLength }} characters long.
-            </div>
-        </div>
-    </div>
-
-
-    <mat-checkbox [checked]="quiz.isPublic" (change)="publicChanged($event.checked)">Show in public</mat-checkbox>
-    <div *ngIf="!quiz.isPublic">
-        <ng-multiselect-dropdown [placeholder]="'Assign quiz to ...'" [data]="users" [(ngModel)]="selectedUsers"
-            [ngModelOptions]="{standalone: true}" [settings]="dropdownSettings">
-        </ng-multiselect-dropdown>
-    </div>
-
-    <hr />
-
-
-    <div class="add-input-container">
-        <input #answerInput type="text" placeholder="Add answer" aria-label="Add answer">
-        <span class="btn secondary-button" (click)="addAnswer(answerInput.value)">Add</span>
-    </div>
-
-    <mat-list>
-        <h3 mat-subheader>Answers</h3>
-        <div mat-subheader *ngIf="quiz.answers.length === 0">
-            Please add answers to the quiz
-        </div>
-        <mat-list-item *ngFor="let answer of quiz.answers">
-            <div class="quiz-answer-list-item" (click)="setCorrect(answer)">
-                <div class="action-btn" *ngIf="answer.isCorrect;else not_correct">
-                    <mat-icon mat-list-icon>done</mat-icon>
+                <div *ngIf="isInputValidationFailed(title)" class="validation-err-container">
+                    <div *ngIf="title.errors.required">
+                        Title is required.
+                    </div>
+                    <div *ngIf="title.errors.minlength">
+                        Title must be at least {{ title.errors.minlength.requiredLength }} characters long.
+                    </div>
                 </div>
-
-                <ng-template class="action-btn" #not_correct>
-                    <mat-icon mat-list-icon>arrow_forward_ios</mat-icon>
-                </ng-template>
-
-                <p class="answer-content">{{answer.content}}</p>
-
-                <mat-icon class="action-btn" (click)="deleteAnswer(answer)" svgIcon="delete"></mat-icon>
             </div>
-        </mat-list-item>
-        <mat-divider></mat-divider>
-    </mat-list>
+        </div>
 
-    <br />
-    <hr />
+        <div class="grid-item-full-width">
+            <div class="form-group">
+                <label class="input-label-small" for="description">Description</label>
+                <input [style.border]="getInputBorderStyle(description)" [(ngModel)]="quiz.description"
+                    name="description" class="form-control" formControlName="description" />
 
-    <button id="cancel-btn" class="btn btn-default" mat-dialog-close>Cancel</button>
+                <div *ngIf="isInputValidationFailed(description)" class="validation-err-container">
+                    <div *ngIf="description.errors.required">
+                        Description is required.
+                    </div>
+                    <div *ngIf="description.errors.minlength">
+                        Description must be at least {{ description.minlength.requiredLength }} characters long.
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <button id="add-quiz-btn" class="btn btn-primary" [disabled]="!theForm.valid" (click)="addQuiz()">
-        Add quiz
-    </button>
+        <div class="grid-item-full-width">
+            <mat-checkbox [checked]="quiz.isPublic" (change)="publicChanged($event.checked)">Show in public
+            </mat-checkbox>
+            <div *ngIf="!quiz.isPublic">
+                <ng-multiselect-dropdown [placeholder]="'Assign quiz to ...'" [data]="users" [(ngModel)]="selectedUsers"
+                    [ngModelOptions]="{standalone: true}" [settings]="dropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+        </div>
+
+        <div class="grid-item-full-width">
+            <div class="add-input-container">
+                <input #answerInput type="text" placeholder="Add answer" aria-label="Add answer">
+                <button class="btn btn-outline-primary" (click)="addAnswer(answerInput.value)">Add</button>
+            </div>
+        </div>
+
+        <div class="grid-item-full-width quiz-answers-list">
+            <h5 mat-subheader>Answers list:</h5>
+            <div mat-subheader *ngIf="quiz.answers.length === 0">
+                Please add answers to the quiz
+            </div>
+            <mat-list-item *ngFor="let answer of quiz.answers">
+                <div class="quiz-answer-list-item" (click)="setCorrect(answer)">
+                    <div class="action-btn" *ngIf="answer.isCorrect;else not_correct">
+                        <mat-icon mat-list-icon>done</mat-icon>
+                    </div>
+
+                    <ng-template class="action-btn" #not_correct>
+                        <mat-icon mat-list-icon>arrow_forward_ios</mat-icon>
+                    </ng-template>
+
+                    <p class="answer-content">{{answer.content}}</p>
+
+                    <mat-icon class="action-btn" (click)="deleteAnswer(answer)" svgIcon="delete"></mat-icon>
+                </div>
+                <mat-divider></mat-divider>
+            </mat-list-item>
+        </div>
+
+        <div class="grid-item-cancel-btn">
+            <button id="cancel-btn" class="btn btn-default btn-block" mat-dialog-close>
+                Cancel
+            </button>
+        </div>
+
+        <div class="grid-item-add-quiz">
+            <button id="add-quiz-btn" class="btn btn-primary btn-block" [disabled]="!theForm.valid" (click)="addQuiz()">
+                Add quiz
+            </button>
+        </div>
+    </div>
 </form>

@@ -1,26 +1,26 @@
-#cancel-btn {
-  float: left;
-}
-
-#add-quiz-btn {
-  float: right;
-}
 
 .header {
   text-align: center;
 }
 
-.add-input-container input {
-  width: 80%;
-  padding: 5px;
+.add-input-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-flow: row nowrap;
 }
 
-.add-input-container span {
-  width: 20%;
+.add-input-container input {
+  flex-grow: 8;
+}
+
+.add-input-container button {
+  flex-grow: 2;
+  margin: 5px;
 }
 
 .mat-icon {
-  font-size: 5px;
+  font-size: 20px;
 }
 
 .quiz-answer-list-item {
@@ -38,7 +38,30 @@
   width: 80%;
 }
 
-form {
-  overflow-y: scroll;
-  height: 80vh;
+.grid-container {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: auto auto auto auto;
+}
+
+.grid-item-full-width {
+  grid-column-start: 1;
+  grid-column-end: 5;
+}
+
+.grid-item-cancel-btn {
+  grid-column: 1 / span 2;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.grid-item-add-quiz {
+  grid-column: 3 / span 2;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.quiz-answers-list {
+  max-height: 25vh;
+  overflow: auto;
 }
