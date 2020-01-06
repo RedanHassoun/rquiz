@@ -3,7 +3,7 @@
     <div class="grid-container">
         <div class="grid-item-full-width">
             <div class="form-group">
-                <label class="input-label-small" for="title">Title</label>
+                <label for="title">Title</label>
                 <input [style.border]="getInputBorderStyle(title)" [(ngModel)]="quiz.title" name="title"
                     class="form-control" formControlName="title">
 
@@ -20,7 +20,7 @@
 
         <div class="grid-item-full-width">
             <div class="form-group">
-                <label class="input-label-small" for="description">Description</label>
+                <label for="description">Description</label>
                 <input [style.border]="getInputBorderStyle(description)" [(ngModel)]="quiz.description"
                     name="description" class="form-control" formControlName="description" />
 
