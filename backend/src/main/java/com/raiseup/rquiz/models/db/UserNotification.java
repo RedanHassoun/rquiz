@@ -33,8 +33,12 @@ public class UserNotification extends BaseModel {
     private Date time;
 
     @ManyToOne
-    @JoinColumn(nullable=true)
+    @JoinColumn(nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn
+    private User targetUser;
 
     public String getId() {
         return id;
@@ -82,5 +86,13 @@ public class UserNotification extends BaseModel {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public User getTargetUser() {
+        return targetUser;
+    }
+
+    public void setTargetUser(User targetUser) {
+        this.targetUser = targetUser;
     }
 }

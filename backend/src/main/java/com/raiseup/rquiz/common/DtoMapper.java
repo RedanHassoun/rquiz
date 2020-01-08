@@ -125,6 +125,7 @@ public class DtoMapper {
                                                                             AppNotificationMessage.class);
         appNotificationMessage.setUserId(userNotification.getUser().getId());
         appNotificationMessage.setUsername(userNotification.getUser().getUsername());
+        appNotificationMessage.setTargetUserId(userNotification.getTargetUser().getId());
 
         return appNotificationMessage;
     }
@@ -136,6 +137,10 @@ public class DtoMapper {
         user.setId(appNotificationMessage.getUserId());
         user.setUsername(appNotificationMessage.getUsername());
         userNotification.setUser(user);
+
+        User targetUser = new User();
+        targetUser.setId(appNotificationMessage.getTargetUserId());
+        userNotification.setTargetUser(targetUser);
 
         return userNotification;
     }

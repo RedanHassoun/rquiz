@@ -23,6 +23,7 @@ export class AppNotificationMessage {
     username: string;
     time: Date;
     seen: boolean;
+    targetUserId: string;
 
     constructor(data: any, topic: string, userId?: string, username?: string) {
         if (typeof data !== 'string') {
