@@ -25,7 +25,7 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
 
   constructor(@Inject(MAT_DIALOG_DATA) public quiz: Quiz,
     private quizService: QuizService,
-    private authenticationService :AuthenticationService,
+    private authenticationService: AuthenticationService,
     private dialogRef: MatDialogRef<ShowQuizComponent>,
     private notificationService: NotificationService) { }
 
@@ -48,7 +48,7 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
     }
 
     if (!!this.isAlreadyAnswered ||
-        (!this.currentUser || this.currentUser.id === this.quiz.creator.id)) {
+      (!this.currentUser || this.currentUser.id === this.quiz.creator.id)) {
       return true;
     }
 
@@ -69,8 +69,12 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
 
     this.quizService.solve(this.quiz.id, answer)
       .subscribe(solvedQuiz => {
-        const solvedQuizNotification = new AppNotificationMessage(solvedQuiz);
-        this.notificationService.send(TOPIC_QUIZ_ANSWERS_UPDATE, solvedQuizNotification);
+        const solvedQuizNotification = new AppNotificationMessage(solvedQuiz,
+          TOPIC_QUIZ_ANSWERS_UPDATE,
+          this.currentUser.id,
+          this.currentUser.username);
+
+        this.notificationService.send(solvedQuizNotification);
         this.dialogRef.close();
       }, err => {
         AppUtil.showError(err.toString());

@@ -1,10 +1,7 @@
 package com.raiseup.rquiz.common;
 
 import com.raiseup.rquiz.models.*;
-import com.raiseup.rquiz.models.db.Quiz;
-import com.raiseup.rquiz.models.db.QuizAnswer;
-import com.raiseup.rquiz.models.db.User;
-import com.raiseup.rquiz.models.db.UserAnswer;
+import com.raiseup.rquiz.models.db.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import java.util.HashSet;
@@ -122,4 +119,25 @@ public class DtoMapper {
 
         return user;
     }
+
+    public AppNotificationMessage convertUserNotificationToDto(UserNotification userNotification) {
+        AppNotificationMessage appNotificationMessage = this.modelMapper.map(userNotification,
+                                                                            AppNotificationMessage.class);
+        appNotificationMessage.setUserId(userNotification.getUser().getId());
+        appNotificationMessage.setUsername(userNotification.getUser().getUsername());
+
+        return appNotificationMessage;
+    }
+
+    public UserNotification convertUserNotificationDtoToEntity(AppNotificationMessage appNotificationMessage) {
+        UserNotification userNotification = this.modelMapper.map(appNotificationMessage,
+                UserNotification.class);
+        User user = new User();
+        user.setId(appNotificationMessage.getUserId());
+        user.setUsername(appNotificationMessage.getUsername());
+        userNotification.setUser(user);
+
+        return userNotification;
+    }
+
 }

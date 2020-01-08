@@ -10,6 +10,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatBadgeModule } from '@angular/material/badge';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -44,7 +45,8 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
     MatRadioModule,
     MatTooltipModule,
     NgMultiSelectDropDownModule.forRoot(),
-    MatSidenavModule
+    MatSidenavModule,
+    MatBadgeModule
   ],
   entryComponents: [
     ConfirmationDialogComponent,
@@ -67,7 +69,8 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
     MatCheckboxModule,
     MatTooltipModule,
     NgMultiSelectDropDownModule,
-    QuizItemComponent
+    QuizItemComponent,
+    MatBadgeModule
   ]
 })
 export class SharedModule { }

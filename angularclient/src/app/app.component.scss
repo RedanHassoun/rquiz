@@ -10,3 +10,13 @@
 h1.app-name {
   margin-left: 8px;
 }
+
+.app-toolbar {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+#notifications-bell {
+  margin-left: auto;
+  margin-right: 10px;
+}

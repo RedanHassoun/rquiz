@@ -76,8 +76,8 @@ export class EditProfileComponent extends FormInputComponent implements OnInit, 
   }
 
   private handleUpdateProfileSucces() {
-    const updatedUser = new AppNotificationMessage(this.user.id);
-    this.notificationService.send(TOPIC_USER_UPDATE, updatedUser);
+    const updatedUser = new AppNotificationMessage(this.user.id, TOPIC_USER_UPDATE);
+    this.notificationService.send(updatedUser);
     this.dialogRef.close();
   }
 

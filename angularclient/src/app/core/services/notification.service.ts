@@ -1,10 +1,13 @@
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Quiz } from './../../shared/models/quiz';
+import { User } from './../../shared/models/user';
+import { AuthenticationService } from 'src/app/core/services/authentication.service';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import * as SockJS from 'sockjs-client';
 import * as Stomp from 'stompjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { first, filter, switchMap } from 'rxjs/operators';
 
-import { AppNotificationMessage } from './../model/socket-consts';
+import { AppNotificationMessage, TOPIC_QUIZ_ANSWERS_UPDATE } from './../model/socket-consts';
 import { AppConsts } from './../../shared/util/app-consts';
 import { SocketClientState, jsonHandler } from '../model';
 
@@ -17,10 +20,17 @@ export class NotificationService implements OnDestroy {
   private stompClient: Stomp.Client;
   private state: BehaviorSubject<SocketClientState>;
   private readonly RECONNECT_DELAY_SECS = 5;
+  private currentUser: User;
+  private myNotificationsSubject: BehaviorSubject<AppNotificationMessage[]>;
 
-  constructor() {
+  constructor(private authService: AuthenticationService) {
+    this.myNotificationsSubject = new BehaviorSubject<AppNotificationMessage[]>([]);
     this.state = new BehaviorSubject<SocketClientState>(SocketClientState.ATTEMPTING);
     this.init(NotificationService.URL);
+    this.authService.getCurrentUser()
+      .then((user: User) => {
+        this.currentUser = user;
+      })
   }
 
   public onMessage(topic: string, messageHandler = jsonHandler): Observable<AppNotificationMessage> {
@@ -29,7 +39,8 @@ export class NotificationService implements OnDestroy {
       .pipe(switchMap((client: Stomp.Client) => {
         const that = this;
         return Observable.create((observer) => {
-          const subscription: Stomp.Subscription = client.subscribe(`/topic${topic}`, (message) => {
+          const subscription: Stomp.Subscription = client.subscribe(`/topic${topic}`, (message: Stomp.Message) => {
+            // observer.next(messageHandler(message ? message.body : null, topic));
             observer.next(messageHandler(message));
             return () => client.unsubscribe(subscription.id);
           });
@@ -37,10 +48,28 @@ export class NotificationService implements OnDestroy {
       }));
   }
 
-  public send(topic: string, message: AppNotificationMessage): void {
+  private notificationMessageHandler(message: string, topic: string): void {
+    // TODO
+    try {
+      if (!this.currentUser) {
+        return;
+      }
+      const msg = JSON.parse(message) as AppNotificationMessage;
+      if (topic.toLowerCase() === TOPIC_QUIZ_ANSWERS_UPDATE.toLowerCase()) {
+        const quiz: Quiz = JSON.parse(msg.content);
+        if (quiz.creator.id === this.currentUser.id) {
+          
+        }
+      }
+    } catch (ex) {
+      console.error(`An error ocurred while handling error: ${ex.toString()}`);
+    }
+  }
+
+  public send(message: AppNotificationMessage): void {
     this.connect()
       .pipe(first())
-      .subscribe(client => client.send(`/rquiz-socket${topic}`, {}, JSON.stringify(message)));
+      .subscribe(client => client.send(`/rquiz-socket${message.topic}`, {}, JSON.stringify(message)));
   }
 
   private init(url: string): void {
@@ -76,5 +105,9 @@ export class NotificationService implements OnDestroy {
     this.connect()
       .pipe(first())
       .subscribe(client => client.disconnect(null));
+  }
+
+  get myNotificationsCount$(): Observable<number> {
+    return of(1);
   }
 }

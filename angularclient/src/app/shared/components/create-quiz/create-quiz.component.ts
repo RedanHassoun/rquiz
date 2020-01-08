@@ -116,8 +116,8 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
       this.quizService.create(this.quiz)
         .pipe(take(1))
         .subscribe(result => {
-          const addedQuiz = new AppNotificationMessage(result);
-          this.notificationService.send(TOPIC_QUIZ_LIST_UPDATE, addedQuiz);
+          const addedQuiz = new AppNotificationMessage(result, TOPIC_QUIZ_LIST_UPDATE);
+          this.notificationService.send(addedQuiz);
           this.dialogRef.close();
         }, (err) => {
           AppUtil.showError(err);

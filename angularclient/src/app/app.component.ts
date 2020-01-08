@@ -1,17 +1,20 @@
+import { Observable, Subscription } from 'rxjs';
 import { NavigationHelperService } from './shared/services/navigation-helper.service';
 import { User } from './shared/models/user';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './core/services/authentication.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { NotificationService } from './core/services';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  private subscriptions: Subscription[] = [];
   drawerOpened = false;
   appPages = new Map<string, string>([
     ['home', 'Home'],
@@ -21,15 +24,30 @@ export class AppComponent {
     ['users', 'Users'],
     ['logout', 'Logout']
   ]);
+  myNotificationsCount: number;
 
   constructor(public authService: AuthenticationService,
     private router: Router,
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer,
-    private navigationService: NavigationHelperService) {
+    private navigationService: NavigationHelperService,
+    private notificationService: NotificationService) {
     this.iconRegistry.addSvgIcon( // TODO: make more general
       'menu',
       this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/baseline-menu-24px.svg'));
+
+    this.iconRegistry.addSvgIcon( // TODO: make more general
+      'bell',
+      this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/notifications-24px.svg'));
+  }
+
+  ngOnInit(): void {
+    this.subscriptions.push(
+      this.notificationService.myNotificationsCount$.subscribe((notificationsCount: number) => {
+        console.log('the count', notificationsCount);
+        this.myNotificationsCount = notificationsCount;
+      })
+    );
   }
 
   async openCurrentUserProfile() {

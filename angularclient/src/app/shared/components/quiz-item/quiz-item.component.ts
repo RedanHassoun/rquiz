@@ -54,8 +54,8 @@ export class QuizItemComponent implements OnInit, OnDestroy {
         if (res) {
           this.quizService.delete(quizId)
             .subscribe(() => {
-              const deletedQuizId = new AppNotificationMessage({ id: quizId });
-              this.notificationService.send(TOPIC_QUIZ_DELETED_UPDATE, deletedQuizId);
+              const deletedQuizId = new AppNotificationMessage({ id: quizId }, TOPIC_QUIZ_DELETED_UPDATE);
+              this.notificationService.send(deletedQuizId);
             }, (err) => {
               AppUtil.showError(err);
             });
