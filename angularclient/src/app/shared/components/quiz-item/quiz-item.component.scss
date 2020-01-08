@@ -1,7 +1,7 @@
 @import "~compass-mixins/lib/compass/css3";
 
 $size: 150px;
-$border-radius: 90px;
+$border-radius: 60px;
 $margin-between-posts: 20px;
 $image-background-color: #cde;
 $quiz-background-color: #f4f4f4;
@@ -36,13 +36,14 @@ article {
   align-items: center;
   margin-bottom: $margin-between-posts;
   background-color: $quiz-background-color;
-  @include border-radius($size);
+  @include border-radius($border-radius);
 
   .img-wrapper {
     @include border-radius($border-radius);
     padding: 10px;
     background-color: $image-background-color;
-    margin-right: 10px;
+    margin-right: 40px;
+    margin-left: 40px;
     @include transition(all 0.2s);
 
     img {
@@ -64,6 +65,7 @@ article {
     font-size: 24px;
     border-bottom: 2px solid $image-background-color;
     color: $app-light-blue;
+    width: 30vh;
     @include transition(all 0.4s);
   }
 }
