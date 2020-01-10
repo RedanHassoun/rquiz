@@ -1,5 +1,4 @@
 import { AppConsts } from './../../shared/util/app-consts';
-import { MY_QUIZ_LIST } from './../../routing/app-routing.module';
 import { Quiz } from './../../shared/models/quiz';
 export enum SocketClientState {
     ATTEMPTING, CONNECTED, ERROR

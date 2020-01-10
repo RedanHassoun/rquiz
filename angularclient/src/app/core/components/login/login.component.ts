@@ -1,3 +1,5 @@
+import { AppNotificationMessage } from './../../model/socket-consts';
+import { NotificationService } from './../../services/notification.service';
 import { FormInputComponent } from './../../../shared/components/form-input/form-input.component';
 import { AccessDeniedError } from './../../../shared/app-errors/access-denied-error';
 import { LoginMessage } from '../../../shared/models/login-message';
@@ -19,15 +21,17 @@ export class LoginComponent extends FormInputComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthenticationService,
-    private formBuilder: FormBuilder) {
-      super();
-    }
+    private formBuilder: FormBuilder,
+    private notificationService: NotificationService) {
+    super();
+  }
 
-  signIn(credentials: LoginMessage) {
+  async signIn(credentials: LoginMessage) {
     this.authService.login(credentials)
-      .subscribe(response => {
+      .subscribe(async (response) => {
         AppUtil.extractAndSaveToken(response);
-        this.router.navigate(['/quizList']);
+        const currentUserId: string = (await this.authService.getCurrentUser()).id;
+        await this.goToMainPage(currentUserId);
       }, (err: Error) => {
         if (err instanceof AccessDeniedError) {
           this.invalidLogin = true;
@@ -37,15 +41,22 @@ export class LoginComponent extends FormInputComponent implements OnInit {
       });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/quizList']);
+      const currentUserId: string = (await this.authService.getCurrentUser()).id;
+      await this.goToMainPage(currentUserId);
+      return;
     }
 
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
+  }
+
+  private async goToMainPage(userId: string) {
+    this.notificationService.initMyNotification();
+    this.router.navigate(['/quizList']);
   }
 
   get username() { return this.loginForm.controls.username; }

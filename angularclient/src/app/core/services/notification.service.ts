@@ -25,7 +25,6 @@ export class NotificationService extends ClientDataServiceService implements OnD
   private myNotificationsSubject: BehaviorSubject<AppNotificationMessage[]>;
   private readonly URL_KEY_TARGET_USER = 'targetUserId';
   private readonly URL_KEY_SEEN = 'seen';
-  private subscriptions: Subscription[] = [];
 
   constructor(private authService: AuthenticationService, public http: HttpClient) {
     super(`${AppConsts.BASE_URL}/api/v1/notifications/`, http);
@@ -33,16 +32,6 @@ export class NotificationService extends ClientDataServiceService implements OnD
     this.myNotificationsSubject = new BehaviorSubject<AppNotificationMessage[]>([]);
     this.state = new BehaviorSubject<SocketClientState>(SocketClientState.ATTEMPTING);
     this.init(NotificationService.URL);
-    this.authService.getCurrentUser()
-      .then((user: User) => {
-        this.currentUser = user;
-        this.subscriptions.push(
-          this.getNotificaitonsListForUser(this.currentUser.id)
-            .subscribe((notifications: AppNotificationMessage[]) => {
-              this.addToMyNotifications(notifications);
-            })
-        );
-      });
   }
 
   public onMessage(topic: string, messageHandler = this.notificationMessageHandler): Observable<AppNotificationMessage> {
@@ -81,6 +70,17 @@ export class NotificationService extends ClientDataServiceService implements OnD
       console.error(`An error ocurred while handling error: ${ex.toString()}`);
       throw ex;
     }
+  }
+
+  public initMyNotification(): void {
+    this.authService.getCurrentUser()
+      .then((user: User) => {
+        this.currentUser = user;
+        this.getNotificaitonsListForUser(this.currentUser.id)
+          .subscribe((notificationsList: AppNotificationMessage[]) => {
+            this.addToMyNotifications(notificationsList);
+          });
+      });
   }
 
   public send(message: AppNotificationMessage): void {
@@ -135,7 +135,7 @@ export class NotificationService extends ClientDataServiceService implements OnD
       }));
   }
 
-  private addToMyNotifications(notificaitonsToAdd: AppNotificationMessage[]): void {
+  public addToMyNotifications(notificaitonsToAdd: AppNotificationMessage[]): void {
     const currNotificationData: AppNotificationMessage[] = this.myNotificationsSubject.value;
 
     for (const notificaiton of notificaitonsToAdd) {
