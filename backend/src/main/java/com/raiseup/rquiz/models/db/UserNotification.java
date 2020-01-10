@@ -25,7 +25,8 @@ public class UserNotification extends BaseModel {
     @NotNull(message = "Notification topic cannot be null")
     private String topic;
 
-    private Boolean seen;
+    @Column(columnDefinition = "boolean default false")
+    private Boolean seen = false;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)

@@ -1,3 +1,5 @@
+import { AppConsts } from './shared/util/app-consts';
+import { UserNotificationsListComponent } from './shared/components/user-notifications-list/user-notifications-list.component';
 import { Observable, Subscription } from 'rxjs';
 import { NavigationHelperService } from './shared/services/navigation-helper.service';
 import { User } from './shared/models/user';
@@ -16,10 +18,11 @@ import { NotificationService } from './core/services';
 export class AppComponent implements OnInit {
   private subscriptions: Subscription[] = [];
   drawerOpened = false;
+  appConsts: any = AppConsts; // TODO: make this more elegant
   appPages = new Map<string, string>([
     ['home', 'Home'],
     ['profile', 'My profile'],
-    ['myquizlist', 'My Quiz List'],
+    [this.appConsts.MY_QUIZ_LIST, 'My Quiz List'],
     ['my-assigned-quiz-list', 'Assigned To Me'],
     ['users', 'Users'],
     ['logout', 'Logout']
@@ -44,7 +47,6 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.subscriptions.push(
       this.notificationService.myNotificationsCount$.subscribe((notificationsCount: number) => {
-        console.log('the count', notificationsCount);
         this.myNotificationsCount = notificationsCount;
       })
     );
@@ -64,8 +66,8 @@ export class AppComponent implements OnInit {
       case 'profile':
         this.openCurrentUserProfile();
         break;
-      case 'myquizlist':
-        this.router.navigate(['myquizlist'], { replaceUrl: true });
+      case AppConsts.MY_QUIZ_LIST:
+        this.router.navigate([AppConsts.MY_QUIZ_LIST], { replaceUrl: true });
         break;
       case 'my-assigned-quiz-list':
         this.router.navigate(['my-assigned-quiz-list'], { replaceUrl: true });
@@ -84,5 +86,15 @@ export class AppComponent implements OnInit {
     }
 
     this.drawerOpened = false;
+  }
+
+  public openUserNotificationsListDialog() {
+    if (!this.myNotificationsCount) {
+      return;
+    }
+
+    this.subscriptions.push(
+      this.navigationService.openDialog(UserNotificationsListComponent).subscribe()
+    );
   }
 }

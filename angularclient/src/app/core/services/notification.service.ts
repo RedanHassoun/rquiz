@@ -1,12 +1,13 @@
+import { ClientDataServiceService } from './../../shared/services/client-data-service.service';
 import { Quiz } from './../../shared/models/quiz';
 import { User } from './../../shared/models/user';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import * as SockJS from 'sockjs-client';
 import * as Stomp from 'stompjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { first, filter, switchMap, map } from 'rxjs/operators';
-
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppNotificationMessage, TOPIC_QUIZ_ANSWERS_UPDATE } from './../model/socket-consts';
 import { AppConsts } from './../../shared/util/app-consts';
 import { SocketClientState, jsonHandler } from '../model';
@@ -15,22 +16,33 @@ import { SocketClientState, jsonHandler } from '../model';
 @Injectable({
   providedIn: 'root'
 })
-export class NotificationService implements OnDestroy {
+export class NotificationService extends ClientDataServiceService implements OnDestroy {
   private static readonly URL = `${AppConsts.BASE_URL}${AppConsts.STOMP_ENDPOINT}`;
   private stompClient: Stomp.Client;
   private state: BehaviorSubject<SocketClientState>;
   private readonly RECONNECT_DELAY_SECS = 5;
   private currentUser: User;
   private myNotificationsSubject: BehaviorSubject<AppNotificationMessage[]>;
+  private readonly URL_KEY_TARGET_USER = 'targetUserId';
+  private readonly URL_KEY_SEEN = 'seen';
+  private subscriptions: Subscription[] = [];
 
-  constructor(private authService: AuthenticationService) {
+  constructor(private authService: AuthenticationService, public http: HttpClient) {
+    super(`${AppConsts.BASE_URL}/api/v1/notifications/`, http);
+
     this.myNotificationsSubject = new BehaviorSubject<AppNotificationMessage[]>([]);
     this.state = new BehaviorSubject<SocketClientState>(SocketClientState.ATTEMPTING);
     this.init(NotificationService.URL);
     this.authService.getCurrentUser()
       .then((user: User) => {
         this.currentUser = user;
-      })
+        this.subscriptions.push(
+          this.getNotificaitonsListForUser(this.currentUser.id)
+            .subscribe((notifications: AppNotificationMessage[]) => {
+              this.addToMyNotifications(notifications);
+            })
+        );
+      });
   }
 
   public onMessage(topic: string, messageHandler = this.notificationMessageHandler): Observable<AppNotificationMessage> {
@@ -112,12 +124,51 @@ export class NotificationService implements OnDestroy {
       .subscribe(client => client.disconnect(null));
   }
 
-  get myNotificationsCount$(): Observable<number> {
-    return this.myNotificationsSubject.asObservable().pipe(map((notificationData: AppNotificationMessage[]) => {
-      if (!notificationData) {
-        return 0;
+  public getNotificaitonsListForUser(userId: string): Observable<AppNotificationMessage[]> {
+    const filterParamMap: Map<string, string> = new Map<string, string>([
+      [this.URL_KEY_TARGET_USER, userId],
+      [this.URL_KEY_SEEN, 'false']]);
+
+    return super.getAllByParameter(filterParamMap, null, null)
+      .pipe(map((notifications: any) => {
+        return notifications as AppNotificationMessage[];
+      }));
+  }
+
+  private addToMyNotifications(notificaitonsToAdd: AppNotificationMessage[]): void {
+    const currNotificationData: AppNotificationMessage[] = this.myNotificationsSubject.value;
+
+    for (const notificaiton of notificaitonsToAdd) {
+      const notificationFromMyList = currNotificationData.find(notification => notification.id === notificaiton.id);
+      if (!notificationFromMyList) {
+        currNotificationData.push(notificaiton);
       }
-      return notificationData.length;
-    }));
+    }
+
+    this.myNotificationsSubject.next(currNotificationData);
+  }
+
+  public removeFromMyNotifications(notificaitonToRemove: AppNotificationMessage): void {
+    const currNotificationData: AppNotificationMessage[] = this.myNotificationsSubject.value;
+
+    const indexOfNotification: number = currNotificationData.findIndex(notification => notification.id === notificaitonToRemove.id);
+    if (indexOfNotification !== -1) {
+      currNotificationData.splice(indexOfNotification, 1);
+      this.myNotificationsSubject.next(currNotificationData);
+    }
+  }
+
+  get myNotificationsList$(): Observable<AppNotificationMessage[]> {
+    return this.myNotificationsSubject.asObservable();
+  }
+
+  get myNotificationsCount$(): Observable<number> {
+    return this.myNotificationsSubject.asObservable()
+      .pipe(map((notificationData: AppNotificationMessage[]) => {
+        if (!notificationData) {
+          return 0;
+        }
+        return notificationData.length;
+      }));
   }
 }

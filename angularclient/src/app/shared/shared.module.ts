@@ -20,6 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { QuizItemComponent } from './components/quiz-item/quiz-item.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
+import { UserNotificationsListComponent } from './components/user-notifications-list/user-notifications-list.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
     CreateQuizComponent,
     ShowQuizComponent,
     QuizItemComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    UserNotificationsListComponent
   ],
   imports: [
     CommonModule,
@@ -49,6 +51,7 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
     MatBadgeModule
   ],
   entryComponents: [
+    UserNotificationsListComponent,
     ConfirmationDialogComponent,
     CreateQuizComponent,
     EditProfileComponent,

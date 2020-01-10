@@ -4,7 +4,8 @@
       <mat-icon svgIcon="menu"></mat-icon>
     </button>
     <h1 class="app-name">RQuiz</h1>
-    <mat-icon id="notifications-bell" svgIcon="bell" [matBadge]="myNotificationsCount" matBadgeColor="warn"></mat-icon>
+    <mat-icon *ngIf="this.authService.isLoggedIn()" id="notifications-bell" svgIcon="bell"
+      [matBadge]="myNotificationsCount" matBadgeColor="warn" (click)="openUserNotificationsListDialog()"></mat-icon>
   </mat-toolbar>
 
   <mat-sidenav-container class="app-side-nav-container mat-app-background">
@@ -14,7 +15,7 @@
 
         <a mat-list-item (click)="goToPage('profile')">{{ appPages.get('profile') }}</a>
 
-        <a mat-list-item (click)="goToPage('myquizlist')">{{ appPages.get('myquizlist') }}</a>
+        <a mat-list-item (click)="goToPage(appConsts.MY_QUIZ_LIST)">{{ appPages.get(appConsts.MY_QUIZ_LIST) }}</a>
 
         <a mat-list-item (click)="goToPage('my-assigned-quiz-list')">{{ appPages.get('my-assigned-quiz-list') }}</a>
 

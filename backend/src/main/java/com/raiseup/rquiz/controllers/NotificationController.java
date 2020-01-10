@@ -1,20 +1,26 @@
 package com.raiseup.rquiz.controllers;
 
+import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.common.DtoMapper;
-import com.raiseup.rquiz.exceptions.AppException;
 import com.raiseup.rquiz.exceptions.IllegalOperationException;
 import com.raiseup.rquiz.models.AppNotificationMessage;
+import com.raiseup.rquiz.models.QuizDto;
 import com.raiseup.rquiz.models.db.UserNotification;
 import com.raiseup.rquiz.services.UserNotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Controller
+@RestController
 public class NotificationController {
 
     private Logger logger = LoggerFactory.getLogger(NotificationController.class);
@@ -80,4 +86,48 @@ public class NotificationController {
 
         return this.dtoMapper.convertUserNotificationToDto(userNotificationOptional.get());
     }
+
+    @GetMapping("/api/v1/notifications/all")
+    public List<AppNotificationMessage> getNotifications(
+            @RequestParam(required = false) String targetUserId,
+            @RequestParam(required = false) Boolean seen) throws Exception {
+
+        List<AppNotificationMessage> notifications;
+
+        if (targetUserId != null) {
+            notifications = this.userNotificationService.readAllForUser(targetUserId, seen)
+                    .stream()
+                    .map(notification -> this.dtoMapper.convertUserNotificationToDto(notification))
+                    .collect(Collectors.toList());
+            this.logger.debug(String.format("Returning %d notifications for user %s", notifications.size(), targetUserId));
+        } else {
+            notifications = this.userNotificationService.readAll()
+                    .stream()
+                    .map(notification -> this.dtoMapper.convertUserNotificationToDto(notification))
+                    .collect(Collectors.toList());
+            this.logger.debug(String.format("Returning all notifications. Number: %d", notifications.size()));
+        }
+
+        return notifications;
+    }
+
+    @PutMapping("/api/v1/notifications/{notificationId}")
+    public AppNotificationMessage updateUserDetails(@PathVariable("notificationId") String notificationId,
+                                  @RequestBody AppNotificationMessage appNotificationMessage) throws Exception {
+        try{
+            if (appNotificationMessage == null || appNotificationMessage.getId() == null) {
+                throw new IllegalOperationException(
+                        String.format("Cannot update notification %s, the notification should be defined and have an id",
+                                notificationId));
+            }
+
+            UserNotification userNotification = this.dtoMapper.convertUserNotificationDtoToEntity(appNotificationMessage);
+            return this.dtoMapper.convertUserNotificationToDto(
+                    this.userNotificationService.update(userNotification).get());
+        } catch (Exception ex){
+            this.logger.error(String.format("Cannot update notification %s", notificationId), ex);
+            throw ex;
+        }
+    }
+
 }

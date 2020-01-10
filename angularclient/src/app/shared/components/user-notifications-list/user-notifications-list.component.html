@@ -1,0 +1,6 @@
+<h4>Notifications:</h4>
+<div *ngFor="let notification of notifications">
+    <div class="notification-item" (click)="navigateToPage(notification)">
+        {{ getNotificationText(notification) }}
+    </div>
+</div>

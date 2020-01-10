@@ -9,7 +9,7 @@ public class AppNotificationMessage {
     private String userId;
     private String username;
     private String targetUserId;
-    private Boolean seen;
+    private Boolean seen = false;
     private Date time;
 
     public String getId() {

@@ -10,13 +10,14 @@ import { UserFormComponent } from '../core/components/user-form/user-form.compon
 import { UserListComponent } from '../core/components/user-list/user-list.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AppConsts } from '../shared/util/app-consts';
 
 const routes: Routes = [
   { path: '', redirectTo: 'quizList', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'quizList', component: QuizListComponent, canActivate: [AuthGuard] },
-  { path: 'myquizlist', component: MyQuizListComponent, canActivate: [AuthGuard] },
+  { path:  AppConsts.MY_QUIZ_LIST, component: MyQuizListComponent, canActivate: [AuthGuard] },
   { path: 'my-assigned-quiz-list', component: MyAssignedQuizComponent, canActivate: [AuthGuard] },
   { path: 'users/:id', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: 'users', component: UserListComponent, canActivate: [AuthGuard] },
