@@ -67,3 +67,13 @@
   max-height: 25vh;
   overflow: auto;
 }
+
+#checkboxes-container {
+  display: flex;
+  align-items: center;
+  flex-flow: row nowrap;
+}
+
+#checkboxes-container * {
+  margin: 8pt;
+}

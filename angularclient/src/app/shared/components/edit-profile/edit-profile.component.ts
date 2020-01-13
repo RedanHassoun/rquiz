@@ -11,7 +11,7 @@ import { FormInputComponent } from './../form-input/form-input.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormGroup, AbstractControl, Validators, FormBuilder } from '@angular/forms';
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { Subscription, Observable, of } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -46,7 +46,7 @@ export class EditProfileComponent extends FormInputComponent implements OnInit, 
     profileDetails.id = this.user.id;
 
     this.subscriptions.push(
-      this.uploadImage()
+      this.fileUploadService.uploadImage(this.imageToUpload, this.user.imageUrl)
         .pipe(switchMap((imageUrl) => {
           this.uploadedImageUrl = imageUrl;
           profileDetails.imageUrl = imageUrl;
@@ -61,14 +61,6 @@ export class EditProfileComponent extends FormInputComponent implements OnInit, 
 
   get form(): { [key: string]: AbstractControl } {
     return this.editProfileForm.controls;
-  }
-
-  private uploadImage(): Observable<string> {
-    if (!this.imageToUpload) {
-      return of(this.user.imageUrl);
-    }
-
-    return this.fileUploadService.upload(this.imageToUpload);
   }
 
   public handleSelectedImage(files: FileList) {

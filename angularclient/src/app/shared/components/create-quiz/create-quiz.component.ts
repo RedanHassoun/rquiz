@@ -1,4 +1,5 @@
-import { take } from 'rxjs/operators';
+import { FileUploadService } from './../../../core/services/file-upload.service';
+import { take, switchMap } from 'rxjs/operators';
 import { AlreadyExistError } from './../../app-errors/already-exist-error';
 import { AppNotificationMessage, TOPIC_QUIZ_LIST_UPDATE } from './../../../core/model/socket-consts';
 import { NotificationService } from './../../../core/services/notification.service';
@@ -31,13 +32,16 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
   users: User[];
   selectedUsers: User[] = [];
   currentUser: User;
+  attachAnImage = false;
+  imageToUpload: File = null;
 
   constructor(private quizService: QuizService,
     private authenticationService: AuthenticationService,
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<CreateQuizComponent>,
     private userService: UserService,
-    private notificationService: NotificationService) {
+    private notificationService: NotificationService,
+    private fileUploadService: FileUploadService) {
     super();
   }
 
@@ -98,6 +102,17 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     this.quiz.isPublic = isPublic;
   }
 
+  attachAnImageChanged(attachAnImage: boolean): void {
+    this.attachAnImage = attachAnImage;
+    if (attachAnImage === false) {
+      this.imageToUpload = null;
+    }
+  }
+
+  public handleSelectedImage(files: FileList) {
+    this.imageToUpload = files.item(0);
+  }
+
   async addQuiz(): Promise<void> {
     if (this.quiz.answers.length < 2) {
       AppUtil.showWarningMessage('The quiz should have at least two answers');
@@ -113,8 +128,12 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     this.quiz.creator = { ...this.currentUser };
     this.quiz.assignedUsers = this.selectedUsers;
     this.subscriptions.push(
-      this.quizService.create(this.quiz)
-        .pipe(take(1))
+      this.fileUploadService.uploadImage(this.imageToUpload, null)
+        .pipe(switchMap((imageUrl: string) => {
+          this.quiz.imageUrl = imageUrl;
+          return this.quizService.create(this.quiz)
+            .pipe(take(1));
+        }))
         .subscribe(result => {
           const addedQuiz = new AppNotificationMessage(result, TOPIC_QUIZ_LIST_UPDATE);
           this.notificationService.send(addedQuiz);

@@ -3,7 +3,7 @@
     <div class="grid-container">
         <div class="grid-item-full-width">
             <div class="form-group">
-                <label for="title"  class="sr-only">Title</label>
+                <label for="title" class="sr-only">Title</label>
                 <input [style.border]="getInputBorderStyle(title)" [(ngModel)]="quiz.title" name="title"
                     class="form-control" placeholder="Title" formControlName="title">
 
@@ -35,13 +35,22 @@
             </div>
         </div>
 
-        <div class="grid-item-full-width">
+        <div id="checkboxes-container" class="grid-item-full-width">
             <mat-checkbox [checked]="quiz.isPublic" (change)="publicChanged($event.checked)">Show in public
             </mat-checkbox>
+            <mat-checkbox [checked]="attachAnImage" (change)="attachAnImageChanged($event.checked)">Attach an image
+            </mat-checkbox>
+        </div>
+        <div class="grid-item-full-width">
             <div *ngIf="!quiz.isPublic">
                 <ng-multiselect-dropdown [placeholder]="'Assign quiz to ...'" [data]="users" [(ngModel)]="selectedUsers"
                     [ngModelOptions]="{standalone: true}" [settings]="dropdownSettings">
                 </ng-multiselect-dropdown>
+            </div>
+            <div *ngIf="!!attachAnImage">
+                <label for="image">Image</label>
+                <input type="file" class="form-control" formControlName="image" placeholder="Image"
+                    accept=".png, .jpg, .jpeg" (change)="handleSelectedImage($event.target.files)">
             </div>
         </div>
 

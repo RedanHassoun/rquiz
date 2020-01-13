@@ -3,7 +3,7 @@ import { AppConsts } from './../../shared/util/app-consts';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +29,14 @@ export class FileUploadService {
       body: formData,
     };
     return this.http.delete(this.url, options);
+  }
+
+  public uploadImage(imageToUpload: File, defaultResult: string): Observable<string> {
+    if (!imageToUpload) {
+      return of(defaultResult);
+    }
+
+    return this.upload(imageToUpload);
   }
 }
 
