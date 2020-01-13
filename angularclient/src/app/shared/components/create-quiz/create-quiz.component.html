@@ -3,9 +3,9 @@
     <div class="grid-container">
         <div class="grid-item-full-width">
             <div class="form-group">
-                <label for="title">Title</label>
+                <label for="title"  class="sr-only">Title</label>
                 <input [style.border]="getInputBorderStyle(title)" [(ngModel)]="quiz.title" name="title"
-                    class="form-control" formControlName="title">
+                    class="form-control" placeholder="Title" formControlName="title">
 
                 <div *ngIf="isInputValidationFailed(title)" class="validation-err-container">
                     <div *ngIf="title.errors.required">
@@ -20,9 +20,9 @@
 
         <div class="grid-item-full-width">
             <div class="form-group">
-                <label for="description">Description</label>
+                <label for="description" class="sr-only">Description</label>
                 <input [style.border]="getInputBorderStyle(description)" [(ngModel)]="quiz.description"
-                    name="description" class="form-control" formControlName="description" />
+                    name="description" placeholder="Description" class="form-control" formControlName="description" />
 
                 <div *ngIf="isInputValidationFailed(description)" class="validation-err-container">
                     <div *ngIf="description.errors.required">
