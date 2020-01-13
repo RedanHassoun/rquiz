@@ -1,10 +1,10 @@
-<article>
+<div class="quiz-item-container">
   <div class="img-wrapper">
     <img (click)="showQuiz()" src={{getQuizImage()}} alt="" />
   </div>
 
   <div class="content-wrapper">
-    <h1>{{quiz.title}}</h1>
+    <h1 class="title">{{quiz.title}}</h1>
     <p>{{ quiz.description }}</p>
     <a (click)="showQuiz()" class="more">Show</a>
     <div>
@@ -16,4 +16,4 @@
       <mat-icon *ngIf="canDeleteQuiz()" (click)="deleteQuiz(quiz.id)" svgIcon="delete"></mat-icon>
     </div>
   </div>
-</article>
+</div>

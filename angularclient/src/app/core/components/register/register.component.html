@@ -1,6 +1,6 @@
 <div class="centered-form-container">
-        <h2>Register</h2>
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <form class="centered-form-item"  [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                <h2 class="centered-form-heading">Register</h2>
                 <div class="form-group">
                         <input type="text" formControlName="username" class="form-control" placeholder="Username"
                                 [style.border]="getInputBorderStyle(form.username)" />

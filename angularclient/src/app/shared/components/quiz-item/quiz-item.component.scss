@@ -1,18 +1,40 @@
 @import "~compass-mixins/lib/compass/css3";
 
-$size: 150px;
+$size: 20vh;
 $border-radius: 60px;
 $margin-between-posts: 20px;
 $image-background-color: #cde;
 $quiz-background-color: #f4f4f4;
 $app-light-blue: #428bca;
 
-h1 {
+.quiz-item-container {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  margin-bottom: $margin-between-posts;
+  background-color: $quiz-background-color;
+  @include border-radius($border-radius);
   text-overflow: ellipsis;
 }
 
-.feed-end-msg {
-  text-align: center;
+.content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-flow: column wrap;
+}
+
+.img-wrapper {
+  margin-right: 30px;
+  margin-left: 30px;
+  background-color: $image-background-color;
+  @include border-radius($border-radius);
+  padding: 10px;
+  background-color: $image-background-color;
+}
+
+.img-wrapper img {
+  width: $size;
+  @include border-radius($border-radius);
 }
 
 .action-btns-container {
@@ -21,51 +43,8 @@ h1 {
   align-items: baseline;
 }
 
-a {
-  cursor: pointer;
-}
-
-.action-btns-container * {
-  margin: 5px;
-}
-
-article {
-  display: flex;
-  justify-content: flex-start;
-  flex-flow: row nowrap;
-  align-items: center;
-  margin-bottom: $margin-between-posts;
-  background-color: $quiz-background-color;
-  @include border-radius($border-radius);
-
-  .img-wrapper {
-    @include border-radius($border-radius);
-    padding: 10px;
-    background-color: $image-background-color;
-    margin-right: 40px;
-    margin-left: 40px;
-    @include transition(all 0.2s);
-
-    img {
-      @include border-radius($border-radius);
-      @include transition(all 0.2s);
-      width: $size;
-    }
-  }
-
-  .content-wrapper {
-    display: flex;
-    justify-content: space-between;
-    flex-flow: column wrap;
-  }
-
-  h1 {
-    height: $size/2;
-    line-height: $size/2;
-    font-size: 24px;
-    border-bottom: 2px solid $image-background-color;
-    color: $app-light-blue;
-    width: 30vh;
-    @include transition(all 0.4s);
-  }
+.title {
+  color: $app-light-blue;
+  border-bottom: 2px solid $image-background-color;
+  font-size: 20pt;
 }

@@ -21,17 +21,28 @@ body {
 }
 
 .centered-form-container {
-  margin: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-flow: column wrap;
-  min-width: 100vh;
-  padding-bottom: 30px;
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: auto auto auto;
 }
 
-.centered-form-container * {
-  margin: 10px;
+.centered-form-item {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  margin-top: 20pt;
+  text-align: center;
+}
+
+.centered-form-item * {
+  margin: 5pt;
+}
+
+#signin-button {
+  margin-top: 20pt;
+}
+
+.centered-form-heading {
+  font-size: 28pt;
 }
 
 .form-button {
