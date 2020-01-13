@@ -27,13 +27,16 @@ public class QuizServiceImpl implements QuizService {
     private QuizRepository quizRepository;
     private UserAnswerService userAnswerService;
     private ApplicationUserRepository applicationUserRepository;
+    private AmazonClient amazonClient;
 
     public QuizServiceImpl(QuizRepository quizRepository,
                            UserAnswerService userAnswerService,
-                           ApplicationUserRepository applicationUserRepository){
+                           ApplicationUserRepository applicationUserRepository,
+                           AmazonClient amazonClient){
         this.quizRepository = quizRepository;
         this.userAnswerService = userAnswerService;
         this.applicationUserRepository = applicationUserRepository;
+        this.amazonClient = amazonClient;
     }
 
     @Override
@@ -153,7 +156,18 @@ public class QuizServiceImpl implements QuizService {
                             "Cannot remove quiz %s because it doesn't exist", id)));
         }
 
-        this.quizRepository.delete(quizOptional.get());
+        Quiz quizFromDB = quizOptional.get();
+
+        if (quizFromDB.getImageUrl() != null) {
+            try {
+                this.amazonClient.deleteFileFromS3Bucket(quizFromDB.getImageUrl());
+            } catch (Exception ex) {
+                this.logger.error(String.format("Cannot delete image for quiz: %s. Image url: %s",
+                        quizFromDB.getId(), quizFromDB.getImageUrl()), ex);
+            }
+        }
+
+        this.quizRepository.delete(quizFromDB);
     }
 
     private void initQuizListAnswersCount(Collection<Quiz> quizList){
