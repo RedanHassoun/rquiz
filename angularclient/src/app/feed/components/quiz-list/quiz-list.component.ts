@@ -102,9 +102,16 @@ export class QuizListComponent implements OnInit, OnDestroy {
   }
 
   openCreateQuizDialog() {
-    this.subscriptions.push(
-      this.navigationService.openDialog(CreateQuizComponent).subscribe()
-    );
+    if (this.navigationService.isMobileMode()) {
+      this.subscriptions.push(
+        this.navigationService.openDialog(CreateQuizComponent, '100vw', null, true).subscribe()
+      );
+    } else {
+      this.subscriptions.push(
+        this.navigationService.openDialog(CreateQuizComponent).subscribe()
+      );
+    }
+
   }
 
   quizListChanged(newQuizList: Quiz[]) {

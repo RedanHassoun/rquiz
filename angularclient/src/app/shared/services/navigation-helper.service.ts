@@ -51,16 +51,37 @@ export class NavigationHelperService {
     return dialogRef.afterClosed();
   }
 
-  openDialog(dialog: ComponentType<{}>, width?: number, dialogData?: any) {
+  openDialog(dialog: ComponentType<{}>, width?: string, dialogData?: any, isFullScreen?: boolean) {
     let dialogWidth = '450px';
     if (width) {
-      dialogWidth = `${width}px`;
+      dialogWidth = width;
     }
-    const dialogRef = this.dialog.open(dialog, {
-      width: dialogWidth,
-      data: dialogData
-    });
+
+    let dialogRef;
+    if (!!isFullScreen) {
+      dialogRef = this.dialog.open(dialog, {
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        height: '100%',
+        width: '100%',
+        data: dialogData,
+        panelClass: 'full-screen-modal',
+      });
+    } else {
+      dialogRef = this.dialog.open(dialog, {
+        width: dialogWidth,
+        data: dialogData
+      });
+    }
 
     return dialogRef.afterClosed();
+  }
+
+  public isMobileMode(): boolean {
+    const mq: MediaQueryList = window.matchMedia( '(max-width: 500px)' );
+    if (mq.matches) {
+      return true;
+    }
+    return false;
   }
 }
