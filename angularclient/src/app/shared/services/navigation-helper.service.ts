@@ -60,10 +60,10 @@ export class NavigationHelperService {
     let dialogRef;
     if (!!isFullScreen) {
       dialogRef = this.dialog.open(dialog, {
-        maxWidth: '100vw',
-        maxHeight: '100vh',
-        height: '100%',
-        width: '100%',
+        maxWidth: '98vw',
+        maxHeight: '98vh',
+        height: '98%',
+        width: '98%',
         data: dialogData,
         panelClass: 'full-screen-modal',
       });

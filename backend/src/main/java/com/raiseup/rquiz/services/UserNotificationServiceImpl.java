@@ -7,6 +7,7 @@ import com.raiseup.rquiz.repo.UserNotificationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     }
 
     @Override
+    @Transactional
     public Optional<UserNotification> save(UserNotification userNotification) throws AppException {
         if (userNotification == null) {
             throw new IllegalOperationException("Cannot save user notification because it is not defined");
@@ -31,6 +33,7 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     }
 
     @Override
+    @Transactional
     public Optional<UserNotification> update(UserNotification userNotification) throws AppException {
         if (userNotification.getId() == null) {
             throw new IllegalOperationException("Cannot update notification because the ID is not defined");
@@ -53,11 +56,13 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserNotification> readAll() {
         return this.userNotificationRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserNotification> readAllForUser(String targetUserId, Boolean seen) throws AppException {
         if (targetUserId == null) {
             throw new IllegalOperationException("Cannot get notifications because user is not defined");
