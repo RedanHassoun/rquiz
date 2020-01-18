@@ -6,6 +6,7 @@ import { AppConsts } from './app-consts';
 import { throwError } from 'rxjs';
 import * as _ from 'lodash';
 import { HttpErrorResponse } from '@angular/common/http';
+import { StopLoadingIndicator, StartLoadingIndicator } from '../decorators/spinner-decorators';
 
 export class AppUtil {
     public static extractAndSaveToken(response: any): void {
@@ -54,16 +55,16 @@ export class AppUtil {
 
     public static showError(err: Error): void {
         if (err instanceof AccessDeniedError) {
-            alert('Access denied!');
+            setTimeout(() => alert('Access denied!'), 1);
             return;
         }
 
         if (err.message) {
-            alert(`${err.message}`);
+            setTimeout(() => alert(`${err.message}`), 1);
             return;
         }
 
-        alert('Something went wrong...');
+        setTimeout(() => alert('Something went wrong...'), 1);
     }
 
     public static appTokenGetter() {
@@ -86,5 +87,13 @@ export class AppUtil {
 
     public static showWarningMessage(message: string) {
         alert(message);
+    }
+
+    @StartLoadingIndicator
+    public static triggerLoadingIndicator() {
+    }
+
+    @StopLoadingIndicator
+    public static triggerLoadingIndicatorStop() {
     }
 }

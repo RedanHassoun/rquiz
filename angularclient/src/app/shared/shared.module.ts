@@ -21,6 +21,8 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { QuizItemComponent } from './components/quiz-item/quiz-item.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { UserNotificationsListComponent } from './components/user-notifications-list/user-notifications-list.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,8 @@ import { UserNotificationsListComponent } from './components/user-notifications-
     ShowQuizComponent,
     QuizItemComponent,
     EditProfileComponent,
-    UserNotificationsListComponent
+    UserNotificationsListComponent,
+    SpinnerComponent
   ],
   imports: [
     CommonModule,
@@ -48,7 +51,8 @@ import { UserNotificationsListComponent } from './components/user-notifications-
     MatTooltipModule,
     NgMultiSelectDropDownModule.forRoot(),
     MatSidenavModule,
-    MatBadgeModule
+    MatBadgeModule,
+    NgxSpinnerModule
   ],
   entryComponents: [
     UserNotificationsListComponent,
@@ -73,7 +77,8 @@ import { UserNotificationsListComponent } from './components/user-notifications-
     MatTooltipModule,
     NgMultiSelectDropDownModule,
     QuizItemComponent,
-    MatBadgeModule
+    MatBadgeModule,
+    SpinnerComponent
   ]
 })
 export class SharedModule { }

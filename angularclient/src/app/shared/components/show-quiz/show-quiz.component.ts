@@ -11,6 +11,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { User } from '../../models/user';
 import { TOPIC_QUIZ_ANSWERS_UPDATE } from 'src/app/core/model/socket-consts';
+import { StopLoadingIndicator, StartLoadingIndicator } from '../../decorators/spinner-decorators';
 
 @Component({
   selector: 'app-show-quiz',
@@ -67,19 +68,31 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
       throw new Error('The selected answer is undefined');
     }
 
-    this.quizService.solve(this.quiz.id, answer)
-      .subscribe(solvedQuiz => {
-        const solvedQuizNotification = new AppNotificationMessage(solvedQuiz,
-          TOPIC_QUIZ_ANSWERS_UPDATE,
-          this.currentUser.id,
-          this.currentUser.username);
+    this.sendSolutionToServer(this.quiz.id, answer);
+  }
 
-        solvedQuizNotification.targetUserId = this.quiz.creator.id;
+  @StartLoadingIndicator
+  private sendSolutionToServer(quizId: string, quizAnswer: QuizAnswer): void {
+    this.quizService.solve(quizId, quizAnswer)
+      .subscribe((solvedQuiz: Quiz) => this.handleServerSuccess(solvedQuiz),
+                 (err: Error) => this.handleServerError(err));
+  }
 
-        this.notificationService.send(solvedQuizNotification);
-        this.dialogRef.close();
-      }, err => {
-        AppUtil.showError(err.toString());
-      });
+  @StopLoadingIndicator
+  private handleServerSuccess(quiz: Quiz): void {
+    const solvedQuizNotification = new AppNotificationMessage(quiz,
+      TOPIC_QUIZ_ANSWERS_UPDATE,
+      this.currentUser.id,
+      this.currentUser.username);
+
+    solvedQuizNotification.targetUserId = this.quiz.creator.id;
+
+    this.notificationService.send(solvedQuizNotification);
+    this.dialogRef.close();
+  }
+
+  @StopLoadingIndicator
+  private handleServerError(err: Error): void {
+    AppUtil.showError(err);
   }
 }

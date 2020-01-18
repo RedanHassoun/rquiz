@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import * as _ from 'lodash';
 import { FormInputComponent } from './../form-input/form-input.component';
+import { StartLoadingIndicator, StopLoadingIndicator } from './../../decorators/spinner-decorators';
 
 @Component({
   selector: 'app-create-quiz',
@@ -45,6 +46,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     super();
   }
 
+  @StartLoadingIndicator
   async ngOnInit() {
     this.quiz = new Quiz();
     this.quiz.reset();
@@ -64,12 +66,13 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
       itemsShowLimit: 3,
       allowSearchFilter: true
     };
-
+    // TODO: Handle this request properly - improve performance
     this.subscriptions.push(
       this.userService.getAll()
         .subscribe((users: any[]) => {
+          AppUtil.triggerLoadingIndicatorStop();
           this.users = AppUtil.removeById(users, this.currentUser.id);
-        })
+        }, err => AppUtil.triggerLoadingIndicatorStop())
     );
   }
 
@@ -127,6 +130,11 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
 
     this.quiz.creator = { ...this.currentUser };
     this.quiz.assignedUsers = this.selectedUsers;
+    this.sendTheQuizToServer();
+  }
+
+  @StartLoadingIndicator
+  private sendTheQuizToServer(): void {
     this.subscriptions.push(
       this.fileUploadService.uploadImage(this.imageToUpload, null)
         .pipe(switchMap((imageUrl: string) => {
@@ -134,14 +142,21 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
           return this.quizService.create(this.quiz)
             .pipe(take(1));
         }))
-        .subscribe(result => {
-          const addedQuiz = new AppNotificationMessage(result, TOPIC_QUIZ_LIST_UPDATE);
-          this.notificationService.send(addedQuiz);
-          this.dialogRef.close();
-        }, (err) => {
-          AppUtil.showError(err);
-        })
+        .subscribe((result: Quiz) => this.handleSuccessResult(result),
+          (err: Error) => this.handleErrorResult(err))
     );
+  }
+
+  @StopLoadingIndicator
+  private handleSuccessResult(result: Quiz): void {
+    const addedQuiz = new AppNotificationMessage(result, TOPIC_QUIZ_LIST_UPDATE);
+    this.notificationService.send(addedQuiz);
+    this.dialogRef.close();
+  }
+
+  @StopLoadingIndicator
+  private handleErrorResult(error: Error): void {
+    AppUtil.showError(error);
   }
 
   setCorrect(answer: QuizAnswer): void {

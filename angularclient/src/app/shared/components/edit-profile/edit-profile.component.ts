@@ -13,6 +13,7 @@ import { FormGroup, AbstractControl, Validators, FormBuilder } from '@angular/fo
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { StartLoadingIndicator, StopLoadingIndicator } from '../../decorators/spinner-decorators';
 
 @Component({
   selector: 'app-edit-profile',
@@ -42,6 +43,7 @@ export class EditProfileComponent extends FormInputComponent implements OnInit, 
     });
   }
 
+  @StartLoadingIndicator
   editProfile(profileDetails: UpdateUserRequest): void {
     profileDetails.id = this.user.id;
 
@@ -52,10 +54,8 @@ export class EditProfileComponent extends FormInputComponent implements OnInit, 
           profileDetails.imageUrl = imageUrl;
           return this.userService.update(this.user.id, profileDetails);
         }))
-        .subscribe(() => {
-          this.handleUpdateProfileSucces();
-        },
-          err => this.handleUpdateProfileError(err))
+        .subscribe(() => this.handleUpdateProfileSuccess(),
+                   (err: HttpErrorResponse) => this.handleUpdateProfileError(err))
     );
   }
 
@@ -67,17 +67,19 @@ export class EditProfileComponent extends FormInputComponent implements OnInit, 
     this.imageToUpload = files.item(0);
   }
 
-  private handleUpdateProfileSucces() {
+  @StopLoadingIndicator
+  private handleUpdateProfileSuccess() {
     const updatedUser = new AppNotificationMessage(this.user.id, TOPIC_USER_UPDATE);
     this.notificationService.send(updatedUser);
     this.dialogRef.close();
   }
 
+  @StopLoadingIndicator
   private handleUpdateProfileError(error: HttpErrorResponse): void {
     if (this.uploadedImageUrl) {
       this.fileUploadService.delete(this.uploadedImageUrl).subscribe();
     }
-    setTimeout(() => AppUtil.showError(error), 1);
+    AppUtil.showError(error);
   }
 
   ngOnDestroy(): void {

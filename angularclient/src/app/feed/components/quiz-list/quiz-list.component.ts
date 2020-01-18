@@ -6,7 +6,7 @@ import { NavigationHelperService } from './../../../shared/services/navigation-h
 import { Quiz } from './../../../shared/models/quiz';
 import { QuizService } from './../../services/quiz.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import * as _ from 'lodash';
 import { ParameterFetchingStrategy } from 'src/app/core/strategies/parameter-fetching-strategy';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -16,6 +16,7 @@ import {
   TOPIC_QUIZ_ANSWERS_UPDATE, TOPIC_QUIZ_DELETED_UPDATE
 } from './../../../core/model/socket-consts';
 import { NotificationService } from './../../../core/services/notification.service';
+import { StartLoadingIndicator } from './../../../shared/decorators/spinner-decorators';
 
 @Component({
   selector: 'app-quiz-list',
@@ -47,6 +48,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
       this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/delete-24px.svg'));
   }
 
+  @StartLoadingIndicator
   async ngOnInit() {
     this.currentUserId = (await this.authService.getCurrentUser()).id;
     this.pagingStrategy = new ParameterFetchingStrategy(this.quizService,
@@ -115,6 +117,10 @@ export class QuizListComponent implements OnInit, OnDestroy {
   }
 
   quizListChanged(newQuizList: Quiz[]) {
+    if (this.quizList && this.quizList.length === 0) {
+      AppUtil.triggerLoadingIndicatorStop();
+    }
+
     this.quizList = _.concat(this.quizList, newQuizList);
   }
 

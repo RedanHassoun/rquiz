@@ -63,10 +63,8 @@ export class PageableComponent implements OnInit, OnChanges {
           this.finished = true;
         }
 
-        if (newItems.length > 0) {
-          this.totalItemsCount += newItems.length;
-          this.dataListChanged.emit(newItems);
-        }
+        this.totalItemsCount += newItems.length;
+        this.dataListChanged.emit(newItems);
 
         this.page++;
       }))
