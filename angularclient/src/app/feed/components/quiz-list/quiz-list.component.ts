@@ -55,6 +55,8 @@ export class QuizListComponent implements OnInit, OnDestroy {
       new Map<string, string>([['isPublic', 'true']]),
       QuizService.PAGE_SIZE);
 
+    this.notificationService.initMyNotification();
+
     this.subscriptions.push(
       this.notificationService.onMessage(TOPIC_QUIZ_LIST_UPDATE)
         .subscribe((message: AppNotificationMessage) => {

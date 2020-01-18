@@ -55,7 +55,6 @@ export class LoginComponent extends FormInputComponent implements OnInit {
   }
 
   private async goToMainPage(userId: string) {
-    this.notificationService.initMyNotification();
     this.router.navigate(['/quizList']);
   }
 
