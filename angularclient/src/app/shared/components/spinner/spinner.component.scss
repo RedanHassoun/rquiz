@@ -1,4 +1,10 @@
-.loading{
-    color: white;
-    padding-top: 10pt;
-  }
+.loading {
+  padding-top: 10pt;
+  display: flex;
+  justify-content: space-between;
+  flex-flow: column wrap;
+}
+
+.loading p {
+  color: white;
+}
