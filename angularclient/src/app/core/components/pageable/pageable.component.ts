@@ -1,7 +1,9 @@
+import { AppUtil } from './../../../shared/util/app-util';
 import { PagingDataFetchStrategy } from './../../strategies/paging-data-fetch-strategy';
 import { tap, take } from 'rxjs/operators';
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { StopLoadingIndicator } from './../../../shared/decorators/spinner-decorators';
 import * as _ from 'lodash';
 
 @Component({
@@ -9,9 +11,10 @@ import * as _ from 'lodash';
   templateUrl: './pageable.component.html',
   styleUrls: ['./pageable.component.scss']
 })
-export class PageableComponent implements OnInit, OnChanges {
+export class PageableComponent implements OnInit, OnChanges, OnDestroy {
   @Input() public pagingStrategy: PagingDataFetchStrategy;
   @Output() public dataListChanged = new EventEmitter();
+  private subscriptions: Subscription[] = [];
   totalItemsCount = 0;
   finished = false;
   page = 0;
@@ -53,22 +56,33 @@ export class PageableComponent implements OnInit, OnChanges {
     }
     this.fetchingData = true;
 
-    this.pagingStrategy.dataObservable(page)
-      .pipe(tap(res => {
-        this.fetchingData = false;
+    this.subscriptions.push(
+      this.pagingStrategy.dataObservable(page)
+        .pipe(tap(res => {
+          this.fetchingData = false;
 
-        const newItems = _.slice(res, 0, this.pagingStrategy.getPageSize());
+          const newItems = _.slice(res, 0, this.pagingStrategy.getPageSize());
 
-        if (newItems.length < this.pagingStrategy.getPageSize()) {
-          this.finished = true;
-        }
+          if (newItems.length < this.pagingStrategy.getPageSize()) {
+            this.finished = true;
+          }
 
-        this.totalItemsCount += newItems.length;
-        this.dataListChanged.emit(newItems);
+          this.totalItemsCount += newItems.length;
+          this.dataListChanged.emit(newItems);
 
-        this.page++;
-      }))
-      .pipe(take(1))
-      .subscribe();
+          this.page++;
+        }))
+        .pipe(take(1))
+        .subscribe(() => { }, (err: Error) => this.handleError(err))
+    );
+  }
+
+  @StopLoadingIndicator
+  private handleError(err: Error): void {
+    AppUtil.showError(err);
+  }
+
+  ngOnDestroy(): void {
+    AppUtil.releaseSubscriptions(this.subscriptions);
   }
 }
