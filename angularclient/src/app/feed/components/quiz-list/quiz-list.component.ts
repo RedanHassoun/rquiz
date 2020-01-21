@@ -1,3 +1,4 @@
+import { PagingStrategyFactory } from 'src/app/shared/factories/paging-strategy-factory';
 import { AuthenticationService } from './../../../core/services/authentication.service';
 import { PagingDataFetchStrategy } from './../../../core/strategies/paging-data-fetch-strategy';
 import { AppUtil } from './../../../shared/util/app-util';
@@ -6,9 +7,8 @@ import { NavigationHelperService } from './../../../shared/services/navigation-h
 import { Quiz } from './../../../shared/models/quiz';
 import { QuizService } from './../../services/quiz.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
-import { ParameterFetchingStrategy } from 'src/app/core/strategies/parameter-fetching-strategy';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
@@ -34,7 +34,8 @@ export class QuizListComponent implements OnInit, OnDestroy {
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer,
     private notificationService: NotificationService,
-    private authService: AuthenticationService) {
+    private authService: AuthenticationService,
+    private pagingStrategyFactory: PagingStrategyFactory) {
     this.iconRegistry.addSvgIcon( // TODO: make more general
       'done',
       this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/baseline-done-24px.svg'));
@@ -51,9 +52,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
   @StartLoadingIndicator
   async ngOnInit() {
     this.currentUserId = (await this.authService.getCurrentUser()).id;
-    this.pagingStrategy = new ParameterFetchingStrategy(this.quizService,
-      new Map<string, string>([['isPublic', 'true']]),
-      QuizService.PAGE_SIZE);
+    this.pagingStrategy = this.pagingStrategyFactory.createStrategyWithParams(new Map<string, string>([['isPublic', 'true']]));
 
     this.notificationService.initMyNotification();
 
@@ -88,6 +87,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
     if (!message || !message.content) {
       return;
     }
+    // TODO: the quiz should be added only if it is public
     const quiz: Quiz = JSON.parse(message.content);
     this.quizList.unshift(quiz);
   }

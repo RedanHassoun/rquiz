@@ -1,11 +1,8 @@
+import { MY_QUIZ_URL } from './../../../shared/factories/paging-strategy-factory';
+import { PagingStrategyFactory } from 'src/app/shared/factories/paging-strategy-factory';
 import { AppUtil } from './../../../shared/util/app-util';
-import { UserService } from './../../../core/services/user-service.service';
 import { Quiz } from './../../../shared/models/quiz';
-import { CustomUrlFetchingStrategy } from './../../../core/strategies/custom-url-fetching-strategy';
 import { PagingDataFetchStrategy } from './../../../core/strategies/paging-data-fetch-strategy';
-import { AuthenticationService } from './../../../core/services/authentication.service';
-import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
-import { QuizService } from './../../services/quiz.service';
 import { Component, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import { StartLoadingIndicator } from './../../../shared/decorators/spinner-decorators';
@@ -18,21 +15,14 @@ import { StartLoadingIndicator } from './../../../shared/decorators/spinner-deco
 export class MyQuizListComponent implements OnInit {
 
   public quizList: Quiz[] = [];
-  public currentUserId: string;
   public pagingStrategy: PagingDataFetchStrategy;
 
-  constructor(private userService: UserService,
-              private navigationService: NavigationHelperService,
-              private authService: AuthenticationService) {
+  constructor(private pagingStrategyFactory: PagingStrategyFactory) {
   }
 
   @StartLoadingIndicator
   async ngOnInit() {
-    this.currentUserId = (await this.authService.getCurrentUser()).id;
-    const urlForFetchingQuizList = `${this.currentUserId}/quiz`;
-    this.pagingStrategy = new CustomUrlFetchingStrategy(this.userService,
-      urlForFetchingQuizList,
-      QuizService.PAGE_SIZE);
+    this.pagingStrategy = this.pagingStrategyFactory.createCustomUrlStrategy(MY_QUIZ_URL);
   }
 
   quizListChanged(newQuizList: Quiz[]) {

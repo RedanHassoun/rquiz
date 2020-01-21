@@ -12,6 +12,8 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './core/components/login/login.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 import { AppJwtModule } from './app-jwt/app-jwt.module';
+import { PagingStrategyFactory } from './shared/factories/paging-strategy-factory';
+import { PagingStrategyFactoryImpl } from './shared/factories/paging-strategy-factory-impl';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { AppJwtModule } from './app-jwt/app-jwt.module';
     AppJwtModule
   ],
   providers: [
-    UserService
+    UserService,
+    { provide: PagingStrategyFactory, useClass: PagingStrategyFactoryImpl }
   ],
   bootstrap: [
     AppComponent
