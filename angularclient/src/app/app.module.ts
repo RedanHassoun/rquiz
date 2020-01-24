@@ -10,7 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './routing/app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './core/components/login/login.component';
-import { NotFoundComponent } from './shared/components/not-found/not-found.component';
+import { NotFoundComponent } from './core/components/not-found/not-found.component';
 import { AppJwtModule } from './app-jwt/app-jwt.module';
 import { PagingStrategyFactory } from './shared/factories/paging-strategy-factory';
 import { PagingStrategyFactoryImpl } from './shared/factories/paging-strategy-factory-impl';
