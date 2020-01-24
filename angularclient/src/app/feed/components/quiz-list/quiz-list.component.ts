@@ -2,7 +2,7 @@ import { PagingStrategyFactory } from 'src/app/shared/factories/paging-strategy-
 import { AuthenticationService } from './../../../core/services/authentication.service';
 import { PagingDataFetchStrategy } from './../../../core/strategies/paging-data-fetch-strategy';
 import { AppUtil } from './../../../shared/util/app-util';
-import { CreateQuizComponent } from '../../../shared/components/create-quiz/create-quiz.component';
+import { CreateQuizComponent } from '../create-quiz/create-quiz.component';
 import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
 import { Quiz } from './../../../shared/models/quiz';
 import { QuizService } from './../../services/quiz.service';

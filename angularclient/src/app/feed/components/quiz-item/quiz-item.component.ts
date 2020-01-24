@@ -1,15 +1,15 @@
 import { Router } from '@angular/router';
-import { User } from './../../models/user';
-import { UserService } from './../../../core/services/user-service.service';
-import { AppNotificationMessage, TOPIC_QUIZ_DELETED_UPDATE } from './../../../core/model/socket-consts';
-import { NotificationService } from './../../../core/services/notification.service';
-import { AuthenticationService } from './../../../core/services/authentication.service';
-import { QuizService } from './../../../feed/services/quiz.service';
+import { User } from '../../../shared/models/user';
+import { UserService } from '../../../core/services/user-service.service';
+import { AppNotificationMessage, TOPIC_QUIZ_DELETED_UPDATE } from '../../../core/model/socket-consts';
+import { NotificationService } from '../../../core/services/notification.service';
+import { AuthenticationService } from '../../../core/services/authentication.service';
+import { QuizService } from '../../services/quiz.service';
 import { ShowQuizComponent } from '../show-quiz/show-quiz.component';
-import { AppUtil } from '../../util/app-util';
-import { NavigationHelperService } from '../../services/navigation-helper.service';
+import { AppUtil } from '../../../shared/util/app-util';
+import { NavigationHelperService } from '../../../shared/services/navigation-helper.service';
 import { Subscription } from 'rxjs';
-import { Quiz } from '../../models/quiz';
+import { Quiz } from '../../../shared/models/quiz';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 
 @Component({

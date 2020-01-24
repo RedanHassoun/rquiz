@@ -1,23 +1,23 @@
-import { FileUploadService } from './../../../core/services/file-upload.service';
+import { FileUploadService } from '../../../core/services/file-upload.service';
 import { take, switchMap } from 'rxjs/operators';
-import { AlreadyExistError } from './../../app-errors/already-exist-error';
-import { AppNotificationMessage, TOPIC_QUIZ_LIST_UPDATE } from './../../../core/model/socket-consts';
-import { NotificationService } from './../../../core/services/notification.service';
-import { UserService } from './../../../core/services/user-service.service';
-import { User } from './../../models/user';
-import { AppUtil } from './../../util/app-util';
-import { AuthenticationService } from './../../../core/services/authentication.service';
-import { QuizService } from './../../../feed/services/quiz.service';
+import { AlreadyExistError } from '../../../shared/app-errors/already-exist-error';
+import { AppNotificationMessage, TOPIC_QUIZ_LIST_UPDATE } from '../../../core/model/socket-consts';
+import { NotificationService } from '../../../core/services/notification.service';
+import { UserService } from '../../../core/services/user-service.service';
+import { User } from '../../../shared/models/user';
+import { AppUtil } from '../../../shared/util/app-util';
+import { AuthenticationService } from '../../../core/services/authentication.service';
+import { QuizService } from '../../services/quiz.service';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Quiz } from '../../models/quiz';
+import { Quiz } from '../../../shared/models/quiz';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { QuizAnswer } from '../../models/quiz-answer';
+import { QuizAnswer } from '../../../shared/models/quiz-answer';
 import { Subscription } from 'rxjs';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import * as _ from 'lodash';
-import { FormInputComponent } from './../form-input/form-input.component';
-import { StartLoadingIndicator, StopLoadingIndicator } from './../../decorators/spinner-decorators';
+import { FormInputComponent } from '../../../shared/components/form-input/form-input.component';
+import { StartLoadingIndicator, StopLoadingIndicator } from '../../../shared/decorators/spinner-decorators';
 
 @Component({
   selector: 'app-create-quiz',

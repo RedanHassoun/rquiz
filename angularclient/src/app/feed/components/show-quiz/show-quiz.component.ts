@@ -1,17 +1,17 @@
-import { AppNotificationMessage } from './../../../core/model/socket-consts';
-import { NotificationService } from './../../../core/services/notification.service';
-import { QuizAnswer } from '../../models/quiz-answer';
-import { AppUtil } from '../../util/app-util';
-import { Quiz } from '../../models/quiz';
+import { AppNotificationMessage } from '../../../core/model/socket-consts';
+import { NotificationService } from '../../../core/services/notification.service';
+import { QuizAnswer } from '../../../shared/models/quiz-answer';
+import { AppUtil } from '../../../shared/util/app-util';
+import { Quiz } from '../../../shared/models/quiz';
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
-import { QuizService } from '../../../feed/services/quiz.service';
+import { QuizService } from '../../services/quiz.service';
 import { Subscription } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
-import { User } from '../../models/user';
+import { User } from '../../../shared/models/user';
 import { TOPIC_QUIZ_ANSWERS_UPDATE } from 'src/app/core/model/socket-consts';
-import { StopLoadingIndicator, StartLoadingIndicator } from '../../decorators/spinner-decorators';
+import { StopLoadingIndicator, StartLoadingIndicator } from '../../../shared/decorators/spinner-decorators';
 
 @Component({
   selector: 'app-show-quiz',
