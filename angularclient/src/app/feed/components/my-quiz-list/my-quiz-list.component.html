@@ -1,11 +1,8 @@
-<div class="container list-article">
-  <div class="quiz-list-container">
-    <div *ngFor="let quiz of quizList">
-      <app-quiz-item [currentUserId]="currentUserId" [quiz]="quiz"></app-quiz-item>
-    </div>
+<div class="quiz-list-container">
+  <div *ngFor="let quiz of quizList">
+    <app-quiz-item [currentUserId]="currentUserId" [quiz]="quiz"></app-quiz-item>
   </div>
 </div>
-<app-pageable [pagingStrategy]='pagingStrategy' 
-              (dataListChanged)="quizListChanged($event)">
+<app-pageable [pagingStrategy]='pagingStrategy' (dataListChanged)="quizListChanged($event)">
 </app-pageable>
 <app-spinner></app-spinner>

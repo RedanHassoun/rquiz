@@ -7,7 +7,7 @@
 
       <div class="grid-item-full-width">
         <p>{{ quiz.description }}</p>
-        <p class="text-warning" *ngIf="isAlreadyAnswered && isAlreadyAnswered === true">
+        <p class="text-warning" *ngIf="isAlreadyAnswered()">
           You already solved this quiz
         </p>
       </div>
@@ -16,7 +16,7 @@
         <mat-radio-group name="quizAnswers" class="quiz-radio-group" aria-label="Select an answer" [selected]="null"
           [(ngModel)]="selectedAnswerId">
           <mat-radio-button class="quiz-radio-button" *ngFor="let answer of quiz.answers" [value]="answer.id"
-            [disabled]="false">
+            [disabled]="isAlreadyAnswered()">
             {{answer.content}}
           </mat-radio-button>
         </mat-radio-group>

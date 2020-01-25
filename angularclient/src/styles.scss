@@ -48,3 +48,8 @@ body {
 .form-button {
   margin: 5px;
 }
+
+.quiz-list-container {
+  display: flex;
+  flex-flow: row nowrap;
+}

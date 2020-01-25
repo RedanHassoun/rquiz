@@ -1,7 +1,8 @@
+import { AppUtil } from './../../../shared/util/app-util';
+import { UserAnswer } from './../../../shared/models/user-answer';
 import { AppNotificationMessage } from '../../../core/model/socket-consts';
 import { NotificationService } from '../../../core/services/notification.service';
 import { QuizAnswer } from '../../../shared/models/quiz-answer';
-import { AppUtil } from '../../../shared/util/app-util';
 import { Quiz } from '../../../shared/models/quiz';
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
@@ -21,7 +22,7 @@ import { StopLoadingIndicator, StartLoadingIndicator } from '../../../shared/dec
 export class ShowQuizComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   selectedAnswerId: string;
-  isAlreadyAnswered: boolean;
+  currentUserAnswerForQuiz: UserAnswer;
   currentUser: User;
 
   constructor(@Inject(MAT_DIALOG_DATA) public quiz: Quiz,
@@ -30,25 +31,46 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<ShowQuizComponent>,
     private notificationService: NotificationService) { }
 
+  @StartLoadingIndicator
   async ngOnInit() {
     this.currentUser = await this.authenticationService.getCurrentUser();
-    this.checkIfQuizAlreadyAnswered();
+    this.currentUserAnswerForQuiz = await this.getCurrentUserAnswerForQuiz();
   }
 
   ngOnDestroy(): void {
     AppUtil.releaseSubscriptions(this.subscriptions);
   }
 
-  async checkIfQuizAlreadyAnswered(): Promise<void> {
-    this.isAlreadyAnswered = await this.quizService.isAlreadyAnswered(this.quiz, this.currentUser.id);
+  async getCurrentUserAnswerForQuiz(): Promise<UserAnswer> {
+    try {
+      const userAnswerListResult: UserAnswer[] = await this.quizService
+        .getUserAnswerForQuiz(this.quiz.id, this.currentUser.id).toPromise();
+
+      AppUtil.triggerLoadingIndicatorStop();
+
+      if (userAnswerListResult && userAnswerListResult.length > 0) {
+        const userAnswer: UserAnswer = userAnswerListResult[0];
+        this.selectedAnswerId = userAnswer.answerId;
+        return userAnswer;
+      }
+
+      return null;
+    } catch (ex) {
+      AppUtil.triggerLoadingIndicatorStop();
+      throw ex;
+    }
   }
 
-  shouldHideSolveButton(): boolean {
-    if (typeof this.isAlreadyAnswered === 'undefined' || this.isAlreadyAnswered === null) {
+  isAlreadyAnswered(): boolean {
+    if (this.currentUserAnswerForQuiz) {
       return true;
     }
 
-    if (!!this.isAlreadyAnswered ||
+    return false;
+  }
+
+  shouldHideSolveButton(): boolean {
+    if (!!this.isAlreadyAnswered() ||
       (!this.currentUser || this.currentUser.id === this.quiz.creator.id)) {
       return true;
     }
@@ -75,7 +97,7 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
   private sendSolutionToServer(quizId: string, quizAnswer: QuizAnswer): void {
     this.quizService.solve(quizId, quizAnswer)
       .subscribe((solvedQuiz: Quiz) => this.handleServerSuccess(solvedQuiz),
-                 (err: Error) => this.handleServerError(err));
+        (err: Error) => this.handleServerError(err));
   }
 
   @StopLoadingIndicator

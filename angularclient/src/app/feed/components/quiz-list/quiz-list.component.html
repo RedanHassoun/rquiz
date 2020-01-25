@@ -1,11 +1,8 @@
-
 <h1 id="header" class="text-primary">RQuiz</h1>
 
-<div class="container list-article">
-  <div class="quiz-list-container">
-    <div *ngFor="let quiz of quizList">
-      <app-quiz-item [currentUserId]="currentUserId" [quiz]="quiz"></app-quiz-item>
-    </div>
+<div class="quiz-list-container">
+  <div *ngFor="let quiz of quizList">
+    <app-quiz-item [currentUserId]="currentUserId" [quiz]="quiz"></app-quiz-item>
   </div>
 </div>
 

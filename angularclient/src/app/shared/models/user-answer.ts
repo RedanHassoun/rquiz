@@ -4,7 +4,7 @@ import { QuizAnswer } from './quiz-answer';
 
 export class UserAnswer {
     id: string;
-    quiz: Quiz;
-    user: User;
-    quizAnswer: QuizAnswer;
+    quizId: string;
+    userId: string;
+    answerId: string;
 }

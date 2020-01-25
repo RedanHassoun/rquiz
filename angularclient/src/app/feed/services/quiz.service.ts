@@ -46,15 +46,6 @@ export class QuizService extends ClientDataServiceService {
       .pipe(catchError(AppUtil.handleError));
   }
 
-  public async isAlreadyAnswered(quiz: Quiz, userId: string): Promise<boolean> {
-    const currentUserAnswersForQuiz: UserAnswer[] = await this.getUserAnswerForQuiz(quiz.id, userId).toPromise();
-    if (currentUserAnswersForQuiz.length > 0) {
-      return true;
-    }
-
-    return false;
-  }
-
   public getUserAnswerForQuiz(quizId: string, userId: string): Observable<UserAnswer[]> {
     if (!quizId || !userId) {
       throw new Error(`Cannot get user answers for quiz, parameters must be defined`);
