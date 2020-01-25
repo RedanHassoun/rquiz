@@ -18,7 +18,7 @@ export class MyAssignedQuizComponent implements OnInit {
   constructor(private pagingStrategyFactory: PagingStrategyFactory) {
   }
 
-  @StartLoadingIndicator // TODO: handle failure
+  @StartLoadingIndicator
   ngOnInit() {
     this.pagingStrategy = this.pagingStrategyFactory.createCustomUrlStrategy(MY_ASSIGNED_QUIZ_URL);
   }

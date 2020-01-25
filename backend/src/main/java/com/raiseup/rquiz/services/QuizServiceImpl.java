@@ -105,21 +105,44 @@ public class QuizServiceImpl implements QuizService {
     @Override
     @Transactional(readOnly=true)
     public Collection<Quiz> readAll(HashMap<String, Object> filterParams, Integer size, Integer page) {
-        if(size == null || page == null)
-            return this.quizRepository.findQuizListByParameters(filterParams,null);
+        this.logger.debug(
+                String.format(
+                        "Reading all quiz list by parameters: %s", AppUtils.paramsMapToString(filterParams)));
 
-        return this.quizRepository.findQuizListByParameters(filterParams,
-                PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"));
+        List<Quiz> quizList;
+        if(size == null || page == null) {
+            this.logger.debug("Returning without pagination");
+            quizList = this.quizRepository.findQuizListByParameters(filterParams,null);
+        } else {
+            this.logger.debug(String.format("Returning without pagination. page: %d, size: %d", page, size));
+            quizList = this.quizRepository.findQuizListByParameters(filterParams,
+                    PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"));
+        }
+
+        this.logger.debug(String.format("Returning %d quiz", quizList.size()));
+
+        this.initQuizListAnswersCount(quizList);
+        return quizList;
     }
 
     @Override
     @Transactional(readOnly=true)
     public Collection<Quiz> readAllAssignedToUser(String userId, Integer size, Integer page) {
+        this.logger.debug(
+                String.format(
+                        "Reading all quiz assigned to user: %s", userId));
+
+        List<Quiz> quizList;
         if(size == null || page == null){
-            return this.quizRepository.findByAssignedUsers_Id(userId, null);
+            quizList = this.quizRepository.findByAssignedUsers_Id(userId, null);
+        } else {
+            quizList = this.quizRepository.findByAssignedUsers_Id(userId,
+                    PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"));
         }
-        return this.quizRepository.findByAssignedUsers_Id(userId,
-                PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"));
+
+        this.logger.debug(String.format("Returning %d quiz", quizList.size()));
+        this.initQuizListAnswersCount(quizList);
+        return quizList;
     }
 
     @Override

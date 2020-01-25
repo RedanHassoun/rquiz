@@ -1,6 +1,7 @@
 package com.raiseup.rquiz.repo;
 
 
+import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.models.db.Quiz;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,8 @@ public class QuizRepositoryCustomImpl implements QuizRepositoryCustom {
     @Override
     public List<Quiz> findQuizListByParameters(HashMap<String, Object> params,
                                                Pageable pageable) {
-        this.logger.debug(String.format("Getting quiz list by parameters"));
+        this.logger.debug(String.format(
+                "Getting quiz list by parameters: %s", AppUtils.paramsMapToString(params)));
 
         CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
 
@@ -68,7 +70,7 @@ public class QuizRepositoryCustomImpl implements QuizRepositoryCustom {
         }
 
         List<Quiz> quizList = typedQuery.getResultList();
-        this.logger.debug(String.format("Returning %d quizzes", quizList.size()));
+        this.logger.debug(String.format("Returning %d quiz", quizList.size()));
         return quizList;
     }
 

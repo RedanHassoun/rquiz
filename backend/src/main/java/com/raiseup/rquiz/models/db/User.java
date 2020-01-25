@@ -113,9 +113,10 @@ public class User extends BaseModel{
 
     @Override
     public String toString(){
-        return String.format("[ username: %s , email: %s]",
-                this.username,
-                this.email);
+        return String.format("[ id: %s, username: %s , email: %s]",
+                this.getId(),
+                this.getUsername(),
+                this.getEmail());
     }
 
     @Override

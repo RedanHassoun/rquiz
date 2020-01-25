@@ -6,7 +6,7 @@ import com.raiseup.rquiz.exceptions.AppException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import java.util.HashMap;
 
 public class AppUtils {
     private static Logger logger = LoggerFactory.getLogger(AppUtils.class);
@@ -61,5 +61,22 @@ public class AppUtils {
                     variableName), ex);
             return null;
         }
+    }
+
+    public static String paramsMapToString(HashMap<String, Object> map) {
+        if (map == null) {
+            return null;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("[ ");
+        map.entrySet().forEach(entry-> {
+            stringBuilder.append(entry.getKey());
+            stringBuilder.append(" : ");
+            stringBuilder.append(entry.getValue());
+            stringBuilder.append(" , ");
+        });
+        stringBuilder.append(" ]");
+
+        return stringBuilder.toString();
     }
 }

@@ -87,8 +87,11 @@ export class QuizListComponent implements OnInit, OnDestroy {
     if (!message || !message.content) {
       return;
     }
-    // TODO: the quiz should be added only if it is public
+
     const quiz: Quiz = JSON.parse(message.content);
+    if (!quiz.isPublic) {
+      return;
+    }
     this.quizList.unshift(quiz);
   }
 
