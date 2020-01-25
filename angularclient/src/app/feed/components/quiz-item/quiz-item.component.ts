@@ -1,3 +1,4 @@
+import { ImageService } from './../../../shared/services/image.service';
 import { Router } from '@angular/router';
 import { User } from '../../../shared/models/user';
 import { UserService } from '../../../core/services/user-service.service';
@@ -24,20 +25,16 @@ export class QuizItemComponent implements OnInit, OnDestroy {
 
   constructor(private navigationService: NavigationHelperService,
     private quizService: QuizService,
-    private authService: AuthenticationService,
     private notificationService: NotificationService,
-    private router: Router) {
+    private router: Router,
+    private imageService: ImageService) {
   }
 
   ngOnInit() {
   }
 
-  getQuizImage() {
-    if (this.quiz.imageUrl) {
-      return this.quiz.imageUrl;
-    }
-
-    return 'assets/img/quiz-place-holder.svg';
+  getQuizImage(): string {
+    return this.imageService.getImageUrlForQuiz(this.quiz);
   }
 
   showQuiz(): void {

@@ -1,3 +1,4 @@
+import { ImageService } from './../../services/image.service';
 import { AppNotificationMessage, TOPIC_USER_UPDATE } from './../../../core/model/socket-consts';
 import { NotificationService } from './../../../core/services/notification.service';
 import { EditProfileComponent } from './../edit-profile/edit-profile.component';
@@ -24,12 +25,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(private route: ActivatedRoute,
-              private usersService: UserService,
-              private authService: AuthenticationService,
-              private iconRegistry: MatIconRegistry,
-              private sanitizer: DomSanitizer,
-              private navigationService: NavigationHelperService,
-              private notificationService: NotificationService) {
+    private usersService: UserService,
+    private authService: AuthenticationService,
+    private iconRegistry: MatIconRegistry,
+    private sanitizer: DomSanitizer,
+    private navigationService: NavigationHelperService,
+    private notificationService: NotificationService,
+    private imageService: ImageService) {
     this.iconRegistry.addSvgIcon( // TODO: make more general
       'edit',
       this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/edit-24px.svg'));
@@ -56,6 +58,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
           }
         })
     );
+  }
+
+  public getUserImageUrl(): string {
+    return this.imageService.getImageUrlForUser(this.user);
   }
 
   private fetchUser(userId: string): void {

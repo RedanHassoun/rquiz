@@ -51,5 +51,11 @@ body {
 
 .quiz-list-container {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.quiz-list-item {
+  width: 90%;
 }
