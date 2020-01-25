@@ -80,7 +80,6 @@ public class QuizServiceImpl implements QuizService {
     @Override
     @Transactional(readOnly=true)
     public Collection<Quiz> readAll(Boolean isPublic, Integer size, Integer page) {
-        Collection<Quiz> quizList;
         Pageable pageable = null;
 
         if(size != null && page != null) {
@@ -90,16 +89,30 @@ public class QuizServiceImpl implements QuizService {
                     Sort.Direction.DESC, "createdAt");
         }
 
-        if(isPublic == null) {
-            quizList = this.quizRepository.findAll(pageable)
-                    .getContent();
-            this.initQuizListAnswersCount(quizList);
-            return quizList;
-        }
+        return this.getQuizList(isPublic, pageable);
+    }
 
-        quizList = this.quizRepository.findAllByPublic(isPublic, pageable);
-        this.initQuizListAnswersCount(quizList);
-        return quizList;
+    private Collection<Quiz> getQuizList(Boolean isPublic, Pageable pageable) {
+        Collection<Quiz> quizListToReturn;
+        if (isPublic == null) {
+            if (pageable != null) {
+                quizListToReturn = this.quizRepository.findAll(pageable).getContent();
+            } else {
+                quizListToReturn = this.quizRepository.findAll();
+            }
+
+            this.initQuizListAnswersCount(quizListToReturn);
+            return quizListToReturn;
+        } else {
+            if (pageable != null) {
+                quizListToReturn = this.quizRepository.findAllByPublic(isPublic, pageable);
+            } else {
+                quizListToReturn = this.quizRepository.findAllByPublic(isPublic);
+            }
+
+            this.initQuizListAnswersCount(quizListToReturn);
+            return quizListToReturn;
+        }
     }
 
     @Override
