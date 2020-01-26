@@ -1,5 +1,6 @@
 package com.raiseup.rquiz.common;
 
+import com.raiseup.rquiz.exceptions.IllegalOperationException;
 import com.raiseup.rquiz.models.*;
 import com.raiseup.rquiz.models.db.*;
 import org.modelmapper.ModelMapper;
@@ -29,7 +30,13 @@ public class DtoMapper {
         }
         quizDto.setAnswers(answers);
         quizDto.setCreator(this.convertUserToDto(quiz.getCreator()));
-        quizDto.setAssignedUsers(null);
+        Set<UserDto> assignedUsers = new HashSet<>();
+        if (quiz.getAssignedUsers() != null ) {
+            for(User user : quiz.getAssignedUsers()) {
+                assignedUsers.add(this.convertUserToDto(user));
+            }
+        }
+        quizDto.setAssignedUsers(assignedUsers);
 
         return quizDto;
     }
@@ -125,7 +132,9 @@ public class DtoMapper {
                                                                             AppNotificationMessage.class);
         appNotificationMessage.setUserId(userNotification.getUser().getId());
         appNotificationMessage.setUsername(userNotification.getUser().getUsername());
-        appNotificationMessage.setTargetUserId(userNotification.getTargetUser().getId());
+        String[] targetUserIds = new String[1];
+        targetUserIds[0] = userNotification.getTargetUser().getId();
+        appNotificationMessage.setTargetUserIds(targetUserIds);
 
         return appNotificationMessage;
     }
@@ -139,7 +148,14 @@ public class DtoMapper {
         userNotification.setUser(user);
 
         User targetUser = new User();
-        targetUser.setId(appNotificationMessage.getTargetUserId());
+        if (appNotificationMessage.getTargetUserIds() != null) {
+            // Currently we support only one target user at a time
+            targetUser.setId(appNotificationMessage.getTargetUserIds()[0]);
+        } else {
+            throw new IllegalArgumentException(
+                    "Cannot convert notification to entity because the target user is not defined");
+        }
+
         userNotification.setTargetUser(targetUser);
 
         return userNotification;

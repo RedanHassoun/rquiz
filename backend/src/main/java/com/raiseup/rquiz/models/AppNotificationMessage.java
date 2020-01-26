@@ -8,7 +8,7 @@ public class AppNotificationMessage {
     private String topic;
     private String userId;
     private String username;
-    private String targetUserId;
+    private String[] targetUserIds;
     private Boolean seen = false;
     private Date time;
 
@@ -52,12 +52,12 @@ public class AppNotificationMessage {
         this.username = username;
     }
 
-    public String getTargetUserId() {
-        return targetUserId;
+    public String[] getTargetUserIds() {
+        return targetUserIds;
     }
 
-    public void setTargetUserId(String targetUserId) {
-        this.targetUserId = targetUserId;
+    public void setTargetUserIds(String[] targetUserIds) {
+        this.targetUserIds = targetUserIds;
     }
 
     public Boolean getSeen() {

@@ -1,16 +1,15 @@
 import { ClientDataServiceService } from './../../shared/services/client-data-service.service';
-import { Quiz } from './../../shared/models/quiz';
 import { User } from './../../shared/models/user';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
-import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import * as SockJS from 'sockjs-client';
 import * as Stomp from 'stompjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { first, filter, switchMap, map } from 'rxjs/operators';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AppNotificationMessage, TOPIC_QUIZ_ANSWERS_UPDATE } from './../model/socket-consts';
+import { HttpClient } from '@angular/common/http';
+import { AppNotificationMessage, TOPIC_QUIZ_ANSWERS_UPDATE, TOPIC_QUIZ_ASSIGNED_TO_USER } from './../model/socket-consts';
 import { AppConsts } from './../../shared/util/app-consts';
-import { SocketClientState, jsonHandler } from '../model';
+import { SocketClientState } from '../model';
 
 
 @Injectable({
@@ -54,14 +53,18 @@ export class NotificationService extends ClientDataServiceService implements OnD
         return JSON.parse(message);
       }
       const msg = JSON.parse(message) as AppNotificationMessage;
-      if (topic.toLowerCase() === TOPIC_QUIZ_ANSWERS_UPDATE.toLowerCase()) {
-        const targetUserId: string = msg.targetUserId;
-        if (targetUserId === context.currentUser.id) {
-          const currNotificationData: AppNotificationMessage[] = context.myNotificationsSubject.value;
-          const notificationFromMyList = currNotificationData.find(notification => notification.id === msg.id);
-          if (!notificationFromMyList) {
-            currNotificationData.push(msg);
-            context.myNotificationsSubject.next(currNotificationData);
+      if (topic.toLowerCase() === TOPIC_QUIZ_ANSWERS_UPDATE.toLowerCase() ||
+        topic.toLowerCase() === TOPIC_QUIZ_ASSIGNED_TO_USER.toLowerCase()) {
+        if (msg && msg.targetUserIds) {
+          for (const targetUserId of msg.targetUserIds) {
+            if (targetUserId === context.currentUser.id) {
+              const currNotificationData: AppNotificationMessage[] = context.myNotificationsSubject.value;
+              const notificationFromMyList = currNotificationData.find(notification => notification.id === msg.id);
+              if (!notificationFromMyList) {
+                currNotificationData.push(msg);
+                context.myNotificationsSubject.next(currNotificationData);
+              }
+            }
           }
         }
       }

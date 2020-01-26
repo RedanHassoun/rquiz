@@ -7,4 +7,5 @@ export class AppConsts {
 
     // Routes
     public static readonly MY_QUIZ_LIST = 'myquizlist';
+    public static readonly MY_ASSIGNED_QUIZ_LIST = 'my-assigned-quiz-list';
 }

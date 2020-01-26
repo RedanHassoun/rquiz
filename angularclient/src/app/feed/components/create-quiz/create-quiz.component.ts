@@ -1,3 +1,4 @@
+import { TOPIC_QUIZ_ASSIGNED_TO_USER } from './../../../core/model/socket-consts';
 import { FileUploadService } from '../../../core/services/file-upload.service';
 import { take, switchMap } from 'rxjs/operators';
 import { AlreadyExistError } from '../../../shared/app-errors/already-exist-error';
@@ -139,8 +140,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
       this.fileUploadService.uploadImage(this.imageToUpload, null)
         .pipe(switchMap((imageUrl: string) => {
           this.quiz.imageUrl = imageUrl;
-          return this.quizService.create(this.quiz)
-            .pipe(take(1));
+          return this.quizService.create(this.quiz).pipe(take(1));
         }))
         .subscribe((result: Quiz) => this.handleSuccessResult(result),
           (err: Error) => this.handleErrorResult(err))
@@ -148,9 +148,21 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
   }
 
   @StopLoadingIndicator
-  private handleSuccessResult(result: Quiz): void {
-    const addedQuiz = new AppNotificationMessage(result, TOPIC_QUIZ_LIST_UPDATE);
-    this.notificationService.send(addedQuiz);
+  private handleSuccessResult(addedQuiz: Quiz): void {
+    let addedQuizNotification = null;
+    if (addedQuiz && addedQuiz.isPublic) {
+      addedQuizNotification = new AppNotificationMessage(addedQuiz, TOPIC_QUIZ_LIST_UPDATE);
+      this.notificationService.send(addedQuizNotification);
+    } else {
+      for (const assignedUser of addedQuiz.assignedUsers) {
+        addedQuizNotification = new AppNotificationMessage(addedQuiz,
+          TOPIC_QUIZ_ASSIGNED_TO_USER,
+          this.currentUser.id,
+          this.currentUser.username);
+        addedQuizNotification.targetUserIds = [assignedUser.id];
+        this.notificationService.send(addedQuizNotification);
+      }
+    }
     this.dialogRef.close();
   }
 

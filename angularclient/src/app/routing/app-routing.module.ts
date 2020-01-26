@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'quizList', component: QuizListComponent, canActivate: [AuthGuard] },
   { path:  AppConsts.MY_QUIZ_LIST, component: MyQuizListComponent, canActivate: [AuthGuard] },
-  { path: 'my-assigned-quiz-list', component: MyAssignedQuizComponent, canActivate: [AuthGuard] },
+  { path:  AppConsts.MY_ASSIGNED_QUIZ_LIST, component: MyAssignedQuizComponent, canActivate: [AuthGuard] },
   { path: 'users/:id', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: 'users', component: UserListComponent, canActivate: [AuthGuard] },
   { path: 'adduser', component: UserFormComponent, canActivate: [AuthGuard] },

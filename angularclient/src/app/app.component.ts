@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
     ['home', 'Home'],
     ['profile', 'My profile'],
     [this.appConsts.MY_QUIZ_LIST, 'My Quiz List'],
-    ['my-assigned-quiz-list', 'Assigned To Me'],
+    [this.appConsts.MY_ASSIGNED_QUIZ_LIST, 'Assigned To Me'],
     ['users', 'Users'],
     ['logout', 'Logout']
   ]);
@@ -69,8 +69,8 @@ export class AppComponent implements OnInit {
       case AppConsts.MY_QUIZ_LIST:
         this.router.navigate([AppConsts.MY_QUIZ_LIST], { replaceUrl: true });
         break;
-      case 'my-assigned-quiz-list':
-        this.router.navigate(['my-assigned-quiz-list'], { replaceUrl: true });
+      case AppConsts.MY_ASSIGNED_QUIZ_LIST:
+        this.router.navigate([AppConsts.MY_ASSIGNED_QUIZ_LIST], { replaceUrl: true });
         break;
       case 'users':
         this.router.navigate(['users'], { replaceUrl: true });

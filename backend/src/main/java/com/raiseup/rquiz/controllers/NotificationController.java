@@ -58,6 +58,14 @@ public class NotificationController {
         return message;
     }
 
+    @MessageMapping("/quiz-assigned-to-user")
+    @SendTo("/topic/quiz-assigned-to-user")
+    public AppNotificationMessage quizAssignedToUser(AppNotificationMessage message) throws Exception {
+        this.logger.debug(String.format("Received socket message: %s on topic: 'quiz-assigned-to-user'",
+                message.getContent()));
+        return this.saveUserNotification(message);
+    }
+
     @MessageMapping("/user-update")
     @SendTo("/topic/user-update")
     public AppNotificationMessage userUpdate(AppNotificationMessage message) {

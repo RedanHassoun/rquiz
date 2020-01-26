@@ -107,7 +107,8 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
       this.currentUser.id,
       this.currentUser.username);
 
-    solvedQuizNotification.targetUserId = this.quiz.creator.id;
+    const targetUserIds = [this.quiz.creator.id];
+    solvedQuizNotification.targetUserIds = targetUserIds;
 
     this.notificationService.send(solvedQuizNotification);
     this.dialogRef.close();
