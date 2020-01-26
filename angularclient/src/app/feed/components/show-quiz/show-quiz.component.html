@@ -12,6 +12,10 @@
         </p>
       </div>
 
+      <div class="grid-item-image-container" *ngIf="quiz.imageUrl">
+        <img class="quiz-image-display" (click)="showQuiz()" src={{quiz.imageUrl}} alt="" />
+      </div>
+
       <div class="grid-item-full-width">
         <mat-radio-group name="quizAnswers" class="quiz-radio-group" aria-label="Select an answer" [selected]="null"
           [(ngModel)]="selectedAnswerId">
