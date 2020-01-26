@@ -54,7 +54,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.notificationService.onMessage(TOPIC_USER_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
           if (message && message.content) {
-            this.fetchUser(message.content);
+            const userId = message.content;
+            if (this.user && userId === this.user.id) {
+              this.fetchUser(message.content);
+            }
           }
         })
     );
