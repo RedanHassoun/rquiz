@@ -7,26 +7,46 @@ import com.raiseup.rquiz.exceptions.UserAlreadyExistException;
 import com.raiseup.rquiz.exceptions.UserNotFoundException;
 import com.raiseup.rquiz.models.db.User;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
-import org.hibernate.exception.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private ApplicationUserRepository applicationUserRepository;
-
+    private EntityManager entityManager;
+    private PlatformTransactionManager transactionManager;
+    private TransactionTemplate transactionTemplate;
+    private AmazonClient amazonClient;
 
     public UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder,
-                           ApplicationUserRepository applicationUserRepository){
+                           ApplicationUserRepository applicationUserRepository,
+                           PlatformTransactionManager transactionManager,
+                           EntityManager entityManager,
+                           AmazonClient amazonClient){
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.applicationUserRepository = applicationUserRepository;
+        this.transactionManager = transactionManager;
+        this.entityManager = entityManager;
+        this.amazonClient = amazonClient;
+    }
+
+    @PostConstruct
+    private void initTransaction() {
+        this.transactionTemplate = new TransactionTemplate(this.transactionManager);
     }
 
     @Override
@@ -68,7 +88,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void update(User user) throws AppException {
         if(user == null || user.getId() == null) {
             AppUtils.throwAndLogException(
@@ -80,11 +99,21 @@ public class UserServiceImpl implements UserService {
             AppUtils.throwAndLogException(new UserNotFoundException(String.format(
                     "Cannot update user %s because it is not found", user.getId())));
         }
-
-        User userFromDB = userFromDBOptional.get();
-        userFromDB.setImageUrl(user.getImageUrl()); // TODO: the images should be uploaded to storage
-        userFromDB.setAbout(user.getAbout());
-        this.applicationUserRepository.save(userFromDB);
+        final User userFromDB = userFromDBOptional.get();
+        final String previousImageUrl = userFromDB.getImageUrl();
+        this.transactionTemplate.execute(status -> {
+            userFromDB.setImageUrl(user.getImageUrl());
+            userFromDB.setAbout(user.getAbout());
+            return this.applicationUserRepository.save(userFromDB);
+        });
+        try {
+            if (previousImageUrl != null) {
+                this.amazonClient.deleteFileFromS3Bucket(previousImageUrl);
+            }
+        } catch (Exception ex) {
+            this.logger.error(String.format("Cannot delete previous image URL for user: %s, image url: %s",
+                    userFromDB.getId(), previousImageUrl), ex);
+        }
     }
 
     @Override
