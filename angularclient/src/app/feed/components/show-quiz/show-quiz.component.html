@@ -16,6 +16,17 @@
         <img class="quiz-image-display" (click)="showQuiz()" src={{quiz.imageUrl}} alt="" />
       </div>
 
+      <div *ngIf="isAlreadyAnswered()" class="grid-item-full-width">
+        <div *ngIf="isUserAnswerCorrect(); else wrongAnswer">
+            <p class="text-success">Your answer is correct.</p>
+        </div>
+
+        <ng-template #wrongAnswer>
+          <p>Your answer: {{ getCurrentUserAnswer() }}</p>
+          <p>Correct answer: {{ getCorrectAnswer() }}</p>
+        </ng-template>
+      </div>
+
       <div class="grid-item-full-width">
         <mat-radio-group name="quizAnswers" class="quiz-radio-group" aria-label="Select an answer" [selected]="null"
           [(ngModel)]="selectedAnswerId">
@@ -35,7 +46,8 @@
 
       <div class="grid-item-solve">
         <!-- TODO: Fix the tooltip issue -->
-        <button class="btn btn-primary btn-block" id="submit-btn" [disabled]="shouldHideSolveButton()" (click)="solve()">
+        <button class="btn btn-primary btn-block" id="submit-btn" [disabled]="shouldHideSolveButton()"
+          (click)="solve()">
           Solve!
         </button>
       </div>

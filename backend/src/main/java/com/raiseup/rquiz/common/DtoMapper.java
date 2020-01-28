@@ -85,7 +85,12 @@ public class DtoMapper {
         userAnswerDto.setId(userAnswer.getId());
         userAnswerDto.setAnswerId(userAnswer.getQuizAnswer().getId());
         userAnswerDto.setUserId(userAnswer.getUser().getId());
-
+        QuizAnswer quizAnswer = userAnswer.getQuizAnswer();
+        Quiz quiz = quizAnswer.getQuiz();
+        if (quiz.getCorrectAnswer() == null) {
+            throw new NullPointerException(String.format("Quiz %s has no correct answer", quiz.getId()));
+        }
+        userAnswerDto.setCorrectAnswerId(quiz.getCorrectAnswer().getId());
         return userAnswerDto;
     }
 

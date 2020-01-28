@@ -114,6 +114,25 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
+  getCurrentUserAnswer(): string {
+    const currentUserAnswerId: string = this.currentUserAnswerForQuiz.answerId;
+    const quizAnswerFilterResult: QuizAnswer[] = this.quiz.answers.filter(ans => ans.id === currentUserAnswerId);
+    return quizAnswerFilterResult[0].content;
+  }
+
+  getCorrectAnswer(): string {
+    const correctAnswerId: string = this.currentUserAnswerForQuiz.correctAnswerId;
+    const quizAnswerFilterResult: QuizAnswer[] = this.quiz.answers.filter(ans => ans.id === correctAnswerId);
+    return quizAnswerFilterResult[0].content;
+  }
+
+  isUserAnswerCorrect(): boolean {
+    if (this.getCurrentUserAnswer() === this.getCorrectAnswer()) {
+      return true;
+    }
+    return false;
+  }
+
   @StopLoadingIndicator
   private handleServerError(err: Error): void {
     AppUtil.showError(err);

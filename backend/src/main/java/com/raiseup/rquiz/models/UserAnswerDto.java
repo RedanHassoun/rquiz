@@ -5,6 +5,7 @@ public class UserAnswerDto {
     private String quizId;
     private String userId;
     private String answerId;
+    private String correctAnswerId;
 
     public String getId() {
         return id;
@@ -36,5 +37,13 @@ public class UserAnswerDto {
 
     public void setAnswerId(String answerId) {
         this.answerId = answerId;
+    }
+
+    public String getCorrectAnswerId() {
+        return correctAnswerId;
+    }
+
+    public void setCorrectAnswerId(String correctAnswerId) {
+        this.correctAnswerId = correctAnswerId;
     }
 }

@@ -136,6 +136,22 @@ public class Quiz extends BaseModel{
         this.assignedUsers = assignedUsers;
     }
 
+    public QuizAnswer getCorrectAnswer() {
+        if (this.getAnswers() == null || this.getAnswers().size() == 0) {
+            return null;
+        }
+
+        Set<QuizAnswer> quizAnswers = this.getAnswers();
+        Iterator<QuizAnswer> iterator = quizAnswers.iterator();
+        while(iterator.hasNext()){
+            QuizAnswer currentQuizAnswer = iterator.next();
+            if(currentQuizAnswer.getIsCorrect()) {
+                return  currentQuizAnswer;
+            }
+        }
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
