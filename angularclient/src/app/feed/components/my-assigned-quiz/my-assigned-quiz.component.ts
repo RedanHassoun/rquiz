@@ -1,3 +1,4 @@
+import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { TOPIC_QUIZ_ASSIGNED_TO_USER, AppNotificationMessage } from './../../../core/model/socket-consts';
 import { NotificationService } from './../../../core/services/notification.service';
 import { PagingStrategyFactory, MY_ASSIGNED_QUIZ_URL } from './../../../shared/factories/paging-strategy-factory';
@@ -17,14 +18,16 @@ import { Subscription } from 'rxjs';
 export class MyAssignedQuizComponent implements OnInit {
   private subscriptions: Subscription[] = [];
   public quizList: Quiz[] = [];
+  public currentUserId: string;
   public pagingStrategy: PagingDataFetchStrategy;
 
   constructor(private pagingStrategyFactory: PagingStrategyFactory,
-    private notificationService: NotificationService) {
+    private notificationService: NotificationService,
+    public authService: AuthenticationService) {
   }
 
   @StartLoadingIndicator
-  ngOnInit() {
+  async ngOnInit() {
     this.pagingStrategy = this.pagingStrategyFactory.createCustomUrlStrategy(MY_ASSIGNED_QUIZ_URL);
     this.subscriptions.push(
       this.notificationService.onMessage(TOPIC_QUIZ_ASSIGNED_TO_USER)
@@ -32,6 +35,8 @@ export class MyAssignedQuizComponent implements OnInit {
           this.handleQuizListUpdate(message);
         })
     );
+
+    this.currentUserId = (await this.authService.getCurrentUser()).id;
   }
 
   handleQuizListUpdate(message: AppNotificationMessage): void {

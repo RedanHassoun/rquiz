@@ -1,3 +1,4 @@
+import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { MY_QUIZ_URL } from './../../../shared/factories/paging-strategy-factory';
 import { PagingStrategyFactory } from 'src/app/shared/factories/paging-strategy-factory';
 import { AppUtil } from './../../../shared/util/app-util';
@@ -15,14 +16,17 @@ import { StartLoadingIndicator } from './../../../shared/decorators/spinner-deco
 export class MyQuizListComponent implements OnInit {
 
   public quizList: Quiz[] = [];
+  public currentUserId: string;
   public pagingStrategy: PagingDataFetchStrategy;
 
-  constructor(private pagingStrategyFactory: PagingStrategyFactory) {
+  constructor(private pagingStrategyFactory: PagingStrategyFactory,
+    private authService: AuthenticationService) {
   }
 
   @StartLoadingIndicator
   async ngOnInit() {
     this.pagingStrategy = this.pagingStrategyFactory.createCustomUrlStrategy(MY_QUIZ_URL);
+    this.currentUserId = (await this.authService.getCurrentUser()).id;
   }
 
   quizListChanged(newQuizList: Quiz[]) {

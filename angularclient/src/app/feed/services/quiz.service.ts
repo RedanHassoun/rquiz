@@ -55,4 +55,14 @@ export class QuizService extends ClientDataServiceService {
       .pipe(map(result => result as UserAnswer[]))
       .pipe(catchError(AppUtil.handleError));
   }
+
+  public isQuizOwnedByUser(quiz: Quiz, userId: string): boolean {
+    if (!quiz || !quiz.creator || !userId) {
+      throw new Error('Cannot check if quiz is owned by user, parameters must be defined');
+    }
+    if (quiz.creator.id === userId) {
+      return true;
+    }
+    return false;
+  }
 }

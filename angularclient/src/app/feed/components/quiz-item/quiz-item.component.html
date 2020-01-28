@@ -7,9 +7,24 @@
     <h1 class="title">{{quiz.title}}</h1>
     <p>{{ quiz.description }}</p>
     <a (click)="showQuiz()" class="more">Show</a>
-    <div>
-      Posted by: <a (click)="showUser(quiz.creator)">{{ quiz.creator.username }}</a>
+
+    <div *ngIf="!!isOwnedByCurrentUser  else createdByAnotherUser">
+      <div *ngIf="getAssignedUsers() else publicQuiz">
+        Assigned to:
+        <span *ngFor="let user of getAssignedUsers(); let isLast=last">
+          <a (click)="showUser(user)">{{user.username}}{{isLast ? '' : ', '}}</a>
+        </span>
+      </div>
+
+      <ng-template #publicQuiz>
+        Public quiz
+      </ng-template>
     </div>
+
+    <ng-template #createdByAnotherUser>
+      <div>Posted by: <a (click)="showUser(quiz.creator)">{{ quiz.creator.username }}</a></div>
+    </ng-template>
+
     <div class="action-btns-container">
       <mat-icon svgIcon="done"></mat-icon> {{ quiz.numberOfCorrectAnswers }}
       <mat-icon svgIcon="clear"></mat-icon> {{ quiz.totalNumberOfAnswers - quiz.numberOfCorrectAnswers }}
