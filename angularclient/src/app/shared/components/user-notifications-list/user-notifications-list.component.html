@@ -1,6 +1,8 @@
-<h4>Notifications:</h4>
-<ul class="list-group">
-    <li *ngFor="let notification of notifications" class="list-group-item" (click)="navigateToPage(notification)">
-        {{ getNotificationText(notification) }}
-    </li>
-</ul>
+<div class="notification-container">
+    <h4>Notifications:</h4>
+    <ul class="list-group">
+        <li *ngFor="let notification of notifications" class="list-group-item" (click)="navigateToPage(notification)">
+            {{ getNotificationText(notification) }}
+        </li>
+    </ul>
+</div>
