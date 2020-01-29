@@ -6,7 +6,6 @@ import com.raiseup.rquiz.exceptions.IllegalOperationException;
 import com.raiseup.rquiz.exceptions.QuizNotFoundException;
 import com.raiseup.rquiz.models.db.Quiz;
 import com.raiseup.rquiz.models.db.User;
-import com.raiseup.rquiz.models.db.UserAnswer;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import com.raiseup.rquiz.repo.QuizRepository;
 import org.slf4j.Logger;
@@ -58,12 +57,12 @@ public class QuizServiceImpl implements QuizService {
     @Override
     @Transactional(readOnly=true)
     public Optional<Quiz> read(String id) {
+        this.logger.debug(String.format("Reading quiz: %s", id));
         Optional<Quiz> quizOptional = this.quizRepository.findById(id);
         if(!quizOptional.isPresent()){
             return Optional.empty();
         }
         Quiz quiz = quizOptional.get();
-        this.initQuizAnswersCount(quiz);
         return Optional.of(quiz);
     }
 
@@ -71,9 +70,8 @@ public class QuizServiceImpl implements QuizService {
     @Transactional(readOnly=true)
     public Collection<Quiz> readAll() {
         Collection<Quiz> quizList = this.quizRepository.findAll();
-
-        this.initQuizListAnswersCount(quizList);
-
+        this.logger.debug(String.format(
+                "Returning %d quiz items", quizList != null ? quizList.size() : 0));
         return quizList;
     }
 
@@ -89,7 +87,10 @@ public class QuizServiceImpl implements QuizService {
                     Sort.Direction.DESC, "createdAt");
         }
 
-        return this.getQuizList(isPublic, pageable);
+        Collection<Quiz> quizListToReturn = this.getQuizList(isPublic, pageable);
+        this.logger.debug(String.format(
+                "Returning %d quiz items", quizListToReturn != null ? quizListToReturn.size() : 0));
+        return quizListToReturn;
     }
 
     private Collection<Quiz> getQuizList(Boolean isPublic, Pageable pageable) {
@@ -101,7 +102,6 @@ public class QuizServiceImpl implements QuizService {
                 quizListToReturn = this.quizRepository.findAll();
             }
 
-            this.initQuizListAnswersCount(quizListToReturn);
             return quizListToReturn;
         } else {
             if (pageable != null) {
@@ -110,7 +110,6 @@ public class QuizServiceImpl implements QuizService {
                 quizListToReturn = this.quizRepository.findAllByPublic(isPublic);
             }
 
-            this.initQuizListAnswersCount(quizListToReturn);
             return quizListToReturn;
         }
     }
@@ -134,7 +133,6 @@ public class QuizServiceImpl implements QuizService {
 
         this.logger.debug(String.format("Returning %d quiz", quizList.size()));
 
-        this.initQuizListAnswersCount(quizList);
         return quizList;
     }
 
@@ -153,8 +151,8 @@ public class QuizServiceImpl implements QuizService {
                     PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"));
         }
 
-        this.logger.debug(String.format("Returning %d quiz", quizList.size()));
-        this.initQuizListAnswersCount(quizList);
+        this.logger.debug(String.format(
+                "Returning %d quiz items", quizList != null ? quizList.size() : 0));
         return quizList;
     }
 
@@ -171,8 +169,7 @@ public class QuizServiceImpl implements QuizService {
                     new IllegalOperationException("Cannot update quiz without id"));
         }
 
-        Optional<Quiz> quizFromDBOptional =
-                this.quizRepository.findById(quiz.getId());
+        Optional<Quiz> quizFromDBOptional = this.quizRepository.findById(quiz.getId());
 
         if (!quizFromDBOptional.isPresent()){
             AppUtils.throwAndLogException(
@@ -204,20 +201,5 @@ public class QuizServiceImpl implements QuizService {
         }
 
         this.quizRepository.delete(quizFromDB);
-    }
-
-    private void initQuizListAnswersCount(Collection<Quiz> quizList){
-        for(Quiz quiz : quizList) {
-            this.initQuizAnswersCount(quiz);
-        }
-    }
-
-    private void initQuizAnswersCount(Quiz quiz){
-        final List<UserAnswer> userAnswersForQuiz =
-                this.userAnswerService.getUserAnswersForQuiz(quiz.getId());
-        quiz.setTotalNumberOfAnswers(userAnswersForQuiz.size());
-        Optional<Integer> correctNumOptional =
-                this.userAnswerService.getCorrectCount(userAnswersForQuiz);
-        quiz.setNumberOfCorrectAnswers(correctNumOptional.orElse(null));
     }
 }

@@ -49,12 +49,6 @@ public class Quiz extends BaseModel{
                cascade = CascadeType.ALL)
     private Set<QuizAnswer> answers = new HashSet<>();
 
-    @Transient
-    private Integer numberOfCorrectAnswers;
-
-    @Transient
-    private Integer totalNumberOfAnswers;
-
     public String getId() {
         return id;
     }
@@ -110,22 +104,6 @@ public class Quiz extends BaseModel{
     public void addQuizAnswer(QuizAnswer quizAnswer) {
         quizAnswer.setQuiz(this);
         this.answers.add(quizAnswer);
-    }
-
-    public Integer getNumberOfCorrectAnswers() {
-        return numberOfCorrectAnswers;
-    }
-
-    public void setNumberOfCorrectAnswers(Integer numberOfCorrectAnswers) {
-        this.numberOfCorrectAnswers = numberOfCorrectAnswers;
-    }
-
-    public Integer getTotalNumberOfAnswers() {
-        return totalNumberOfAnswers;
-    }
-
-    public void setTotalNumberOfAnswers(Integer totalNumberOfAnswers) {
-        this.totalNumberOfAnswers = totalNumberOfAnswers;
     }
 
     public Set<User> getAssignedUsers() {

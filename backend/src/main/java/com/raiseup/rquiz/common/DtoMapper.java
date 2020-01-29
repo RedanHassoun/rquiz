@@ -1,21 +1,24 @@
 package com.raiseup.rquiz.common;
 
-import com.raiseup.rquiz.exceptions.IllegalOperationException;
 import com.raiseup.rquiz.models.*;
 import com.raiseup.rquiz.models.db.*;
+import com.raiseup.rquiz.services.UserAnswerService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 public class DtoMapper {
+    private Logger logger = LoggerFactory.getLogger(DtoMapper.class);
     private ModelMapper modelMapper;
+    private UserAnswerService userAnswerService;
 
-    public DtoMapper(ModelMapper modelMapper){
+    public DtoMapper(ModelMapper modelMapper, UserAnswerService userAnswerService){
         this.modelMapper = modelMapper;
+        this.userAnswerService = userAnswerService;
     }
 
     public QuizDto convertQuizToDto(Quiz quiz) {
@@ -37,6 +40,7 @@ public class DtoMapper {
             }
         }
         quizDto.setAssignedUsers(assignedUsers);
+        this.initQuizAnswersCount(quizDto, quiz);
 
         return quizDto;
     }
@@ -157,8 +161,11 @@ public class DtoMapper {
             // Currently we support only one target user at a time
             targetUser.setId(appNotificationMessage.getTargetUserIds()[0]);
         } else {
-            throw new IllegalArgumentException(
-                    "Cannot convert notification to entity because the target user is not defined");
+            final String notificationId = appNotificationMessage != null ? appNotificationMessage.getId() : null;
+            final String errorMsg = String.format(
+                    "Cannot convert notification %s to entity because the target user is not defined", notificationId);
+            this.logger.error(errorMsg);
+            throw new IllegalArgumentException(errorMsg);
         }
 
         userNotification.setTargetUser(targetUser);
@@ -166,4 +173,12 @@ public class DtoMapper {
         return userNotification;
     }
 
+    private void initQuizAnswersCount(QuizDto quizDto, Quiz quiz){
+        final List<UserAnswer> userAnswersForQuiz =
+                this.userAnswerService.getUserAnswersForQuiz(quiz.getId());
+        quizDto.setTotalNumberOfAnswers(userAnswersForQuiz.size());
+        Optional<Integer> correctNumOptional =
+                this.userAnswerService.getCorrectCount(userAnswersForQuiz);
+        quizDto.setNumberOfCorrectAnswers(correctNumOptional.orElse(null));
+    }
 }
