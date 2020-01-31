@@ -25,7 +25,7 @@ export class MyQuizListComponent implements OnInit {
 
   @StartLoadingIndicator
   async ngOnInit() {
-    this.pagingStrategy = this.pagingStrategyFactory.createCustomUrlStrategy(MY_QUIZ_URL);
+    this.pagingStrategy = await this.pagingStrategyFactory.createCustomUrlStrategy(MY_QUIZ_URL);
     this.currentUserId = (await this.authService.getCurrentUser()).id;
   }
 

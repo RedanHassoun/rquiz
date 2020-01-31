@@ -28,7 +28,7 @@ export class MyAssignedQuizComponent implements OnInit {
 
   @StartLoadingIndicator
   async ngOnInit() {
-    this.pagingStrategy = this.pagingStrategyFactory.createCustomUrlStrategy(MY_ASSIGNED_QUIZ_URL);
+    this.pagingStrategy = await this.pagingStrategyFactory.createCustomUrlStrategy(MY_ASSIGNED_QUIZ_URL);
     this.subscriptions.push(
       this.notificationService.onMessage(TOPIC_QUIZ_ASSIGNED_TO_USER)
         .subscribe((message: AppNotificationMessage) => {

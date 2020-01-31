@@ -52,7 +52,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
   @StartLoadingIndicator
   async ngOnInit() {
     this.currentUserId = (await this.authService.getCurrentUser()).id;
-    this.pagingStrategy = this.pagingStrategyFactory.createStrategyWithParams(new Map<string, string>([['isPublic', 'true']]));
+    this.pagingStrategy = await this.pagingStrategyFactory.createStrategyWithParams(new Map<string, string>([['isPublic', 'true']]));
 
     this.notificationService.initMyNotification();
 

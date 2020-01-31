@@ -10,33 +10,31 @@ import { PagingStrategyFactory, MY_ASSIGNED_QUIZ_URL, MY_QUIZ_URL } from './pagi
 
 @Injectable()
 export class PagingStrategyFactoryImpl extends PagingStrategyFactory {
-    private currentUserId: string;
 
     constructor(private authService: AuthenticationService,
                 private userService: UserService,
                 private quizService: QuizService) {
         super();
-        this.authService.getCurrentUser()
-            .then((user: User) => { this.currentUserId = user.id; });
     }
 
-    public createCustomUrlStrategy(endpointUrl: string, pageSize?: number): PagingDataFetchStrategy {
+    public async createCustomUrlStrategy(endpointUrl: string, pageSize?: number): Promise<PagingDataFetchStrategy> {
         const thePageSize: number = pageSize ? pageSize : QuizService.PAGE_SIZE;
+        const currentUserId: string = (await this.authService.getCurrentUser()).id;
         switch (endpointUrl) {
             case MY_ASSIGNED_QUIZ_URL: {
-                if (!this.currentUserId) {
+                if (!currentUserId) {
                     throw new Error(
                         'Cannot create paging strategy for assigned quiz because the current user url is not defined'
                     );
                 }
-                const urlForFetchingQuizList = `${this.currentUserId}/assignedQuiz`;
+                const urlForFetchingQuizList = `${currentUserId}/assignedQuiz`;
                 return new CustomUrlFetchingStrategy(this.userService,
                     urlForFetchingQuizList,
                     thePageSize);
                 break;
             }
             case MY_QUIZ_URL: {
-                const urlForFetchingQuizList = `${this.currentUserId}/quiz`;
+                const urlForFetchingQuizList = `${currentUserId}/quiz`;
                 return new CustomUrlFetchingStrategy(this.userService,
                       urlForFetchingQuizList,
                       thePageSize);
@@ -47,7 +45,7 @@ export class PagingStrategyFactoryImpl extends PagingStrategyFactory {
         }
     }
 
-    public createStrategyWithParams(paramMap: Map<string, string>, pageSize?: number) {
+    public async createStrategyWithParams(paramMap: Map<string, string>, pageSize?: number): Promise<PagingDataFetchStrategy> {
         return new ParameterFetchingStrategy(this.quizService,
             paramMap,
             pageSize ? pageSize : QuizService.PAGE_SIZE);
