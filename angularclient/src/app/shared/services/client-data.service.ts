@@ -1,10 +1,9 @@
-import { CoreUtil } from './../../core/common/core-util';
+import { CoreUtil } from '../../core/common/core-util';
 import { AppUtil } from '../util/app-util';
-import { AppConsts } from '../util/app-consts';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 
-export class ClientDataServiceService {
+export class ClientDataService {
   constructor(public url: string, public http: HttpClient) {
   }
   // TODO: take headers from interceptor

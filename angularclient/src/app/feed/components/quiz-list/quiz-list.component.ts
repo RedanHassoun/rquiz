@@ -1,3 +1,4 @@
+import { Service } from './../../../shared/factories/paging-strategy-factory';
 import { PagingStrategyFactory } from 'src/app/shared/factories/paging-strategy-factory';
 import { AuthenticationService } from './../../../core/services/authentication.service';
 import { PagingDataFetchStrategy } from './../../../core/strategies/paging-data-fetch-strategy';
@@ -52,7 +53,8 @@ export class QuizListComponent implements OnInit, OnDestroy {
   @StartLoadingIndicator
   async ngOnInit() {
     this.currentUserId = (await this.authService.getCurrentUser()).id;
-    this.pagingStrategy = await this.pagingStrategyFactory.createStrategyWithParams(new Map<string, string>([['isPublic', 'true']]));
+    this.pagingStrategy = await this.pagingStrategyFactory.createStrategyWithParams(
+      Service.Quiz, new Map<string, string>([['isPublic', 'true']]));
 
     this.notificationService.initMyNotification();
 

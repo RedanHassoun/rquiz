@@ -1,3 +1,4 @@
+import { ClientDataService } from './../services/client-data.service';
 import { ParameterFetchingStrategy } from './../../core/strategies/parameter-fetching-strategy';
 import { Injectable } from '@angular/core';
 import { QuizService } from './../../feed/services/quiz.service';
@@ -6,7 +7,7 @@ import { CustomUrlFetchingStrategy } from './../../core/strategies/custom-url-fe
 import { User } from './../models/user';
 import { AuthenticationService } from './../../core/services/authentication.service';
 import { PagingDataFetchStrategy } from './../../core/strategies/paging-data-fetch-strategy';
-import { PagingStrategyFactory, MY_ASSIGNED_QUIZ_URL, MY_QUIZ_URL } from './paging-strategy-factory';
+import { PagingStrategyFactory, MY_ASSIGNED_QUIZ_URL, MY_QUIZ_URL, Service } from './paging-strategy-factory';
 
 @Injectable()
 export class PagingStrategyFactoryImpl extends PagingStrategyFactory {
@@ -45,8 +46,18 @@ export class PagingStrategyFactoryImpl extends PagingStrategyFactory {
         }
     }
 
-    public async createStrategyWithParams(paramMap: Map<string, string>, pageSize?: number): Promise<PagingDataFetchStrategy> {
-        return new ParameterFetchingStrategy(this.quizService,
+    public async createStrategyWithParams(service: Service,
+        paramMap: Map<string, string>,
+        pageSize?: number): Promise<PagingDataFetchStrategy> {
+        let serviceForFetching: ClientDataService;
+        if (service === Service.Quiz) {
+            serviceForFetching = this.quizService;
+        } else if (service === Service.User) {
+            serviceForFetching = this.userService;
+        } else {
+            throw Error(`Unsupported service: ${service}`);
+        }
+        return new ParameterFetchingStrategy(serviceForFetching,
             paramMap,
             pageSize ? pageSize : QuizService.PAGE_SIZE);
     }

@@ -1,12 +1,11 @@
 import { CoreUtil } from './../../core/common/core-util';
-import { User } from './../../shared/models/user';
 import { AuthenticationService } from './../../core/services/authentication.service';
 import { QuizAnswer } from './../../shared/models/quiz-answer';
 import { Quiz } from './../../shared/models/quiz';
 import { AppUtil } from './../../shared/util/app-util';
 import { HttpClient } from '@angular/common/http';
 import { AppConsts } from './../../shared/util/app-consts';
-import { ClientDataServiceService } from './../../shared/services/client-data-service.service';
+import { ClientDataService } from '../../shared/services/client-data.service';
 import { Injectable } from '@angular/core';
 import { catchError, map } from 'rxjs/operators';
 import { UserAnswer } from 'src/app/shared/models/user-answer';
@@ -15,7 +14,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class QuizService extends ClientDataServiceService {
+export class QuizService extends ClientDataService {
   public static readonly PAGE_SIZE = 15;
   constructor(public http: HttpClient, private authenticationService: AuthenticationService) {
     super(`${AppConsts.BASE_URL}/api/v1/quiz/`, http);

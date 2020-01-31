@@ -1,4 +1,4 @@
-import { ClientDataServiceService } from './../../shared/services/client-data-service.service';
+import { ClientDataService } from '../../shared/services/client-data.service';
 import { User } from './../../shared/models/user';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -15,7 +15,7 @@ import { SocketClientState } from '../model';
 @Injectable({
   providedIn: 'root'
 })
-export class NotificationService extends ClientDataServiceService implements OnDestroy {
+export class NotificationService extends ClientDataService implements OnDestroy {
   private static readonly URL = `${AppConsts.BASE_URL}${AppConsts.STOMP_ENDPOINT}`;
   private stompClient: Stomp.Client;
   private state: BehaviorSubject<SocketClientState>;

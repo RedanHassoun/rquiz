@@ -1,10 +1,10 @@
 import { Observable } from 'rxjs';
-import { ClientDataServiceService } from './../../shared/services/client-data-service.service';
+import { ClientDataService } from '../../shared/services/client-data.service';
 import { PagingDataFetchStrategy } from './paging-data-fetch-strategy';
 
 export class ParameterFetchingStrategy implements PagingDataFetchStrategy {
 
-    constructor(private dataService: ClientDataServiceService,
+    constructor(private dataService: ClientDataService,
         private paramMap: Map<string, string>,
         private pageSize: number) {
     }
