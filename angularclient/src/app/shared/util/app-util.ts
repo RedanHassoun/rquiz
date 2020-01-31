@@ -89,6 +89,13 @@ export class AppUtil {
         alert(message);
     }
 
+    public static getFullException(error: Error): string {
+        if (!error) {
+            return null;
+        }
+        return `${error.message}\nStack: ${error.stack}`;
+    }
+
     @StartLoadingIndicator
     public static triggerLoadingIndicator() {
     }
