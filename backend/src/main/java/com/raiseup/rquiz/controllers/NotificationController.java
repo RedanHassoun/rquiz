@@ -1,21 +1,15 @@
 package com.raiseup.rquiz.controllers;
 
-import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.common.DtoMapper;
 import com.raiseup.rquiz.exceptions.IllegalOperationException;
 import com.raiseup.rquiz.models.AppNotificationMessage;
-import com.raiseup.rquiz.models.QuizDto;
 import com.raiseup.rquiz.models.db.UserNotification;
 import com.raiseup.rquiz.services.UserNotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,7 +31,7 @@ public class NotificationController {
     @MessageMapping("/quiz-list-update")
     @SendTo("/topic/quiz-list-update")
     public AppNotificationMessage quizListUpdate(AppNotificationMessage message) {
-        this.logger.debug(String.format("Received socket message: %s on topic: 'quiz-list-update'",
+        this.logger.trace(String.format("Received socket message: %s on topic: 'quiz-list-update'",
                 message.getContent()));
         return message;
     }
@@ -45,7 +39,7 @@ public class NotificationController {
     @MessageMapping("/quiz-answers-update")
     @SendTo("/topic/quiz-answers-update")
     public AppNotificationMessage quizAnswersUpdate(AppNotificationMessage message) throws Exception {
-        this.logger.debug(String.format("Received socket message: %s on topic: 'quiz-answers-update'",
+        this.logger.trace(String.format("Received socket message: %s on topic: 'quiz-answers-update'",
                 message.getContent()));
         return this.saveUserNotification(message);
     }
@@ -53,7 +47,7 @@ public class NotificationController {
     @MessageMapping("/quiz-deleted-update")
     @SendTo("/topic/quiz-deleted-update")
     public AppNotificationMessage quizDeletedUpdate(AppNotificationMessage message) {
-        this.logger.debug(String.format("Received socket message: %s on topic: 'quiz-deleted-update'",
+        this.logger.trace(String.format("Received socket message: %s on topic: 'quiz-deleted-update'",
                 message.getContent()));
         return message;
     }
@@ -61,7 +55,7 @@ public class NotificationController {
     @MessageMapping("/quiz-assigned-to-user")
     @SendTo("/topic/quiz-assigned-to-user")
     public AppNotificationMessage quizAssignedToUser(AppNotificationMessage message) throws Exception {
-        this.logger.debug(String.format("Received socket message: %s on topic: 'quiz-assigned-to-user'",
+        this.logger.trace(String.format("Received socket message: %s on topic: 'quiz-assigned-to-user'",
                 message.getContent()));
         return this.saveUserNotification(message);
     }
@@ -69,7 +63,7 @@ public class NotificationController {
     @MessageMapping("/user-update")
     @SendTo("/topic/user-update")
     public AppNotificationMessage userUpdate(AppNotificationMessage message) {
-        this.logger.debug(String.format("Received socket message: %s on topic: 'user-update'",
+        this.logger.trace(String.format("Received socket message: %s on topic: 'user-update'",
                 message.getContent()));
         return message;
     }
@@ -79,7 +73,7 @@ public class NotificationController {
             throw new IllegalOperationException("Cannot save user notification because it is not defined");
         }
 
-        this.logger.debug(String.format("Saving user notification: %s", message.toString()));
+        this.logger.trace(String.format("Saving user notification: %s", message.toString()));
 
         UserNotification userNotificationEntity =  this.dtoMapper.convertUserNotificationDtoToEntity(message);
         Optional<UserNotification> userNotificationOptional= this.userNotificationService.save(userNotificationEntity);
@@ -90,7 +84,7 @@ public class NotificationController {
                             "Something went wrong while saving the user notification: %s", message.toString()));
         }
 
-        this.logger.debug(String.format("Notification was saved to DB. id: %s", userNotificationOptional.get().getId()));
+        this.logger.trace(String.format("Notification was saved to DB. id: %s", userNotificationOptional.get().getId()));
 
         return this.dtoMapper.convertUserNotificationToDto(userNotificationOptional.get());
     }
