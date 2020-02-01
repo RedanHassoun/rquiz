@@ -1,5 +1,6 @@
 package com.raiseup.rquiz.controllers;
 
+import com.raiseup.rquiz.common.AppConstants;
 import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.common.DtoMapper;
 import com.raiseup.rquiz.exceptions.IllegalOperationException;
@@ -124,8 +125,7 @@ public class UserController {
                                             userId, page, size));
 
             if(!AppUtils.isPaginationParamsValid(page, size)){
-                throw new IllegalOperationException(
-                        "In order to use pagination you must provide both page and size");
+                throw new IllegalOperationException(AppConstants.ERROR_PAGINATION_PARAMS);
             }
 
             HashMap<String, Object> queryParams = new HashMap<>();

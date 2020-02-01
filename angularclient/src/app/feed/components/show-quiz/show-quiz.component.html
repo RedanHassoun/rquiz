@@ -45,10 +45,8 @@
       </div>
 
       <div class="grid-item-solve">
-        <!-- TODO: Fix the tooltip issue -->
-        <button class="btn btn-primary btn-block" id="submit-btn" [disabled]="shouldHideSolveButton()"
-          (click)="solve()">
-          Solve!
+        <button class="btn btn-primary btn-block" id="submit-btn"  (click)="handleQuizAction()">
+          {{ getButtonText() }}
         </button>
       </div>
     </div>

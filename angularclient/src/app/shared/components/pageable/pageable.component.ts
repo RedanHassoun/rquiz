@@ -1,9 +1,9 @@
-import { AppUtil } from './../../../shared/util/app-util';
-import { PagingDataFetchStrategy } from './../../strategies/paging-data-fetch-strategy';
+import { AppUtil } from '../../util/app-util';
+import { PagingDataFetchStrategy } from '../../../core/strategies/paging-data-fetch-strategy';
 import { tap, take } from 'rxjs/operators';
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { StopLoadingIndicator } from './../../../shared/decorators/spinner-decorators';
+import { StopLoadingIndicator } from '../../decorators/spinner-decorators';
 import * as _ from 'lodash';
 
 @Component({

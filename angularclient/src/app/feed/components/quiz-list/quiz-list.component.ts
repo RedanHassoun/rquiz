@@ -6,7 +6,6 @@ import { AppUtil } from './../../../shared/util/app-util';
 import { CreateQuizComponent } from '../create-quiz/create-quiz.component';
 import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
 import { Quiz } from './../../../shared/models/quiz';
-import { QuizService } from './../../services/quiz.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
@@ -30,8 +29,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
   public currentUserId: string;
   pagingStrategy: PagingDataFetchStrategy;
 
-  constructor(private quizService: QuizService,
-    private navigationService: NavigationHelperService,
+  constructor(private navigationService: NavigationHelperService,
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer,
     private notificationService: NotificationService,

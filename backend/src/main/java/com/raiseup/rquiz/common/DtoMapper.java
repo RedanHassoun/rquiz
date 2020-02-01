@@ -89,6 +89,7 @@ public class DtoMapper {
         userAnswerDto.setId(userAnswer.getId());
         userAnswerDto.setAnswerId(userAnswer.getQuizAnswer().getId());
         userAnswerDto.setUserId(userAnswer.getUser().getId());
+        userAnswerDto.setUsername(userAnswer.getUser().getUsername());
         QuizAnswer quizAnswer = userAnswer.getQuizAnswer();
         Quiz quiz = quizAnswer.getQuiz();
         if (quiz.getCorrectAnswer() == null) {
@@ -175,7 +176,7 @@ public class DtoMapper {
 
     private void initQuizAnswersCount(QuizDto quizDto, Quiz quiz){
         final List<UserAnswer> userAnswersForQuiz =
-                this.userAnswerService.getUserAnswersForQuiz(quiz.getId());
+                this.userAnswerService.getUserAnswersForQuiz(quiz.getId(), null, null);
         quizDto.setTotalNumberOfAnswers(userAnswersForQuiz.size());
         Optional<Integer> correctNumOptional =
                 this.userAnswerService.getCorrectCount(userAnswersForQuiz);

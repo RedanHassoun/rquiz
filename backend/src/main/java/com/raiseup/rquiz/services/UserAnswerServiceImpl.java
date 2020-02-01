@@ -1,5 +1,6 @@
 package com.raiseup.rquiz.services;
 
+import com.raiseup.rquiz.common.AppConstants;
 import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.exceptions.*;
 import com.raiseup.rquiz.models.db.User;
@@ -12,6 +13,9 @@ import com.raiseup.rquiz.repo.UserAnswerRepository;
 import com.raiseup.rquiz.repo.QuizRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -66,11 +70,21 @@ public class UserAnswerServiceImpl implements UserAnswerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserAnswer> getUserAnswersForQuiz(String quizId) {
+    public List<UserAnswer> getUserAnswersForQuiz(String quizId, Integer page, Integer size) {
         if(quizId == null){
             throw new IllegalArgumentException("quiz id cannot be null");
         }
 
+        this.logger.debug(String.format("Getting answers list for quiz : %s", quizId));
+
+        if (page != null && size != null) {
+            this.logger.debug(String.format("Returning page: %d , size: %d", page, size));
+            Pageable pageable = PageRequest.of(
+                    page, size, Sort.Direction.DESC, "createdAt");
+            return this.userAnswerRepository.findByQuizId(quizId, pageable);
+        }
+
+        this.logger.debug("Returning all answers list");
         return this.userAnswerRepository.findByQuizId(quizId);
     }
 

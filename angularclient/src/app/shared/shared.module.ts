@@ -1,3 +1,4 @@
+import { UserAnswersListComponent } from './components/user-answers-list/user-answers-list.component';
 import { CreateQuizComponent } from '../feed/components/create-quiz/create-quiz.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
@@ -23,16 +24,19 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
 import { UserNotificationsListComponent } from './components/user-notifications-list/user-notifications-list.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { PageableComponent } from './components/pageable/pageable.component';
 
 @NgModule({
   declarations: [
+    PageableComponent,
     ConfirmationDialogComponent,
     CreateQuizComponent,
     ShowQuizComponent,
     QuizItemComponent,
     EditProfileComponent,
     UserNotificationsListComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    UserAnswersListComponent
   ],
   imports: [
     CommonModule,
@@ -59,6 +63,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     ConfirmationDialogComponent,
     CreateQuizComponent,
     EditProfileComponent,
+    UserAnswersListComponent,
     ShowQuizComponent // TODO: check if this must be in shared
   ],
   exports: [
@@ -78,7 +83,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     NgMultiSelectDropDownModule,
     QuizItemComponent,
     MatBadgeModule,
-    SpinnerComponent
+    SpinnerComponent,
+    PageableComponent
   ]
 })
 export class SharedModule { }

@@ -1,6 +1,8 @@
 package com.raiseup.rquiz.common;
 
 public class AppConstants {
+    public static final String ERROR_PAGINATION_PARAMS = "In order to use pagination you must provide both page and size";
+
     public static class DBConsts {
         public static final String USERS_TABLE_NAME = "app_user";
         public static final String TABLE_USER_QUIZ_ASSIGNMENT = "user_quiz_assignment";

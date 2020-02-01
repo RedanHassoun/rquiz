@@ -6,7 +6,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppJwtModule } from '../app-jwt/app-jwt.module';
 import { ProfileComponent } from '../shared/components/profile/profile.component';
-import { PageableComponent } from './components/pageable/pageable.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FormInputComponent } from '../shared/components/form-input/form-input.component';
@@ -16,7 +15,6 @@ import { FormInputComponent } from '../shared/components/form-input/form-input.c
     UserListComponent,
     UserFormComponent,
     ProfileComponent,
-    PageableComponent,
     RegisterComponent,
     FormInputComponent
   ],
@@ -25,9 +23,6 @@ import { FormInputComponent } from '../shared/components/form-input/form-input.c
     SharedModule,
     AppJwtModule,
     AppRoutingModule
-  ],
-  exports: [
-    PageableComponent
   ]
 })
 export class CoreModule { }

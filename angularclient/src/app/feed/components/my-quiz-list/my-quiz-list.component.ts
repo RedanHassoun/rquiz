@@ -30,8 +30,10 @@ export class MyQuizListComponent implements OnInit {
 
   @StartLoadingIndicator
   async ngOnInit() {
-    this.pagingStrategy = await this.pagingStrategyFactory.createCustomUrlStrategy(MY_QUIZ_URL);
     this.currentUserId = (await this.authService.getCurrentUser()).id;
+    this.pagingStrategy = await this.pagingStrategyFactory.createCustomUrlStrategy(
+      MY_QUIZ_URL, new Map<string, string>([['currentUserId', this.currentUserId]]));
+
     this.subscriptions.push(
       this.notificationService.onMessage(TOPIC_QUIZ_LIST_UPDATE)
         .pipe(filter(message => this.isCreatedByCurrentUser(message)))

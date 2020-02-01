@@ -7,22 +7,25 @@ import { CustomUrlFetchingStrategy } from './../../core/strategies/custom-url-fe
 import { User } from './../models/user';
 import { AuthenticationService } from './../../core/services/authentication.service';
 import { PagingDataFetchStrategy } from './../../core/strategies/paging-data-fetch-strategy';
-import { PagingStrategyFactory, MY_ASSIGNED_QUIZ_URL, MY_QUIZ_URL, Service } from './paging-strategy-factory';
+import { PagingStrategyFactory, MY_ASSIGNED_QUIZ_URL, MY_QUIZ_URL, Service, USER_ANSWERS_FOR_QUIZ } from './paging-strategy-factory';
 
 @Injectable()
 export class PagingStrategyFactoryImpl extends PagingStrategyFactory {
 
     constructor(private authService: AuthenticationService,
-                private userService: UserService,
-                private quizService: QuizService) {
+        private userService: UserService,
+        private quizService: QuizService) {
         super();
     }
 
-    public async createCustomUrlStrategy(endpointUrl: string, pageSize?: number): Promise<PagingDataFetchStrategy> {
+    public async createCustomUrlStrategy(endpointUrl: string,
+        urlParameters?: Map<string, string>,
+        pageSize?: number): Promise<PagingDataFetchStrategy> {
         const thePageSize: number = pageSize ? pageSize : QuizService.PAGE_SIZE;
-        const currentUserId: string = (await this.authService.getCurrentUser()).id;
         switch (endpointUrl) {
             case MY_ASSIGNED_QUIZ_URL: {
+                this.validateParameters(urlParameters, ['currentUserId']);
+                const currentUserId: string = urlParameters.get('currentUserId');
                 if (!currentUserId) {
                     throw new Error(
                         'Cannot create paging strategy for assigned quiz because the current user url is not defined'
@@ -35,13 +38,36 @@ export class PagingStrategyFactoryImpl extends PagingStrategyFactory {
                 break;
             }
             case MY_QUIZ_URL: {
+                this.validateParameters(urlParameters, ['currentUserId']);
+                const currentUserId: string = urlParameters.get('currentUserId');
                 const urlForFetchingQuizList = `${currentUserId}/quiz`;
                 return new CustomUrlFetchingStrategy(this.userService,
-                      urlForFetchingQuizList,
-                      thePageSize);
+                    urlForFetchingQuizList,
+                    thePageSize);
+            }
+            case USER_ANSWERS_FOR_QUIZ: {
+                this.validateParameters(urlParameters, ['quizId']);
+                const quizId: string = urlParameters.get('quizId');
+                const urlForFetchingQuizList = `${quizId}/user-answer`;
+                return new CustomUrlFetchingStrategy(this.quizService,
+                    urlForFetchingQuizList,
+                    thePageSize);
             }
             default: {
                 return null;
+            }
+        }
+    }
+
+    private validateParameters(urlParametersMap: Map<string, string>, parameters: string[]): void {
+        if (!urlParametersMap) {
+            throw new Error('Parameters must be defined');
+        }
+        if (parameters) {
+            for (const param of parameters) {
+                if (!urlParametersMap.has(param)) {
+                    throw new Error(`Parameter ${param} is missing`);
+                }
             }
         }
     }

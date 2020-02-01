@@ -4,6 +4,7 @@ public class UserAnswerDto {
     private String id;
     private String quizId;
     private String userId;
+    private String username;
     private String answerId;
     private String correctAnswerId;
 
@@ -29,6 +30,14 @@ public class UserAnswerDto {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getAnswerId() {

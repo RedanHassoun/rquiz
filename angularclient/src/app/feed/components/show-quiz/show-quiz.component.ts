@@ -1,3 +1,5 @@
+import { UserAnswersListComponent } from '../../../shared/components/user-answers-list/user-answers-list.component';
+import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
 import { AppUtil } from './../../../shared/util/app-util';
 import { UserAnswer } from './../../../shared/models/user-answer';
 import { AppNotificationMessage } from '../../../core/model/socket-consts';
@@ -29,7 +31,8 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
     private quizService: QuizService,
     private authenticationService: AuthenticationService,
     private dialogRef: MatDialogRef<ShowQuizComponent>,
-    private notificationService: NotificationService) { }
+    private notificationService: NotificationService,
+    private navigationService: NavigationHelperService) { }
 
   @StartLoadingIndicator
   async ngOnInit() {
@@ -78,7 +81,30 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  async solve(): Promise<void> {
+  getButtonText(): string {
+    if (!!this.shouldHideSolveButton()) {
+      return 'Show user answers';
+    } else {
+      return 'Solve!';
+    }
+  }
+
+  handleQuizAction() {
+    if (!!this.shouldHideSolveButton()) {
+      this.showUserAnswers();
+    } else {
+      this.solve();
+    }
+  }
+
+  showUserAnswers(): void {
+    this.subscriptions.push(
+      this.navigationService.openDialog(UserAnswersListComponent, undefined, this.quiz)
+        .subscribe()
+    );
+  }
+
+  solve(): void {
     if (!this.selectedAnswerId) {
       AppUtil.handleNullError('The selected answer ID');
     }
@@ -95,9 +121,11 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
 
   @StartLoadingIndicator
   private sendSolutionToServer(quizId: string, quizAnswer: QuizAnswer): void {
-    this.quizService.solve(quizId, quizAnswer)
+    this.subscriptions.push(
+      this.quizService.solve(quizId, quizAnswer)
       .subscribe((solvedQuiz: Quiz) => this.handleServerSuccess(solvedQuiz),
-        (err: Error) => this.handleServerError(err));
+        (err: Error) => this.handleServerError(err))
+    );
   }
 
   @StopLoadingIndicator

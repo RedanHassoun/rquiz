@@ -1,5 +1,6 @@
 package com.raiseup.rquiz.controllers;
 
+import com.raiseup.rquiz.common.AppConstants;
 import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.common.DtoMapper;
 import com.raiseup.rquiz.exceptions.*;
@@ -168,8 +169,12 @@ public class QuizController {
     @GetMapping(path = "/{id}/user-answer",
             produces = "application/json")
     public List<UserAnswerDto> getQuizUserAnswers(@PathVariable("id") String quizId,
-                                                  @RequestParam(required = false) String userId) throws Exception {
+                                                  @RequestParam(required = false) String userId,
+                                                  @RequestParam(required = false) Integer page,
+                                                  @RequestParam(required = false) Integer size) throws Exception {
         try{
+            this.logger.debug(String.format(
+                    "Getting quiz user answers, quizId=%s, userId=%s , page=%s, size=%s", quizId, userId, page, size));
             List<UserAnswer> userAnswers = new ArrayList<>();
             if(userId != null) {
                 Optional<UserAnswer> userAnswer = this.userAnswerService.getQuizAnswerForUser(quizId, userId);
@@ -178,7 +183,10 @@ public class QuizController {
                 }
 
             } else {
-                userAnswers = this.userAnswerService.getUserAnswersForQuiz(quizId);
+                if (!AppUtils.isPaginationParamsValid(page, size)) {
+                    throw new IllegalOperationException(AppConstants.ERROR_PAGINATION_PARAMS);
+                }
+                userAnswers = this.userAnswerService.getUserAnswersForQuiz(quizId, page, size);
             }
 
             return userAnswers.stream()

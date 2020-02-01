@@ -1,0 +1,12 @@
+<div *ngIf="shouldShowList(); else no_answers">
+  <div *ngFor="let answer of userAnswersList">
+    {{ answer.username }}: {{ getAnswerById(answer.answerId) }}
+  </div>
+</div>
+
+<ng-template class="action-btn" #no_answers>
+  No answers yet
+</ng-template>
+
+<app-pageable [pagingStrategy]='pagingStrategy' (dataListChanged)="userAnswerListChanged($event)">
+</app-pageable>
