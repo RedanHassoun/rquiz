@@ -6,7 +6,7 @@
       </div>
 
       <div class="grid-item-full-width">
-        <p>{{ quiz.description }}</p>
+        <p *ngIf="hasDescription()">{{ quiz.description }}</p>
         <p class="text-warning" *ngIf="isAlreadyAnswered()">
           You already solved this quiz
         </p>

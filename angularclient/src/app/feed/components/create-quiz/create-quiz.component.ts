@@ -53,7 +53,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     this.quiz.reset();
     this.addQuizForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.minLength(4)]],
-      description: ['', [Validators.required, Validators.minLength(4)]]
+      description: ['', []]
     });
 
     this.currentUser = await this.authenticationService.getCurrentUser();

@@ -23,15 +23,6 @@
                 <label for="description" class="sr-only">Description</label>
                 <input [style.border]="getInputBorderStyle(description)" [(ngModel)]="quiz.description"
                     name="description" placeholder="Description" class="form-control" formControlName="description" />
-
-                <div *ngIf="isInputValidationFailed(description)" class="validation-err-container">
-                    <div *ngIf="description.errors.required">
-                        Description is required.
-                    </div>
-                    <div *ngIf="description.errors.minlength">
-                        Description must be at least {{ description.minlength.requiredLength }} characters long.
-                    </div>
-                </div>
             </div>
         </div>
 

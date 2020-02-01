@@ -123,8 +123,8 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
   private sendSolutionToServer(quizId: string, quizAnswer: QuizAnswer): void {
     this.subscriptions.push(
       this.quizService.solve(quizId, quizAnswer)
-      .subscribe((solvedQuiz: Quiz) => this.handleServerSuccess(solvedQuiz),
-        (err: Error) => this.handleServerError(err))
+        .subscribe((solvedQuiz: Quiz) => this.handleServerSuccess(solvedQuiz),
+          (err: Error) => this.handleServerError(err))
     );
   }
 
@@ -156,6 +156,13 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
 
   isUserAnswerCorrect(): boolean {
     if (this.getCurrentUserAnswer() === this.getCorrectAnswer()) {
+      return true;
+    }
+    return false;
+  }
+
+  hasDescription(): boolean {
+    if (this.quiz && this.quiz.description && this.quiz.description !== '') {
       return true;
     }
     return false;
