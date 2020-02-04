@@ -29,7 +29,7 @@ export class UserNotificationsListComponent implements OnInit, OnDestroy {
   }
 
   public getNotificationText(notification: AppNotificationMessage): string {
-    return createNotificationMessageText(notification);
+    return notification.humanReadableContent;
   }
 
   public navigateToPage(notification: AppNotificationMessage): void {

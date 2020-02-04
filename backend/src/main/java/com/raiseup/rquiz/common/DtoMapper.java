@@ -145,6 +145,7 @@ public class DtoMapper {
         String[] targetUserIds = new String[1];
         targetUserIds[0] = userNotification.getTargetUser().getId();
         appNotificationMessage.setTargetUserIds(targetUserIds);
+        appNotificationMessage.setHumanReadableContent(userNotification.getContent());
 
         return appNotificationMessage;
     }
@@ -169,6 +170,7 @@ public class DtoMapper {
             throw new IllegalArgumentException(errorMsg);
         }
 
+        userNotification.setContent(appNotificationMessage.getHumanReadableContent());
         userNotification.setTargetUser(targetUser);
 
         return userNotification;

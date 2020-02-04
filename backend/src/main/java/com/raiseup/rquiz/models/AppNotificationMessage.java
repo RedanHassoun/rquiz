@@ -11,6 +11,7 @@ public class AppNotificationMessage {
     private String[] targetUserIds;
     private Boolean seen = false;
     private Date time;
+    private String humanReadableContent;
 
     public String getId() {
         return id;
@@ -74,6 +75,14 @@ public class AppNotificationMessage {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public String getHumanReadableContent() {
+        return humanReadableContent;
+    }
+
+    public void setHumanReadableContent(String humanReadableContent) {
+        this.humanReadableContent = humanReadableContent;
     }
 
     @Override

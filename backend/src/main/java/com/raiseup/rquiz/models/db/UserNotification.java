@@ -17,7 +17,7 @@ public class UserNotification extends BaseModel {
             strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
 
-    @Column(nullable = false, length = 1024)
+    @Column(nullable = false)
     @NotNull(message = "Notification content cannot be null")
     private String content;
 
@@ -40,6 +40,9 @@ public class UserNotification extends BaseModel {
     @ManyToOne
     @JoinColumn
     private User targetUser;
+
+    @Column
+    private String additionalData;
 
     public String getId() {
         return id;
@@ -95,5 +98,13 @@ public class UserNotification extends BaseModel {
 
     public void setTargetUser(User targetUser) {
         this.targetUser = targetUser;
+    }
+
+    public String getAdditionalData() {
+        return additionalData;
+    }
+
+    public void setAdditionalData(String additionalData) {
+        this.additionalData = additionalData;
     }
 }

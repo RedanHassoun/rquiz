@@ -41,7 +41,9 @@ public class NotificationController {
     public AppNotificationMessage quizAnswersUpdate(AppNotificationMessage message) throws Exception {
         this.logger.trace(String.format("Received socket message: %s on topic: 'quiz-answers-update'",
                 message.getContent()));
-        return this.saveUserNotification(message);
+        final AppNotificationMessage messageFromDB = this.saveUserNotification(message);
+        message.setId(messageFromDB.getId());
+        return message;
     }
 
     @MessageMapping("/quiz-deleted-update")
@@ -57,7 +59,9 @@ public class NotificationController {
     public AppNotificationMessage quizAssignedToUser(AppNotificationMessage message) throws Exception {
         this.logger.trace(String.format("Received socket message: %s on topic: 'quiz-assigned-to-user'",
                 message.getContent()));
-        return this.saveUserNotification(message);
+        final AppNotificationMessage messageFromDB = this.saveUserNotification(message);
+        message.setId(messageFromDB.getId());
+        return message;
     }
 
     @MessageMapping("/user-update")

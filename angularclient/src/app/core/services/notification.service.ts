@@ -7,7 +7,7 @@ import * as Stomp from 'stompjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { first, filter, switchMap, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { AppNotificationMessage, TOPIC_QUIZ_ANSWERS_UPDATE, TOPIC_QUIZ_ASSIGNED_TO_USER } from './../model/socket-consts';
+import { AppNotificationMessage, TOPIC_QUIZ_ANSWERS_UPDATE, TOPIC_QUIZ_ASSIGNED_TO_USER, createNotificationMessageText } from './../model/socket-consts';
 import { AppConsts } from './../../shared/util/app-consts';
 import { SocketClientState } from '../model';
 
@@ -87,6 +87,7 @@ export class NotificationService extends ClientDataService implements OnDestroy 
   }
 
   public send(message: AppNotificationMessage): void {
+    message.humanReadableContent = createNotificationMessageText(message);
     this.connect()
       .pipe(first())
       .subscribe(client => client.send(`/rquiz-socket${message.topic}`, {}, JSON.stringify(message)));

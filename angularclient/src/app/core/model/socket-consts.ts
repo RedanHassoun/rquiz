@@ -26,6 +26,7 @@ export class AppNotificationMessage {
     time: Date;
     seen: boolean;
     targetUserIds: string[];
+    humanReadableContent: string;
 
     constructor(data: any, topic: string, userId?: string, username?: string) {
         if (typeof data !== 'string') {
