@@ -17,7 +17,8 @@ public class UserNotification extends BaseModel {
             strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
 
-    @Column(nullable = false, length = 1024)
+    // TODO: Improve the user notifications infrastructure and avoid saving the whole object as content
+    @Column(nullable = false, length = 4096)
     @NotNull(message = "Notification content cannot be null")
     private String content;
 

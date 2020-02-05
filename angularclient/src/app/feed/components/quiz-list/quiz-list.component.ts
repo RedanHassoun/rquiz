@@ -14,7 +14,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {
   AppNotificationMessage, TOPIC_QUIZ_LIST_UPDATE,
   TOPIC_QUIZ_ANSWERS_UPDATE, TOPIC_QUIZ_DELETED_UPDATE
-} from './../../../core/model/socket-consts';
+} from '../../../core/common/socket-consts';
 import { NotificationService } from './../../../core/services/notification.service';
 import { StartLoadingIndicator } from './../../../shared/decorators/spinner-decorators';
 

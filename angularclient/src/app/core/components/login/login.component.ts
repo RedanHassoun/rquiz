@@ -1,4 +1,4 @@
-import { AppNotificationMessage } from './../../model/socket-consts';
+import { AppNotificationMessage } from '../../common/socket-consts';
 import { NotificationService } from './../../services/notification.service';
 import { FormInputComponent } from './../../../shared/components/form-input/form-input.component';
 import { AccessDeniedError } from './../../../shared/app-errors/access-denied-error';

@@ -1,7 +1,7 @@
 import { ImageService } from './../../../shared/services/image.service';
 import { Router } from '@angular/router';
 import { User } from '../../../shared/models/user';
-import { AppNotificationMessage, TOPIC_QUIZ_DELETED_UPDATE } from '../../../core/model/socket-consts';
+import { AppNotificationMessage, TOPIC_QUIZ_DELETED_UPDATE } from '../../../core/common/socket-consts';
 import { NotificationService } from '../../../core/services/notification.service';
 import { QuizService } from '../../services/quiz.service';
 import { ShowQuizComponent } from '../show-quiz/show-quiz.component';

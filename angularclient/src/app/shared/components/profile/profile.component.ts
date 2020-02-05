@@ -1,5 +1,5 @@
 import { ImageService } from './../../services/image.service';
-import { AppNotificationMessage, TOPIC_USER_UPDATE } from './../../../core/model/socket-consts';
+import { AppNotificationMessage, TOPIC_USER_UPDATE } from '../../../core/common/socket-consts';
 import { NotificationService } from './../../../core/services/notification.service';
 import { EditProfileComponent } from './../edit-profile/edit-profile.component';
 import { NavigationHelperService } from './../../services/navigation-helper.service';

@@ -1,5 +1,5 @@
 import { filter } from 'rxjs/operators';
-import { TOPIC_QUIZ_LIST_UPDATE, AppNotificationMessage } from './../../../core/model/socket-consts';
+import { TOPIC_QUIZ_LIST_UPDATE, AppNotificationMessage } from '../../../core/common/socket-consts';
 import { NotificationService } from './../../../core/services/notification.service';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { MY_QUIZ_URL } from './../../../shared/factories/paging-strategy-factory';

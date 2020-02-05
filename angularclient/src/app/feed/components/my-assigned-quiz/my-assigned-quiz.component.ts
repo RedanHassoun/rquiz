@@ -1,5 +1,5 @@
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
-import { TOPIC_QUIZ_ASSIGNED_TO_USER, AppNotificationMessage } from './../../../core/model/socket-consts';
+import { TOPIC_QUIZ_ASSIGNED_TO_USER, AppNotificationMessage } from '../../../core/common/socket-consts';
 import { NotificationService } from './../../../core/services/notification.service';
 import { PagingStrategyFactory, MY_ASSIGNED_QUIZ_URL } from './../../../shared/factories/paging-strategy-factory';
 import { AppUtil } from './../../../shared/util/app-util';

@@ -1,8 +1,8 @@
-import { TOPIC_QUIZ_ASSIGNED_TO_USER } from './../../../core/model/socket-consts';
+import { TOPIC_QUIZ_ASSIGNED_TO_USER } from '../../../core/common/socket-consts';
 import { FileUploadService } from '../../../core/services/file-upload.service';
 import { take, switchMap } from 'rxjs/operators';
 import { AlreadyExistError } from '../../../shared/app-errors/already-exist-error';
-import { AppNotificationMessage, TOPIC_QUIZ_LIST_UPDATE } from '../../../core/model/socket-consts';
+import { AppNotificationMessage, TOPIC_QUIZ_LIST_UPDATE } from '../../../core/common/socket-consts';
 import { NotificationService } from '../../../core/services/notification.service';
 import { UserService } from '../../../core/services/user-service.service';
 import { User } from '../../../shared/models/user';

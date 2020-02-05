@@ -29,6 +29,15 @@ public class UserNotificationServiceImpl implements UserNotificationService {
             throw new IllegalOperationException("Cannot save user notification because it is not defined");
         }
 
+        if (userNotification.getContent() == null) {
+            throw new IllegalOperationException(String.format(
+                    "Cannot save notification %s because the content is not defined", userNotification.getId()));
+        }
+
+        final String content = userNotification.getContent();
+        final String contentMinified = content.replaceAll("[\\n\\t ]", "");
+        userNotification.setContent(contentMinified);
+
         return Optional.of(this.userNotificationRepository.save(userNotification));
     }
 
@@ -77,3 +86,5 @@ public class UserNotificationServiceImpl implements UserNotificationService {
         return this.userNotificationRepository.findForUser(targetUserId, seen);
     }
 }
+
+

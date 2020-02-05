@@ -1,16 +1,11 @@
-import { AppConsts } from './../../shared/util/app-consts';
-import { Quiz } from './../../shared/models/quiz';
+import { AppConsts } from '../../shared/util/app-consts';
+import { Quiz } from '../../shared/models/quiz';
 export enum SocketClientState {
     ATTEMPTING, CONNECTED, ERROR
 }
 
 export interface StompMessage {
     body: string;
-}
-
-export function jsonHandler(message: StompMessage): any {
-    console.log('handling:', message);
-    return JSON.parse(message.body);
 }
 
 export function textHandler(message: StompMessage): string {

@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { FileUploadService } from './../../../core/services/file-upload.service';
 import { UpdateUserRequest } from './../../models/update-user-request';
 import { NotificationService } from './../../../core/services/notification.service';
-import { AppNotificationMessage, TOPIC_USER_UPDATE } from './../../../core/model/socket-consts';
+import { AppNotificationMessage, TOPIC_USER_UPDATE } from '../../../core/common/socket-consts';
 import { AppUtil } from './../../util/app-util';
 import { UserService } from './../../../core/services/user-service.service';
 import { User } from './../../models/user';

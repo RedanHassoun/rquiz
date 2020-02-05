@@ -1,7 +1,7 @@
 import { AppUtil } from './../../util/app-util';
 import { Router } from '@angular/router';
 import { NotificationService } from './../../../core/services/notification.service';
-import { AppNotificationMessage, createNotificationMessageText, createNotificationRouteUrl } from './../../../core/model/socket-consts';
+import { AppNotificationMessage, createNotificationMessageText, createNotificationRouteUrl } from '../../../core/common/socket-consts';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { Subscription } from 'rxjs';
