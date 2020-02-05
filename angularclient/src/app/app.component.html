@@ -4,8 +4,14 @@
       <mat-icon svgIcon="menu"></mat-icon>
     </button>
     <h1 class="app-name">RQuiz</h1>
-    <mat-icon *ngIf="this.authService.isLoggedIn()" id="notifications-bell" svgIcon="bell"
-      [matBadge]="myNotificationsCount" matBadgeColor="warn" (click)="openUserNotificationsListDialog()"></mat-icon>
+    <div *ngIf="this.authService.isLoggedIn()" class="right-side-items">
+      <ng-container *ngIf="currentUser">
+          <img id="user-image" src={{getUserImageUrl()}} alt="User image">
+          <div id="username">{{ currentUser.username }}</div>
+      </ng-container>
+      <mat-icon id="notifications-bell" svgIcon="bell"
+        [matBadge]="myNotificationsCount" matBadgeColor="warn" (click)="openUserNotificationsListDialog()"></mat-icon>
+    </div>
   </mat-toolbar>
 
   <mat-sidenav-container class="app-side-nav-container mat-app-background">
@@ -29,5 +35,4 @@
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>
-
 </div>

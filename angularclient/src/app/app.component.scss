@@ -1,9 +1,9 @@
 .app-side-nav-container {
-    flex: 1;
-    height: 100vh;
+  flex: 1;
+  height: 100vh;
 }
 
-.app-drawer{
+.app-drawer {
   background: #eee;
 }
 
@@ -16,7 +16,25 @@ h1.app-name {
   flex-flow: row nowrap;
 }
 
-#notifications-bell {
+.right-side-items {
   margin-left: auto;
   margin-right: 10px;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+#username {
+  margin-right: 10pt;
+}
+
+#notifications-bell {
+  margin-right: 10pt;
+}
+
+#user-image {
+  margin-right: 10pt;
+  border-radius: 50%;
+  width: 5vh;
+  height: 5vh;
 }

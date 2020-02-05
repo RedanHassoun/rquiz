@@ -1,6 +1,11 @@
+import { AppUtil } from './shared/util/app-util';
+import { TOPIC_USER_UPDATE } from './core/common/socket-consts';
+import { UserService } from './core/services/user-service.service';
+import { switchMap, filter } from 'rxjs/operators';
+import { ImageService } from './shared/services/image.service';
 import { AppConsts } from './shared/util/app-consts';
 import { UserNotificationsListComponent } from './shared/components/user-notifications-list/user-notifications-list.component';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { NavigationHelperService } from './shared/services/navigation-helper.service';
 import { User } from './shared/models/user';
 import { Router } from '@angular/router';
@@ -28,13 +33,16 @@ export class AppComponent implements OnInit {
     ['logout', 'Logout']
   ]);
   myNotificationsCount: number;
+  currentUser: User;
 
   constructor(public authService: AuthenticationService,
     private router: Router,
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer,
     private navigationService: NavigationHelperService,
-    private notificationService: NotificationService) {
+    private notificationService: NotificationService,
+    private imageService: ImageService,
+    private usersService: UserService) {
     this.iconRegistry.addSvgIcon( // TODO: make more general
       'menu',
       this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/baseline-menu-24px.svg'));
@@ -50,6 +58,33 @@ export class AppComponent implements OnInit {
         this.myNotificationsCount = notificationsCount;
       })
     );
+    this.initCurrentUser();
+    this.listenForUserChanges();
+  }
+
+  private initCurrentUser(): void {
+    this.usersService.getCurrentUserDetails()
+      .subscribe((user: User) => {
+        this.currentUser = user;
+      });
+  }
+
+  private listenForUserChanges(): void {
+    this.notificationService.onMessage(TOPIC_USER_UPDATE)
+      .pipe(filter(message => AppUtil.isNotificationForCurrentUserUpdate(message, this.currentUser)))
+      .pipe(switchMap(message => {
+        return this.usersService.get(message.content);
+      }))
+      .subscribe((user: User) => {
+        this.currentUser = user;
+      },
+      async err => {
+        this.currentUser = await this.authService.getCurrentUser();
+      });
+  }
+
+  public getUserImageUrl(): string {
+    return this.imageService.getImageUrlForUser(this.currentUser);
   }
 
   async openCurrentUserProfile() {

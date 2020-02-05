@@ -1,3 +1,6 @@
+import { TOPIC_USER_UPDATE } from './../../core/common/socket-consts';
+import { User } from './../models/user';
+import { AppNotificationMessage } from './../../core/model/socket-consts';
 import { AccessDeniedError } from './../app-errors/access-denied-error';
 import { NotFoundError } from './../app-errors/not-found-error';
 import { BadInputError } from './../app-errors/bad-input-error';
@@ -89,11 +92,26 @@ export class AppUtil {
         alert(message);
     }
 
+    public static showErrorMessage(message: string) {
+        alert(message);
+    }
+
     public static getFullException(error: Error): string {
         if (!error) {
             return null;
         }
         return `${error.message}\nStack: ${error.stack}`;
+    }
+
+    public static isNotificationForCurrentUserUpdate(message: AppNotificationMessage, currentUser: User): boolean {
+        if (!message || !currentUser) {
+            return false;
+        }
+        if (message.topic !== TOPIC_USER_UPDATE) {
+            return false;
+        }
+        const userId = message.content;
+        return userId === currentUser.id;
     }
 
     @StartLoadingIndicator
