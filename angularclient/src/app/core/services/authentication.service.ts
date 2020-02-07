@@ -1,3 +1,4 @@
+import { AppUtil } from './../../shared/util/app-util';
 import { RegisterRequest } from './../../shared/models/register-message';
 import { User } from './../../shared/models/user';
 import { AppUtil } from '../../shared/util/app-util';
@@ -108,14 +109,12 @@ export class AuthenticationService {
   public async getCurrentUser(): Promise<User> {
     const token: string = localStorage.getItem(AppConsts.KEY_USER_TOKEN);
     if (!token) {
-      throw new Error(`Token should not be null`);
+      AppUtil.showErrorMessage('Session expired please login again');
+      this.logout();
+      return Promise.reject(`Token should not be null`);
     }
 
-    const user: User = JSON.parse(this.jwtHelper.decodeToken(token)[`sub`]);
-    if (!user) {
-      throw new Error(`User cannot be null`);
-    }
-
+    const user: User = this.tokenToUser(token);
     return Promise.resolve(user);
   }
 }
