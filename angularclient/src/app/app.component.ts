@@ -5,7 +5,7 @@ import { switchMap, filter } from 'rxjs/operators';
 import { ImageService } from './shared/services/image.service';
 import { AppConsts } from './shared/util/app-consts';
 import { UserNotificationsListComponent } from './shared/components/user-notifications-list/user-notifications-list.component';
-import { Subscription } from 'rxjs';
+import { of } from 'rxjs';
 import { NavigationHelperService } from './shared/services/navigation-helper.service';
 import { User } from './shared/models/user';
 import { Router } from '@angular/router';
@@ -21,7 +21,6 @@ import { NotificationService } from './core/services';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  private subscriptions: Subscription[] = [];
   drawerOpened = false;
   appConsts: any = AppConsts; // TODO: make this more elegant
   appPages = new Map<string, string>([
@@ -53,24 +52,28 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subscriptions.push(
-      this.notificationService.myNotificationsCount$.subscribe((notificationsCount: number) => {
-        this.myNotificationsCount = notificationsCount;
-      })
-    );
-    this.initCurrentUser();
-    this.listenForUserChanges();
-  }
+    this.notificationService.myNotificationsCount$.subscribe((notificationsCount: number) => {
+      this.myNotificationsCount = notificationsCount;
+    });
 
-  private initCurrentUser(): void {
-    // TODO: fix the bug when the user logs out and logs in as another user
-    this.usersService.getCurrentUserDetails()
+    this.authService.currentUser$
+      .pipe(switchMap((user: User) => {
+        if (!user) {
+          return of(null);
+        }
+        return this.usersService.getUserDetails(user.id, user);
+      }))
       .subscribe((user: User) => {
         this.currentUser = user;
-      });
+      },
+        (err: Error) => {
+          this.currentUser = null;
+        });
+
+    this.listenForUserNotifications();
   }
 
-  private listenForUserChanges(): void {
+  private listenForUserNotifications(): void {
     this.notificationService.onMessage(TOPIC_USER_UPDATE)
       .pipe(filter(message => AppUtil.isNotificationForCurrentUserUpdate(message, this.currentUser)))
       .pipe(switchMap(message => {
@@ -79,9 +82,9 @@ export class AppComponent implements OnInit {
       .subscribe((user: User) => {
         this.currentUser = user;
       },
-      async err => {
-        this.currentUser = await this.authService.getCurrentUser();
-      });
+        async err => {
+          this.currentUser = await this.authService.getCurrentUser();
+        });
   }
 
   public getUserImageUrl(): string {
@@ -129,8 +132,6 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    this.subscriptions.push(
-      this.navigationService.openDialog(UserNotificationsListComponent).subscribe()
-    );
+    this.navigationService.openDialog(UserNotificationsListComponent).subscribe();
   }
 }

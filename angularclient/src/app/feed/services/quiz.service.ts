@@ -1,5 +1,4 @@
 import { CoreUtil } from './../../core/common/core-util';
-import { AuthenticationService } from './../../core/services/authentication.service';
 import { QuizAnswer } from './../../shared/models/quiz-answer';
 import { Quiz } from './../../shared/models/quiz';
 import { AppUtil } from './../../shared/util/app-util';
@@ -16,7 +15,7 @@ import { Observable } from 'rxjs';
 })
 export class QuizService extends ClientDataService {
   public static readonly PAGE_SIZE = 15;
-  constructor(public http: HttpClient, private authenticationService: AuthenticationService) {
+  constructor(public http: HttpClient) {
     super(`${AppConsts.BASE_URL}/api/v1/quiz/`, http);
   }
 

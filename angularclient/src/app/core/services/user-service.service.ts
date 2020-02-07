@@ -1,7 +1,7 @@
 import { User } from './../../shared/models/user';
-import { switchMap, catchError, map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { AuthenticationService } from './authentication.service';
-import { Observable, from } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { ClientDataService } from '../../shared/services/client-data.service';
 import { HttpClient } from '@angular/common/http';
@@ -15,14 +15,11 @@ export class UserService extends ClientDataService {
     super(`${AppConsts.BASE_URL}/api/v1/users/`, http);
   }
 
-  public getCurrentUserDetails(): Observable<User> {
-    return from(this.authService.getCurrentUser())
-      .pipe(switchMap((user: User) => {
-        return super.get(user.id);
-      }))
+  public getUserDetails(userId: string, defaultValue: User = null): Observable<User> {
+    return super.get(userId)
       .pipe(map(fetchResult => fetchResult as User))
       .pipe(catchError((err: Error) => {
-        return from(this.authService.getCurrentUser());
+        return of(defaultValue);
       }));
   }
 }

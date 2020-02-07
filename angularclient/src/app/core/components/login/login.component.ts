@@ -1,5 +1,3 @@
-import { AppNotificationMessage } from '../../common/socket-consts';
-import { NotificationService } from './../../services/notification.service';
 import { FormInputComponent } from './../../../shared/components/form-input/form-input.component';
 import { AccessDeniedError } from './../../../shared/app-errors/access-denied-error';
 import { LoginMessage } from '../../../shared/models/login-message';
@@ -21,15 +19,14 @@ export class LoginComponent extends FormInputComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthenticationService,
-    private formBuilder: FormBuilder,
-    private notificationService: NotificationService) {
+    private formBuilder: FormBuilder) {
     super();
   }
 
   async signIn(credentials: LoginMessage) {
     this.authService.login(credentials)
       .subscribe(async (response) => {
-        AppUtil.extractAndSaveToken(response);
+        this.authService.persistTokenFromResponse(response);
         const currentUserId: string = (await this.authService.getCurrentUser()).id;
         await this.goToMainPage(currentUserId);
       }, (err: Error) => {

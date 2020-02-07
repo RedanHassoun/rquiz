@@ -12,26 +12,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { StopLoadingIndicator, StartLoadingIndicator } from '../decorators/spinner-decorators';
 
 export class AppUtil {
-    public static extractAndSaveToken(response: any): void {
-        if (!response[`status`] || response[`status`] !== 200) {
-            throw new Error('Response status should be 200');
-        }
-
-        if (!response[`headers`]) {
-            throw new Error('No headers found in response');
-        }
-
-        const headers = response[`headers`];
-
-        const authorizationValue: string = headers.get(`Authorization`);
-
-        if (!authorizationValue) {
-            throw new Error('Cannot find token inside headers');
-        }
-
-        localStorage.setItem(AppConsts.KEY_USER_TOKEN, authorizationValue);
-    }
-
     public static removeById(items: any[], id: string): any[] {
         return _.remove(items, (item) => {
             return item.id !== id;

@@ -3,21 +3,26 @@ import { User } from './../../shared/models/user';
 import { AppUtil } from '../../shared/util/app-util';
 import { LoginMessage } from '../../shared/models/login-message';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { AppConsts } from '../../shared/util/app-consts';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { catchError } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { catchError, distinct } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
+  private readonly jwtHelper = new JwtHelperService();
+  private currentUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
   constructor(private http: HttpClient,
     private jwtService: JwtHelperService,
     private router: Router) {
+    const token: string = localStorage.getItem(AppConsts.KEY_USER_TOKEN);
+    const user = this.tokenToUser(token);
+    this.currentUserSubject.next(user);
   }
 
   login(credentials: LoginMessage): Observable<HttpResponse<any>> {
@@ -29,6 +34,7 @@ export class AuthenticationService {
 
   logout() {
     localStorage.removeItem(AppConsts.KEY_USER_TOKEN);
+    this.currentUserSubject.next(null);
     this.router.navigate(['/login'], { replaceUrl: true });
   }
 
@@ -51,6 +57,42 @@ export class AuthenticationService {
     return false;
   }
 
+  public persistTokenFromResponse(response: any): void {
+    if (!response[`status`] || response[`status`] !== 200) {
+      throw new Error('Response status should be 200');
+    }
+
+    if (!response[`headers`]) {
+      throw new Error('No headers found in response');
+    }
+
+    const headers = response[`headers`];
+
+    const authorizationValue: string = headers.get(`Authorization`);
+
+    if (!authorizationValue) {
+      throw new Error('Cannot find token inside headers');
+    }
+
+    localStorage.setItem(AppConsts.KEY_USER_TOKEN, authorizationValue);
+    const user = this.tokenToUser(authorizationValue);
+    this.currentUserSubject.next(user);
+  }
+
+  private tokenToUser(token: string): User {
+    if (!token) {
+      return null;
+    }
+    try {
+      const user: User = JSON.parse(this.jwtHelper.decodeToken(token)[`sub`]);
+      return { ...user };
+    } catch (ex) {
+      console.error('Saved user token is currupted');
+      this.logout();
+      return null;
+    }
+  }
+
   get currentUser() {
     const token: string = localStorage.getItem(AppConsts.KEY_USER_TOKEN);
     if (!token) {
@@ -59,15 +101,17 @@ export class AuthenticationService {
     return this.jwtService.decodeToken(token);
   }
 
-  public async getCurrentUser(): Promise<User> {
-    const jwtHelper = new JwtHelperService();
+  get currentUser$(): Observable<User> {
+    return this.currentUserSubject.asObservable().pipe(distinct());
+  }
 
+  public async getCurrentUser(): Promise<User> {
     const token: string = localStorage.getItem(AppConsts.KEY_USER_TOKEN);
     if (!token) {
       throw new Error(`Token should not be null`);
     }
 
-    const user: User = JSON.parse(jwtHelper.decodeToken(token)[`sub`]);
+    const user: User = JSON.parse(this.jwtHelper.decodeToken(token)[`sub`]);
     if (!user) {
       throw new Error(`User cannot be null`);
     }

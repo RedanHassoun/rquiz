@@ -74,15 +74,7 @@ export class NotificationService extends ClientDataService implements OnDestroy 
         if (message && message.targetUserIds) {
           for (const targetUserId of message.targetUserIds) {
             if (targetUserId === context.currentUser.id) {
-
-              // TODO: use "addToMyNotifications"
-
-              const currNotificationData: AppNotificationMessage[] = context.myNotificationsListSubject.value;
-              const notificationFromMyList = currNotificationData.find(notification => notification.id === message.id);
-              if (!notificationFromMyList) {
-                currNotificationData.push(message);
-                context.myNotificationsListSubject.next(currNotificationData);
-              }
+              this.addToMyNotifications([message]);
             }
           }
         }
