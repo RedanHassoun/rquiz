@@ -26,17 +26,10 @@ export class QuizService extends ClientDataService {
       url += `&page=${page}&size=${QuizService.PAGE_SIZE}`;
     }
     return this.http.get(url, { headers: CoreUtil.createAuthorizationHeader() })
+      .pipe(map(resultJSON => {
+        return this.quizInstanceFromJSON(resultJSON);
+      }))
       .pipe(catchError(AppUtil.handleError));
-  }
-
-  hasCorrectAnswer(quiz: Quiz): Promise<boolean> {
-    for (const ans of quiz.answers) {
-      if (ans.isCorrect) {
-        return Promise.resolve(true);
-      }
-    }
-
-    return Promise.resolve(false);
   }
 
   public solve(quizId: string, quizAnswer: QuizAnswer): Observable<Quiz> {
@@ -55,13 +48,12 @@ export class QuizService extends ClientDataService {
       .pipe(catchError(AppUtil.handleError));
   }
 
-  public isQuizOwnedByUser(quiz: Quiz, userId: string): boolean {
-    if (!quiz || !quiz.creator || !userId) {
-      throw new Error('Cannot check if quiz is owned by user, parameters must be defined');
+  private quizInstanceFromJSON(quizJSON: any): Quiz {
+    if (!quizJSON) {
+      return null;
     }
-    if (quiz.creator.id === userId) {
-      return true;
-    }
-    return false;
+    const quiz: Quiz = JSON.parse(quizJSON);
+    Object.setPrototypeOf(quiz, Quiz.prototype);
+    return quiz;
   }
 }

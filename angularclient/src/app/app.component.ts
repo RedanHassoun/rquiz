@@ -63,6 +63,7 @@ export class AppComponent implements OnInit {
   }
 
   private initCurrentUser(): void {
+    // TODO: fix the bug when the user logs out and logs in as another user
     this.usersService.getCurrentUserDetails()
       .subscribe((user: User) => {
         this.currentUser = user;

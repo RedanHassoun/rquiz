@@ -2,6 +2,8 @@ import { AlreadyExistError } from './../app-errors/already-exist-error';
 import { UserAnswer } from './user-answer';
 import { QuizAnswer } from './quiz-answer';
 import { User } from './user';
+import * as _ from 'lodash';
+
 export class Quiz {
     id: string;
     title: string;
@@ -33,5 +35,41 @@ export class Quiz {
         }
 
         this.answers.push(answer);
+    }
+
+    public setCorrectAnswer(correctAnswer: QuizAnswer): void {
+        for (const answer of this.answers) {
+            if (answer.content === correctAnswer.content) {
+                answer.isCorrect = true;
+            } else {
+                answer.isCorrect = false;
+            }
+        }
+    }
+
+    public deleteAnswer(answer: QuizAnswer): void {
+        this.answers = _.remove(this.answers, (quizAnswer) => {
+            return quizAnswer.content !== answer.content;
+        });
+    }
+
+    public isCreatedByUser(userId: string): boolean {
+        if (!userId) {
+            return false;
+        }
+
+        if (this.creator.id === userId) {
+            return true;
+        }
+        return false;
+    }
+
+    public hasCorrectAnswer(): boolean {
+        for (const answer of this.answers) {
+            if (answer.isCorrect) {
+                return true;
+            }
+        }
+        return false;
     }
 }

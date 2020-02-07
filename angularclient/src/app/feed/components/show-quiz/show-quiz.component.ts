@@ -1,3 +1,4 @@
+import { QuizCrudService } from './../../services/quiz-crud.service';
 import { UserAnswersListComponent } from '../../../shared/components/user-answers-list/user-answers-list.component';
 import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
 import { AppUtil } from './../../../shared/util/app-util';
@@ -32,36 +33,18 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
     private authenticationService: AuthenticationService,
     private dialogRef: MatDialogRef<ShowQuizComponent>,
     private notificationService: NotificationService,
-    private navigationService: NavigationHelperService) { }
+    private navigationService: NavigationHelperService,
+    private quizCrudService: QuizCrudService) { }
 
-  @StartLoadingIndicator
   async ngOnInit() {
     this.currentUser = await this.authenticationService.getCurrentUser();
-    this.currentUserAnswerForQuiz = await this.getCurrentUserAnswerForQuiz();
+    this.currentUserAnswerForQuiz = await this.quizCrudService
+      .getUserAnswerForQuiz(this.quiz, this.currentUser.id, true);
+    this.selectedAnswerId =  this.currentUserAnswerForQuiz.answerId;
   }
 
   ngOnDestroy(): void {
     AppUtil.releaseSubscriptions(this.subscriptions);
-  }
-
-  async getCurrentUserAnswerForQuiz(): Promise<UserAnswer> {
-    try {
-      const userAnswerListResult: UserAnswer[] = await this.quizService
-        .getUserAnswerForQuiz(this.quiz.id, this.currentUser.id).toPromise();
-
-      AppUtil.triggerLoadingIndicatorStop();
-
-      if (userAnswerListResult && userAnswerListResult.length > 0) {
-        const userAnswer: UserAnswer = userAnswerListResult[0];
-        this.selectedAnswerId = userAnswer.answerId;
-        return userAnswer;
-      }
-
-      return null;
-    } catch (ex) {
-      AppUtil.triggerLoadingIndicatorStop();
-      throw ex;
-    }
   }
 
   isAlreadyAnswered(): boolean {

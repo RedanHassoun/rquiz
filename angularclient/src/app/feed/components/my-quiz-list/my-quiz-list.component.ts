@@ -41,10 +41,11 @@ export class MyQuizListComponent implements OnInit {
         .pipe(filter(message => {
           try {
             const quiz: Quiz = JSON.parse(message.content);
-            return this.quizCrudService.isQuizCreatedByUser(quiz, this.currentUserId);
+            Object.setPrototypeOf(quiz, Quiz.prototype);
+            return quiz.isCreatedByUser(this.currentUserId);
           } catch (ex) {
             console.error(`Cannot update quiz list, error: ${ex}`);
-            throw ex;
+            return false;
           }
         }))
         .subscribe((message: AppNotificationMessage) => {

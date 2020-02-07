@@ -1,4 +1,7 @@
-import { User } from './../../shared/models/user';
+import { QuizService } from './quiz.service';
+import { UserAnswer } from 'src/app/shared/models/user-answer';
+import { AlreadyExistError } from './../../shared/app-errors/already-exist-error';
+import { QuizAnswer } from './../../shared/models/quiz-answer';
 import { AppUtil } from './../../shared/util/app-util';
 import { Quiz } from './../../shared/models/quiz';
 import { AppNotificationMessage } from './../../core/common/socket-consts';
@@ -9,7 +12,7 @@ import { Injectable } from '@angular/core';
 })
 export class QuizCrudService {
 
-  constructor() { }
+  constructor(private quizService: QuizService) { }
 
   public handleQuizAnswersUpdate(message: AppNotificationMessage, quizList: Quiz[]): void {
     if (!message || !message.content) {
@@ -38,17 +41,53 @@ export class QuizCrudService {
     quizList.unshift(quiz);
   }
 
-  public isQuizCreatedByUser(quiz: Quiz, userId: string): boolean {
-    if (!userId) {
-      throw new Error('User id is not defined');
+  public addAnswer(quiz: Quiz, answerContent: string, AlreadyExistCallback?: (ex: Error) => void): void {
+    if (!answerContent) {
+      return;
     }
-    if (!quiz) {
-      return false;
-    }
+    const answer = new QuizAnswer();
+    answer.content = answerContent;
+    answer.isCorrect = false;
 
-    if (quiz.creator.id === userId) {
-      return true;
+    try {
+      quiz.addAnswer(answer);
+    } catch (ex) {
+      if (ex instanceof AlreadyExistError) {
+        if (AlreadyExistCallback) {
+          AlreadyExistCallback(ex);
+        } else {
+          throw ex;
+        }
+      } else {
+        throw ex;
+      }
     }
-    return false;
+  }
+
+  public async getUserAnswerForQuiz(quiz: Quiz, userId: string, showLoader = false): Promise<UserAnswer> {
+    try {
+      if (!!showLoader) {
+        AppUtil.triggerLoadingIndicator();
+      }
+
+      const userAnswerListResult: UserAnswer[] = await this.quizService
+        .getUserAnswerForQuiz(quiz.id, userId).toPromise();
+
+      if (!!showLoader) {
+        AppUtil.triggerLoadingIndicatorStop();
+      }
+
+      if (userAnswerListResult && userAnswerListResult.length > 0) {
+        const userAnswer: UserAnswer = userAnswerListResult[0];
+        return userAnswer;
+      }
+
+      return null;
+    } catch (ex) {
+      if (!!showLoader) {
+        AppUtil.triggerLoadingIndicatorStop();
+      }
+      throw ex;
+    }
   }
 }

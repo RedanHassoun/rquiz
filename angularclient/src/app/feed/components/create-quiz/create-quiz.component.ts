@@ -1,12 +1,12 @@
+import { AppUtil } from './../../../shared/util/app-util';
+import { QuizCrudService } from './../../services/quiz-crud.service';
 import { TOPIC_QUIZ_ASSIGNED_TO_USER } from '../../../core/common/socket-consts';
 import { FileUploadService } from '../../../core/services/file-upload.service';
 import { take, switchMap } from 'rxjs/operators';
-import { AlreadyExistError } from '../../../shared/app-errors/already-exist-error';
 import { AppNotificationMessage, TOPIC_QUIZ_LIST_UPDATE } from '../../../core/common/socket-consts';
 import { NotificationService } from '../../../core/services/notification.service';
 import { UserService } from '../../../core/services/user-service.service';
 import { User } from '../../../shared/models/user';
-import { AppUtil } from '../../../shared/util/app-util';
 import { AuthenticationService } from '../../../core/services/authentication.service';
 import { QuizService } from '../../services/quiz.service';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
@@ -43,7 +43,8 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     private dialogRef: MatDialogRef<CreateQuizComponent>,
     private userService: UserService,
     private notificationService: NotificationService,
-    private fileUploadService: FileUploadService) {
+    private fileUploadService: FileUploadService,
+    private quizCrudService: QuizCrudService) {
     super();
   }
 
@@ -85,21 +86,8 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     if (!answerContent) {
       return;
     }
-    const answer = new QuizAnswer();
-    answer.content = answerContent;
-    answer.isCorrect = false;
-
-    try {
-      this.quiz.addAnswer(answer);
-    } catch (ex) {
-      if (ex instanceof AlreadyExistError) {
-        AppUtil.showError(ex);
-      } else {
-        throw ex;
-      }
-    } finally {
-      this.answerInput.nativeElement.value = '';
-    }
+    this.quizCrudService.addAnswer(this.quiz, answerContent, AppUtil.showError);
+    this.answerInput.nativeElement.value = '';
   }
 
   publicChanged(isPublic: boolean): void {
@@ -117,14 +105,13 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     this.imageToUpload = files.item(0);
   }
 
-  async addQuiz(): Promise<void> {
+  addQuiz(): Promise<void> {
     if (this.quiz.answers.length < 2) {
       AppUtil.showWarningMessage('The quiz should have at least two answers');
       return;
     }
 
-    const hasCorrectAnswer: boolean = await this.quizService.hasCorrectAnswer(this.quiz);
-    if (!hasCorrectAnswer) {
+    if (!this.quiz.hasCorrectAnswer()) {
       AppUtil.showWarningMessage('You must choose a correct answer');
       return;
     }
@@ -172,19 +159,11 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
   }
 
   setCorrect(answer: QuizAnswer): void {
-    for (const ans of this.quiz.answers) {
-      if (ans.content === answer.content) {
-        ans.isCorrect = true;
-      } else {
-        ans.isCorrect = false;
-      }
-    }
+    this.quiz.setCorrectAnswer(answer);
   }
 
   deleteAnswer(answer: QuizAnswer): void {
-    this.quiz.answers = _.remove(this.quiz.answers, (quizAnswer) => {
-      return quizAnswer.content !== answer.content;
-    });
+    this.quiz.deleteAnswer(answer);
   }
 
   ngOnDestroy(): void {
