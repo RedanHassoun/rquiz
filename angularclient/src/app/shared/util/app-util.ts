@@ -1,6 +1,6 @@
 import { TOPIC_USER_UPDATE } from './../../core/common/socket-consts';
 import { User } from './../models/user';
-import { AppNotificationMessage } from './../../core/model/socket-consts';
+import { AppNotificationMessage } from './../../core/common/socket-consts';
 import { AccessDeniedError } from './../app-errors/access-denied-error';
 import { NotFoundError } from './../app-errors/not-found-error';
 import { BadInputError } from './../app-errors/bad-input-error';

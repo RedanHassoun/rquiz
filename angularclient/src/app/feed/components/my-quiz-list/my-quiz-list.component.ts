@@ -1,3 +1,4 @@
+import { QuizCrudService } from './../../services/quiz-crud.service';
 import { filter } from 'rxjs/operators';
 import { TOPIC_QUIZ_LIST_UPDATE, AppNotificationMessage } from '../../../core/common/socket-consts';
 import { NotificationService } from './../../../core/services/notification.service';
@@ -25,7 +26,8 @@ export class MyQuizListComponent implements OnInit {
 
   constructor(private pagingStrategyFactory: PagingStrategyFactory,
     private notificationService: NotificationService,
-    private authService: AuthenticationService) {
+    private authService: AuthenticationService,
+    private quizCrudService: QuizCrudService) {
   }
 
   @StartLoadingIndicator
@@ -36,41 +38,19 @@ export class MyQuizListComponent implements OnInit {
 
     this.subscriptions.push(
       this.notificationService.onMessage(TOPIC_QUIZ_LIST_UPDATE)
-        .pipe(filter(message => this.isCreatedByCurrentUser(message)))
+        .pipe(filter(message => {
+          try {
+            const quiz: Quiz = JSON.parse(message.content);
+            return this.quizCrudService.isQuizCreatedByUser(quiz, this.currentUserId);
+          } catch (ex) {
+            console.error(`Cannot update quiz list, error: ${ex}`);
+            throw ex;
+          }
+        }))
         .subscribe((message: AppNotificationMessage) => {
-          this.handleQuizListUpdate(message);
+          this.quizCrudService.handleAddedQuiz(message, this.quizList);
         })
     );
-  }
-
-  private isCreatedByCurrentUser(message: AppNotificationMessage): boolean {
-    if (!message || !message.content) {
-      return false;
-    }
-
-    try {
-      const quiz: Quiz = JSON.parse(message.content);
-      if (quiz.creator.id === this.currentUserId) {
-        return true;
-      }
-      return false;
-    } catch (ex) {
-      console.error(
-        `An error ocurred while handling quiz list update. Error: ${AppUtil.getFullException(ex)}`);
-      return false;
-    }
-  }
-
-  private handleQuizListUpdate(message: AppNotificationMessage): void {
-    if (!message || !message.content) {
-      return;
-    }
-
-    const quiz: Quiz = JSON.parse(message.content);
-    if (!quiz.isPublic) {
-      return;
-    }
-    this.quizList.unshift(quiz);
   }
 
   quizListChanged(newQuizList: Quiz[]) {

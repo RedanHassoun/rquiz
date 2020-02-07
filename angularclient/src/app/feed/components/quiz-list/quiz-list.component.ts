@@ -1,3 +1,5 @@
+import { filter } from 'rxjs/operators';
+import { QuizCrudService } from './../../services/quiz-crud.service';
 import { Service } from './../../../shared/factories/paging-strategy-factory';
 import { PagingStrategyFactory } from 'src/app/shared/factories/paging-strategy-factory';
 import { AuthenticationService } from './../../../core/services/authentication.service';
@@ -34,7 +36,8 @@ export class QuizListComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private notificationService: NotificationService,
     private authService: AuthenticationService,
-    private pagingStrategyFactory: PagingStrategyFactory) {
+    private pagingStrategyFactory: PagingStrategyFactory,
+    private quizCrudService: QuizCrudService) {
     this.iconRegistry.addSvgIcon( // TODO: make more general
       'done',
       this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/baseline-done-24px.svg'));
@@ -58,54 +61,28 @@ export class QuizListComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(
       this.notificationService.onMessage(TOPIC_QUIZ_LIST_UPDATE)
+        .pipe(filter((message: AppNotificationMessage) => {
+          const quiz: Quiz = JSON.parse(message.content);
+          return quiz.isPublic;
+        }))
         .subscribe((message: AppNotificationMessage) => {
-          this.handleQuizListUpdate(message);
+          this.quizCrudService.handleAddedQuiz(message, this.quizList);
         })
     );
 
     this.subscriptions.push(
       this.notificationService.onMessage(TOPIC_QUIZ_ANSWERS_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
-          this.handleQuizAnswersUpdate(message);
+          this.quizCrudService.handleQuizAnswersUpdate(message, this.quizList);
         })
     );
 
     this.subscriptions.push(
       this.notificationService.onMessage(TOPIC_QUIZ_DELETED_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
-          this.handleQuizDeletedUpdate(message);
+          this.quizCrudService.handleQuizDeletedUpdate(message, this.quizList);
         })
     );
-  }
-
-  private handleQuizDeletedUpdate(message: AppNotificationMessage): void {
-    const id: string = JSON.parse(message.content).id;
-    this.quizList = AppUtil.removeById(this.quizList, id);
-  }
-
-  private handleQuizListUpdate(message: AppNotificationMessage): void {
-    if (!message || !message.content) {
-      return;
-    }
-
-    const quiz: Quiz = JSON.parse(message.content);
-    if (!quiz.isPublic) {
-      return;
-    }
-    this.quizList.unshift(quiz);
-  }
-
-  private handleQuizAnswersUpdate(message: AppNotificationMessage): void {
-    if (!message || !message.content) {
-      return;
-    }
-
-    const quiz: Quiz = JSON.parse(message.content);
-    const indexOfQuiz = this.quizList.findIndex(currQuiz => currQuiz.id === quiz.id);
-
-    if (indexOfQuiz !== -1) {
-      this.quizList[indexOfQuiz] = quiz;
-    }
   }
 
   openCreateQuizDialog() {

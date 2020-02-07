@@ -1,3 +1,6 @@
+import { TOPIC_QUIZ_ANSWERS_UPDATE } from 'src/app/core/common/socket-consts';
+import { TOPIC_QUIZ_DELETED_UPDATE } from './../../../core/common/socket-consts';
+import { QuizCrudService } from './../../services/quiz-crud.service';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { TOPIC_QUIZ_ASSIGNED_TO_USER, AppNotificationMessage } from '../../../core/common/socket-consts';
 import { NotificationService } from './../../../core/services/notification.service';
@@ -9,6 +12,7 @@ import { Quiz } from './../../../shared/models/quiz';
 import { Component, OnInit } from '@angular/core';
 import { StartLoadingIndicator } from './../../../shared/decorators/spinner-decorators';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-my-assigned-quiz',
@@ -23,7 +27,8 @@ export class MyAssignedQuizComponent implements OnInit {
 
   constructor(private pagingStrategyFactory: PagingStrategyFactory,
     private notificationService: NotificationService,
-    public authService: AuthenticationService) {
+    public authService: AuthenticationService,
+    private quizCrudService: QuizCrudService) {
   }
 
   @StartLoadingIndicator
@@ -34,23 +39,28 @@ export class MyAssignedQuizComponent implements OnInit {
 
     this.subscriptions.push(
       this.notificationService.onMessage(TOPIC_QUIZ_ASSIGNED_TO_USER)
+        .pipe(filter((message: AppNotificationMessage) => {
+          const quiz: Quiz = JSON.parse(message.content);
+          return !quiz.isPublic;
+        }))
         .subscribe((message: AppNotificationMessage) => {
-          this.handleQuizListUpdate(message);
+          this.quizCrudService.handleAddedQuiz(message, this.quizList);
         })
     );
-  }
 
-  handleQuizListUpdate(message: AppNotificationMessage): void {
-    if (!message || !message.content) {
-      return;
-    }
+    this.subscriptions.push(
+      this.notificationService.onMessage(TOPIC_QUIZ_ANSWERS_UPDATE)
+        .subscribe((message: AppNotificationMessage) => {
+          this.quizCrudService.handleQuizAnswersUpdate(message, this.quizList);
+        })
+    );
 
-    const quiz: Quiz = JSON.parse(message.content);
-    if (quiz.isPublic) {
-      throw new Error(
-        `Cannot handle notification from topic ${message.topic}, public quiz cannot be assigned to user`);
-    }
-    this.quizList.unshift(quiz);
+    this.subscriptions.push(
+      this.notificationService.onMessage(TOPIC_QUIZ_DELETED_UPDATE)
+        .subscribe((message: AppNotificationMessage) => {
+          this.quizCrudService.handleQuizDeletedUpdate(message, this.quizList);
+        })
+    );
   }
 
   quizListChanged(newQuizList: Quiz[]) {
