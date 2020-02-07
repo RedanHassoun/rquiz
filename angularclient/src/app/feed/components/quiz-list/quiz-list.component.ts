@@ -57,8 +57,6 @@ export class QuizListComponent implements OnInit, OnDestroy {
     this.pagingStrategy = await this.pagingStrategyFactory.createStrategyWithParams(
       Service.Quiz, new Map<string, string>([['isPublic', 'true']]));
 
-    this.notificationService.initMyNotification();
-
     this.subscriptions.push(
       this.notificationService.onMessage(TOPIC_QUIZ_LIST_UPDATE)
         .pipe(filter((message: AppNotificationMessage) => {

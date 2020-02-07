@@ -31,6 +31,7 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     this.myNotificationsListSubject = new BehaviorSubject<AppNotificationMessage[]>([]);
     this.sockectState = new BehaviorSubject<SocketClientState>(SocketClientState.ATTEMPTING);
     this.initSocketConnection(NotificationService.URL);
+    this.initMyNotification();
     this.listenToAllNotifications();
   }
 
@@ -74,7 +75,7 @@ export class NotificationService extends ClientDataService implements OnDestroy 
         if (message && message.targetUserIds) {
           for (const targetUserId of message.targetUserIds) {
             if (targetUserId === context.currentUser.id) {
-              this.addToMyNotifications([message]);
+              context.addToMyNotifications([message]);
             }
           }
         }
@@ -170,7 +171,7 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     for (const notificaiton of notificaitonsToAdd) {
       const notificationFromMyList = currNotificationData.find(notification => notification.id === notificaiton.id);
       if (!notificationFromMyList) {
-        currNotificationData.push(notificaiton);
+        currNotificationData.unshift(notificaiton);
       }
     }
 

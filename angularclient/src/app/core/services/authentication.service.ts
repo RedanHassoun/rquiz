@@ -1,7 +1,6 @@
 import { AppUtil } from './../../shared/util/app-util';
 import { RegisterRequest } from './../../shared/models/register-message';
 import { User } from './../../shared/models/user';
-import { AppUtil } from '../../shared/util/app-util';
 import { LoginMessage } from '../../shared/models/login-message';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
