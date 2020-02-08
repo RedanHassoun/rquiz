@@ -7,6 +7,8 @@
 
     <h1 class="username">{{user.username}}</h1>
     <h2 class="email">{{user.email}}</h2>
+    <h2 class="correct-answers-count">Total correct answers: {{user.totalNumberOfCorrectAnswers}}</h2>
+    <h2 class="wrong-answers-count">Total worng answers: {{user.totalNumberOfAnswers - user.totalNumberOfCorrectAnswers}}</h2>
 
     <div class="about">
         <div *ngIf="user.about; else noDescription">

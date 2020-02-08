@@ -9,6 +9,8 @@ public class UserDto {
     private String imageUrl;
     private String about;
     private Date createdAt;
+    private Long totalNumberOfAnswers;
+    private Long totalNumberOfCorrectAnswers;
 
     public String getId() {
         return id;
@@ -56,6 +58,22 @@ public class UserDto {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Long getTotalNumberOfAnswers() {
+        return totalNumberOfAnswers;
+    }
+
+    public void setTotalNumberOfAnswers(Long totalNumberOfAnswers) {
+        this.totalNumberOfAnswers = totalNumberOfAnswers;
+    }
+
+    public Long getTotalNumberOfCorrectAnswers() {
+        return totalNumberOfCorrectAnswers;
+    }
+
+    public void setTotalNumberOfCorrectAnswers(Long totalNumberOfCorrectAnswers) {
+        this.totalNumberOfCorrectAnswers = totalNumberOfCorrectAnswers;
     }
 
     @Override

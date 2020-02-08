@@ -1,5 +1,7 @@
 $app-color: #3f51b5;
 $line-color: #969696;
+$wrong-answer-color: #990000;
+$correct-answer-color: #206040;
 
 .profile {
   margin-left: auto;
@@ -32,7 +34,9 @@ $line-color: #969696;
 
 .username,
 .email,
-.about {
+.about,
+.wrong-answers-count,
+.correct-answers-count {
   text-align: center;
   font-family: "Roboto", sans-serif;
   padding: 0;
@@ -47,6 +51,16 @@ $line-color: #969696;
 
 .email {
   font-size: 14pt;
+}
+
+.wrong-answers-count {
+  font-size: 12pt;
+  color: $wrong-answer-color;
+}
+
+.correct-answers-count {
+  font-size: 12pt;
+  color: $correct-answer-color;
 }
 
 .about {

@@ -7,6 +7,7 @@ import com.raiseup.rquiz.exceptions.UserAlreadyExistException;
 import com.raiseup.rquiz.exceptions.UserNotFoundException;
 import com.raiseup.rquiz.models.db.User;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
+import com.raiseup.rquiz.repo.UserAnswerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,17 +32,20 @@ public class UserServiceImpl implements UserService {
     private PlatformTransactionManager transactionManager;
     private TransactionTemplate transactionTemplate;
     private AmazonClient amazonClient;
+    private UserAnswerRepository userAnswerRepository;
 
     public UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder,
                            ApplicationUserRepository applicationUserRepository,
                            PlatformTransactionManager transactionManager,
                            EntityManager entityManager,
-                           AmazonClient amazonClient){
+                           AmazonClient amazonClient,
+                           UserAnswerRepository userAnswerRepository){
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.applicationUserRepository = applicationUserRepository;
         this.transactionManager = transactionManager;
         this.entityManager = entityManager;
         this.amazonClient = amazonClient;
+        this.userAnswerRepository = userAnswerRepository;
     }
 
     @PostConstruct
@@ -71,8 +75,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly=true)
-    public Optional<User> read(String id) {
-        return this.applicationUserRepository.findById(id);
+    public Optional<User> read(String id) throws AppException {
+        Optional<User> userOptional = this.applicationUserRepository.findById(id);
+        if (!userOptional.isPresent()) {
+            throw new UserNotFoundException(String.format("Cannot find user %s", id));
+        }
+        User user = userOptional.get();
+        final Long correctAnswersCount = this.userAnswerRepository.findCorrectUserAnswersCountByUserId(id);
+        final Long allAnswersCount = this.userAnswerRepository.findUserAnswersCountByUserId(id);
+
+        user.setTotalNumberOfCorrectAnswers(correctAnswersCount);
+        user.setTotalNumberOfAnswers(allAnswersCount);
+
+        return Optional.of(user);
     }
 
     @Override

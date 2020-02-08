@@ -34,6 +34,12 @@ public class User extends BaseModel{
     private String imageUrl;
     private String about;
 
+    @Transient
+    private Long totalNumberOfAnswers;
+
+    @Transient
+    private Long totalNumberOfCorrectAnswers;
+
     @OneToMany(mappedBy = DBConsts.USER_FIELD,
                cascade = CascadeType.ALL)
     @JsonIgnore
@@ -109,6 +115,22 @@ public class User extends BaseModel{
 
     public void setAbout(String about) {
         this.about = about;
+    }
+
+    public Long getTotalNumberOfAnswers() {
+        return totalNumberOfAnswers;
+    }
+
+    public void setTotalNumberOfAnswers(Long totalNumberOfAnswers) {
+        this.totalNumberOfAnswers = totalNumberOfAnswers;
+    }
+
+    public Long getTotalNumberOfCorrectAnswers() {
+        return totalNumberOfCorrectAnswers;
+    }
+
+    public void setTotalNumberOfCorrectAnswers(Long totalNumberOfCorrectAnswers) {
+        this.totalNumberOfCorrectAnswers = totalNumberOfCorrectAnswers;
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface UserService {
     User create (User user) throws AppException;
-    Optional<User> read (String id);
+    Optional<User> read(String id) throws AppException;
     Collection<User> readAll ();
     Collection<User> readAll (int size, int page);
     void update (User user) throws AppException;

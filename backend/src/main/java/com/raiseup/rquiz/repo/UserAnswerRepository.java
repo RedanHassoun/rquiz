@@ -17,4 +17,10 @@ public interface UserAnswerRepository extends JpaRepository<UserAnswer, String> 
 
     @Query("SELECT a FROM UserAnswer AS a JOIN QuizAnswer AS q ON a.quizAnswer.id = q.id AND q.quiz.id = :quizId")
     List<UserAnswer> findByQuizId(@Param("quizId") String quizId, Pageable pageable);
+
+    @Query("SELECT COUNT(u) FROM UserAnswer u WHERE u.user.id = :userId")
+    Long findUserAnswersCountByUserId(@Param("userId") String userId);
+
+    @Query("SELECT COUNT(u) FROM UserAnswer u WHERE u.user.id = :userId AND u.quizAnswer.isCorrect = true")
+    Long findCorrectUserAnswersCountByUserId(@Param("userId") String userId);
 }

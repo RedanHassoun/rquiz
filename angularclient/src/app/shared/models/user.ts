@@ -4,4 +4,6 @@ export class User {
     email: string;
     imageUrl: string;
     about: string;
+    totalNumberOfAnswers: number;
+    totalNumberOfCorrectAnswers: number;
 }
