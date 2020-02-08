@@ -1,5 +1,13 @@
 <div class="notification-container">
-    <h4>Notifications:</h4>
+    <div class="header">
+        <h5>Notifications:</h5>
+        <button id="clear-all-btn" [disabled]="!shouldShowClearAllButton()" class="btn btn-primary btn-block" (click)="clearAll()">Clear all</button>
+    </div>
+
+    <div *ngIf="notifications.length === 0">
+        No notifications available.
+    </div>
+
     <ul class="list-group">
         <li *ngFor="let notification of notifications" class="list-group-item" (click)="navigateToPage(notification)">
             {{ getNotificationText(notification) }}

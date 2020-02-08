@@ -7,6 +7,7 @@ import com.raiseup.rquiz.models.db.UserNotification;
 import com.raiseup.rquiz.services.UserNotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
@@ -138,4 +139,20 @@ public class NotificationController {
         }
     }
 
+    @PatchMapping("/api/v1/notifications/targetUser/{targetUserId}")
+    public ResponseEntity<Object> updateTargetUserNotifications(@PathVariable("targetUserId") String targetUserId,
+                                                                 @RequestBody AppNotificationMessage appNotificationMessage) throws Exception {
+        if (appNotificationMessage == null) {
+            throw new IllegalOperationException("Notification message must be defined");
+        }
+        if (appNotificationMessage.getSeen() == null) {
+            throw new IllegalOperationException("Seen property must be defined");
+        }
+
+        UserNotification userNotification = this.dtoMapper.convertUserNotificationDtoToEntity(appNotificationMessage);
+        int numOfUpdatedRows = this.userNotificationService.updateTargetUserNotifications(targetUserId, userNotification);
+        return ResponseEntity.ok()
+                .header("updated-rows", String.valueOf(numOfUpdatedRows))
+                .build();
+    }
 }

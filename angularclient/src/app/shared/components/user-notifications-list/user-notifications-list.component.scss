@@ -1,10 +1,21 @@
 $notification-background-color: #cde;
 
+.header {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+#clear-all-btn {
+    margin-right: 5pt;
+    margin-left: auto;
+    margin-bottom: 10pt;
+    width: 18vh;
+}
+
 .notification-item {
-    background-color: $notification-background-color;
+  background-color: $notification-background-color;
 }
 
 .notification-container {
-    height: 85vh;
+  height: 85vh;
 }
-

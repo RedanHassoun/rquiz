@@ -1,10 +1,12 @@
+import { switchMap } from 'rxjs/operators';
+import { NavigationHelperService } from './../../services/navigation-helper.service';
 import { AppUtil } from './../../util/app-util';
 import { Router } from '@angular/router';
 import { NotificationService } from './../../../core/services/notification.service';
 import { AppNotificationMessage, createNotificationMessageText, createNotificationRouteUrl } from '../../../core/common/socket-consts';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 
 @Component({
   selector: 'app-user-notifications-list',
@@ -17,7 +19,8 @@ export class UserNotificationsListComponent implements OnInit, OnDestroy {
 
   constructor(private notificationService: NotificationService,
     public dialogRef: MatDialogRef<UserNotificationsListComponent>,
-    private router: Router) { }
+    private router: Router,
+    private navigationService: NavigationHelperService) { }
 
   ngOnInit() {
     this.subscriptions.push(
@@ -42,6 +45,33 @@ export class UserNotificationsListComponent implements OnInit, OnDestroy {
         this.dialogRef.close();
       })
     );
+  }
+
+  clearAll(): void {
+    this.subscriptions.push(
+      this.navigationService
+        .openYesNoDialogNoCallback('Are you sure you want to clear all notifications?')
+        .pipe(switchMap(res => {
+          if (res) {
+            const toUpdate: Partial<AppNotificationMessage> = {
+              seen: true
+            };
+            return this.notificationService.updateAllMyNotifications(toUpdate);
+          }
+          return of(null);
+        }))
+        .subscribe((res) => {
+          if (res) {
+            this.notificationService.resetMyNotifications();
+          }
+        }, (err: Error) => {
+          AppUtil.showErrorMessage(err.message);
+        })
+    );
+  }
+
+  shouldShowClearAllButton(): boolean {
+    return this.notifications && this.notifications.length > 1;
   }
 
   ngOnDestroy(): void {

@@ -1,12 +1,14 @@
+import { AppUtil } from './../../shared/util/app-util';
+import { CoreUtil } from './../common/core-util';
 import { SocketClientState } from './../common/socket-consts';
 import { ClientDataService } from '../../shared/services/client-data.service';
 import { User } from './../../shared/models/user';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import * as SockJS from 'sockjs-client';
 import * as Stomp from 'stompjs';
 import { Injectable, OnDestroy } from '@angular/core';
-import { first, filter, switchMap, map } from 'rxjs/operators';
+import { first, filter, switchMap, map, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { AppNotificationMessage, TOPIC_QUIZ_ANSWERS_UPDATE, TOPIC_QUIZ_ASSIGNED_TO_USER } from '../common/socket-consts';
 import { AppConsts } from './../../shared/util/app-consts';
@@ -31,7 +33,7 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     this.myNotificationsListSubject = new BehaviorSubject<AppNotificationMessage[]>([]);
     this.sockectState = new BehaviorSubject<SocketClientState>(SocketClientState.ATTEMPTING);
     this.initSocketConnection(NotificationService.URL);
-    this.initMyNotification();
+    this.initMyNotifications();
     this.listenToAllNotifications();
   }
 
@@ -103,7 +105,11 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     return false;
   }
 
-  public initMyNotification(): void {
+  public initMyNotifications(): void {
+    if (!this.authService.isLoggedIn()) {
+      return;
+    }
+
     this.authService.getCurrentUser()
       .then((user: User) => {
         this.currentUser = user;
@@ -200,5 +206,19 @@ export class NotificationService extends ClientDataService implements OnDestroy 
         }
         return notificationData.length;
       }));
+  }
+
+  public resetMyNotifications(): void {
+    this.myNotificationsListSubject.next([]);
+  }
+
+  public updateAllMyNotifications(patchRequestObj: Partial<AppNotificationMessage>): Observable<any> {
+    if (!this.currentUser) {
+      throwError('Cannot update all notifications, please try again later');
+    }
+    patchRequestObj.targetUserIds = [this.currentUser.id];
+    const url = `${this.url}targetUser/${this.currentUser.id}`;
+    return this.http.patch(url, patchRequestObj, { headers: CoreUtil.createAuthorizationHeader(), observe: 'response'})
+      .pipe(catchError(AppUtil.handleError));
   }
 }

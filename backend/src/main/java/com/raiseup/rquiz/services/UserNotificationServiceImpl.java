@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -84,6 +83,23 @@ public class UserNotificationServiceImpl implements UserNotificationService {
 
         this.logger.debug(String.format("Reading notifications for user: %s with seen=%b", targetUserId, seen));
         return this.userNotificationRepository.findForUser(targetUserId, seen);
+    }
+
+    @Override
+    @Transactional
+    public int updateTargetUserNotifications(String userId, UserNotification userNotification) throws AppException {
+        if (userId == null) {
+            throw new IllegalOperationException("Cannot update user's notifications, user must be defined");
+        }
+
+        if (userNotification.getSeen() == null) {
+            throw new IllegalOperationException("The seen property must be defined");
+        }
+        this.logger.debug(String.format("Updating user: %s notifications with seen=%b", userId, userNotification.getSeen()));
+        int numberOfUpdatedNotifications = this.userNotificationRepository.updateAllUserNotifications(userId,
+                userNotification.getSeen());
+        this.logger.info(String.format("Updated %d notifications for user %s", numberOfUpdatedNotifications, userId));
+        return numberOfUpdatedNotifications;
     }
 }
 

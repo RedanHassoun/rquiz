@@ -4,9 +4,8 @@
   </div>
 
   <div class="content-wrapper">
-    <h1 class="title">{{quiz.title}}</h1>
-    <p>{{ quiz.description }}</p>
-    <a (click)="showQuiz()" class="more">Show</a>
+    <h1 class="title" (click)="showQuiz()">{{quiz.title}}</h1>
+    <p (click)="showQuiz()">{{ quiz.description }}</p>
 
     <div *ngIf="!!isOwnedByCurrentUser  else createdByAnotherUser">
       <div *ngIf="getAssignedUsers() else publicQuiz">

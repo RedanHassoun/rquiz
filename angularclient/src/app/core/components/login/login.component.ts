@@ -1,3 +1,4 @@
+import { NotificationService } from './../../services/notification.service';
 import { FormInputComponent } from './../../../shared/components/form-input/form-input.component';
 import { AccessDeniedError } from './../../../shared/app-errors/access-denied-error';
 import { LoginMessage } from '../../../shared/models/login-message';
@@ -19,7 +20,8 @@ export class LoginComponent extends FormInputComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthenticationService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private notificationService: NotificationService) {
     super();
   }
 
@@ -28,7 +30,7 @@ export class LoginComponent extends FormInputComponent implements OnInit {
       .subscribe(async (response) => {
         this.authService.persistTokenFromResponse(response);
         const currentUserId: string = (await this.authService.getCurrentUser()).id;
-        await this.goToMainPage(currentUserId);
+        this.goToMainPage(currentUserId);
       }, (err: Error) => {
         if (err instanceof AccessDeniedError) {
           this.invalidLogin = true;
@@ -52,7 +54,13 @@ export class LoginComponent extends FormInputComponent implements OnInit {
   }
 
   private async goToMainPage(userId: string) {
-    this.router.navigate(['/quizList']);
+    try {
+      this.notificationService.initMyNotifications();
+    } catch (ex) {
+      console.error('Cannot init notifications list.', ex);
+    } finally {
+      this.router.navigate(['/quizList']);
+    }
   }
 
   get username() { return this.loginForm.controls.username; }

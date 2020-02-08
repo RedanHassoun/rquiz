@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface UserNotificationService {
     Optional<UserNotification> save(UserNotification userNotification) throws AppException;
     Optional<UserNotification> update(UserNotification userNotification) throws AppException;
+    int updateTargetUserNotifications(String userId, UserNotification userNotification) throws AppException;
     List<UserNotification> readAll() throws AppException;
     List<UserNotification> readAllForUser(String targetUserId, Boolean seen) throws AppException;
 }
