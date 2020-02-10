@@ -70,3 +70,8 @@ body {
   margin-left: 15pt;
   font-weight: bold;
 }
+
+.mat-radio-label {
+  // In order to enable "break word" in 'mat-radio-button'
+  white-space: normal !important;
+}

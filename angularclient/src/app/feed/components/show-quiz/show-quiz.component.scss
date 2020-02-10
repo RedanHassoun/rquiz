@@ -3,6 +3,7 @@
 .quiz-radio-group {
   display: inline-flex;
   flex-direction: column;
+  word-break: break-word;
 }
 
 .quiz-radio-button {
@@ -51,5 +52,5 @@
 .quiz-title {
   font-size: $title-medium-font-size;
   font-weight: bold;
-  word-break: break-all;
+  word-break: break-word;
 }

@@ -6,7 +6,7 @@ export class AppConsts {
     public static readonly STOMP_ENDPOINT = '/gs-guide-websocket';
 
     // Routes
-    public static readonly MY_QUIZ_LIST = 'myquizlist';
+    public static readonly MY_QUIZ_LIST = 'my-quiz-list';
     public static readonly MY_QUIZ_LIST_DISPLAY = 'My Quiz List';
     public static readonly MY_ASSIGNED_QUIZ_LIST = 'my-assigned-quiz-list';
     public static readonly MY_ASSIGNED_QUIZ_LIST_DISPLAY = 'Assigned To Me';
