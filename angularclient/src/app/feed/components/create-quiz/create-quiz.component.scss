@@ -1,3 +1,4 @@
+@import './../../../variables.scss';
 
 .header {
   text-align: center;
@@ -19,8 +20,8 @@
   margin: 5px;
 }
 
-.mat-icon {
-  font-size: 20px;
+mat-icon {
+  font-size: $icon-size-small;
 }
 
 .quiz-answer-list-item {
@@ -32,6 +33,11 @@
 
 .action-btn {
   width: 10%;
+}
+
+.answers-list-title {
+  font-size: $content-medium-font-size;
+  font-weight: bold;
 }
 
 .answer-content {

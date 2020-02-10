@@ -3,15 +3,18 @@
 
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
+@import './app/variables.scss';
+
 $app-background: white !important;
 
 body {
   background-color: $app-background;
+  font-size: $content-medium-font-size;
 }
 
 .secondary-Bbtton {
   border-radius: 10px;
-  border: 1px solid #3f51b5;
+  border: 1px solid $app-primary-color;
 }
 
 .validation-err-container {
@@ -42,7 +45,7 @@ body {
 }
 
 .centered-form-heading {
-  font-size: 20pt;
+  font-size: $title-medium-font-size;
 }
 
 .form-button {

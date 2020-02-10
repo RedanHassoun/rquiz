@@ -1,11 +1,11 @@
 @import "~compass-mixins/lib/compass/css3";
+@import './../../../variables.scss';
 
 $size: 20vh;
 $border-radius: 60px;
 $margin-between-posts: 20px;
 $image-background-color: #cde;
 $quiz-background-color: #f4f4f4;
-$app-light-blue: #428bca;
 
 .quiz-item-container {
   display: flex;
@@ -44,9 +44,14 @@ $app-light-blue: #428bca;
 }
 
 .title {
-  color: $app-light-blue;
+  color: $app-light-color;
   border-bottom: 2px solid $image-background-color;
-  font-size: 20pt;
+  font-size: $title-medium-font-size;
+  word-break: break-all;
+}
+
+#delete-icon {
+  margin-left: 10pt;
 }
 
 @media only screen and (max-width: 700px) {

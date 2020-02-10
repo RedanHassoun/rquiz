@@ -1,6 +1,6 @@
-$line-color: #969696;
+@import './../../../variables.scss';
 
 .title {
-  border-bottom: $line-color solid 1px;
+  border-bottom: $separator-line-default-color solid 1px;
   margin-bottom: 10px;
 }

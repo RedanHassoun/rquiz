@@ -1,7 +1,4 @@
-$app-color: #3f51b5;
-$line-color: #969696;
-$wrong-answer-color: #990000;
-$correct-answer-color: #206040;
+@import './../../../variables.scss';
 
 .profile {
   margin-left: auto;
@@ -22,7 +19,7 @@ $correct-answer-color: #206040;
 .photo {
   width: 35vh;
   height: 35vh;
-  border: $app-color 3px solid;
+  border: $app-primary-color 3px solid;
   border-radius: 50%;
   object-fit: cover;
   object-position: center;
@@ -44,29 +41,30 @@ $correct-answer-color: #206040;
 }
 
 .username {
-  font-size: 20pt;
+  font-size: $title-medium-font-size;
   margin: 2px;
-  color: $app-color;
+  color: $app-primary-color;
 }
 
 .email {
-  font-size: 14pt;
+  font-size: $content-medium-font-size;
+  margin-bottom: 5pt;
 }
 
 .wrong-answers-count {
-  font-size: 12pt;
+  font-size: $content-medium-font-size;
   color: $wrong-answer-color;
 }
 
 .correct-answers-count {
-  font-size: 12pt;
+  font-size: $content-medium-font-size;
   color: $correct-answer-color;
 }
 
 .about {
-  border-top: $line-color solid 1px;
+  border-top: $separator-line-default-color solid 1px;
   padding: 10px;
-  font-size: 11pt;
+  font-size: $content-medium-font-size;
   margin: 5px;
   margin-left: 30px;
   margin-right: 30px;
