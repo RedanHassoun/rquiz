@@ -29,7 +29,7 @@ export class QuizCrudService {
 
   public handleQuizDeletedUpdate(message: AppNotificationMessage, quizList: Quiz[]): void {
     const id: string = JSON.parse(message.content).id;
-    quizList = AppUtil.removeById(quizList, id);
+    AppUtil.removeById(quizList, id);
   }
 
   public handleAddedQuiz(message: AppNotificationMessage, quizList: Quiz[]): void {

@@ -12,10 +12,20 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { StopLoadingIndicator, StartLoadingIndicator } from '../decorators/spinner-decorators';
 
 export class AppUtil {
-    public static removeById(items: any[], id: string): any[] {
-        return _.remove(items, (item) => {
-            return item.id !== id;
+    public static removeById(items: any[], id: string): void {
+        if (!items || !id) {
+            return;
+        }
+
+        let indexOfItem = -1;
+        items.forEach((item, i) => {
+            if (item.id === id) {
+                indexOfItem = i;
+            }
         });
+        if (indexOfItem > -1) {
+            items.splice(indexOfItem, 1);
+        }
     }
 
     public static handleError(error: HttpErrorResponse): Observable<never> {

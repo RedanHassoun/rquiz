@@ -1,3 +1,5 @@
+import { TOPIC_QUIZ_DELETED_UPDATE } from './../../../core/common/socket-consts';
+import { TOPIC_QUIZ_ANSWERS_UPDATE } from 'src/app/core/common/socket-consts';
 import { QuizCrudService } from './../../services/quiz-crud.service';
 import { filter } from 'rxjs/operators';
 import { TOPIC_QUIZ_LIST_UPDATE, AppNotificationMessage } from '../../../core/common/socket-consts';
@@ -50,6 +52,20 @@ export class MyQuizListComponent implements OnInit {
         }))
         .subscribe((message: AppNotificationMessage) => {
           this.quizCrudService.handleAddedQuiz(message, this.quizList);
+        })
+    );
+
+    this.subscriptions.push(
+      this.notificationService.onMessage(TOPIC_QUIZ_ANSWERS_UPDATE)
+        .subscribe((message: AppNotificationMessage) => {
+          this.quizCrudService.handleQuizAnswersUpdate(message, this.quizList);
+        })
+    );
+
+    this.subscriptions.push(
+      this.notificationService.onMessage(TOPIC_QUIZ_DELETED_UPDATE)
+        .subscribe((message: AppNotificationMessage) => {
+          this.quizCrudService.handleQuizDeletedUpdate(message, this.quizList);
         })
     );
   }
