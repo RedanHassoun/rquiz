@@ -41,10 +41,9 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     return this.connect()
       .pipe(first())
       .pipe(switchMap((client: Stomp.Client) => {
-        const that = this;
         return Observable.create((observer) => {
           const subscription: Stomp.Subscription = client.subscribe(`/topic${topic}`, (message: Stomp.Message) => {
-            observer.next(messageHandler(that, message ? message.body : null));
+            observer.next(messageHandler.call(this, message ? message.body : null));
             return () => client.unsubscribe(subscription.id);
           });
         });
@@ -55,7 +54,7 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     this.onMessage('/*', this.notificationsListMessageHandler).subscribe();
   }
 
-  private jsonHandler(context: NotificationService, messageString: string): any {
+  private jsonHandler(messageString: string): any {
     if (!messageString) {
       return null;
     }
@@ -63,21 +62,21 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     return JSON.parse(messageString);
   }
 
-  private notificationsListMessageHandler(context: NotificationService, messageString: string): any {
+  private notificationsListMessageHandler( messageString: string): any {
     try {
       if (!messageString) {
         return null;
       }
 
-      if (!context.currentUser) {
+      if (!this.currentUser) {
         return null;
       }
       const message = JSON.parse(messageString) as AppNotificationMessage;
-      if (context.shouldNotificationAppearInUserNotifications(message)) {
+      if (this.shouldNotificationAppearInUserNotifications(message)) {
         if (message && message.targetUserIds) {
           for (const targetUserId of message.targetUserIds) {
-            if (targetUserId === context.currentUser.id) {
-              context.addToMyNotifications([message]);
+            if (targetUserId === this.currentUser.id) {
+              this.addToMyNotifications([message]);
             }
           }
         }
