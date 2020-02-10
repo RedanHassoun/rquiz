@@ -33,8 +33,16 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     this.myNotificationsListSubject = new BehaviorSubject<AppNotificationMessage[]>([]);
     this.sockectState = new BehaviorSubject<SocketClientState>(SocketClientState.ATTEMPTING);
     this.initSocketConnection(NotificationService.URL);
-    this.initMyNotifications();
-    this.listenToAllNotifications();
+
+    this.authService.currentUser$
+      .subscribe((user: User) => {
+        this.currentUser = user;
+        this.initMyNotifications();
+        this.listenToAllNotifications();
+      }, (err: User) => {
+        AppUtil.showErrorMessage(AppConsts.SESSION_EXPIRED_ERROR);
+        this.authService.logout();
+      });
   }
 
   public onMessage(topic: string, messageHandler = this.jsonHandler): Observable<AppNotificationMessage> {
@@ -62,7 +70,7 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     return JSON.parse(messageString);
   }
 
-  private notificationsListMessageHandler( messageString: string): any {
+  private notificationsListMessageHandler(messageString: string): any {
     try {
       if (!messageString) {
         return null;
@@ -105,18 +113,10 @@ export class NotificationService extends ClientDataService implements OnDestroy 
   }
 
   public initMyNotifications(): void {
-    if (!this.authService.isLoggedIn()) {
-      return;
-    }
-
-    this.authService.getCurrentUser()
-      .then((user: User) => {
-        this.currentUser = user;
-        this.getNotificaitonsListForUser(this.currentUser.id)
-          .subscribe((notificationsList: AppNotificationMessage[]) => {
-            this.addToMyNotifications(notificationsList);
-          });
-      });
+    this.getNotificaitonsListForUser(this.currentUser.id)
+    .subscribe((notificationsList: AppNotificationMessage[]) => {
+      this.addToMyNotifications(notificationsList);
+    });
   }
 
   public send(message: AppNotificationMessage): void {
@@ -129,19 +129,22 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     const socket = new SockJS(url);
     this.stompClient = Stomp.over(socket);
 
-    const that = this;
     this.stompClient.connect({},
-      (frame: Stomp.Frame) => {
-        that.sockectState.next(SocketClientState.CONNECTED);
-      },
-      (error) => {
-        that.sockectState.next(SocketClientState.ERROR);
-        console.error('Unable to connect to STOMP endpoint, error:', error);
-        console.error(`Trying to connect again in ${this.RECONNECT_DELAY_SECS} seconds`);
-        setTimeout(() => {
-          that.initSocketConnection(NotificationService.URL);
-        }, this.RECONNECT_DELAY_SECS * 1000);
-      });
+      (frame: Stomp.Frame) => this.socketConnectedCallback.call(this, frame),
+      (error) => this.socketFailedToConnectCallback.call(this, error));
+  }
+
+  private socketConnectedCallback(frame: Stomp.Frame): void {
+    this.sockectState.next(SocketClientState.CONNECTED);
+  }
+
+  private socketFailedToConnectCallback(error: string | Stomp.Frame): void {
+    this.sockectState.next(SocketClientState.ERROR);
+    console.error('Unable to connect to STOMP endpoint, error:', error);
+    console.error(`Trying to connect again in ${this.RECONNECT_DELAY_SECS} seconds`);
+    setTimeout(() => {
+      this.initSocketConnection(NotificationService.URL);
+    }, this.RECONNECT_DELAY_SECS * 1000);
   }
 
   private connect(): Observable<Stomp.Client> {
@@ -217,7 +220,7 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     }
     patchRequestObj.targetUserIds = [this.currentUser.id];
     const url = `${this.url}targetUser/${this.currentUser.id}`;
-    return this.http.patch(url, patchRequestObj, { headers: CoreUtil.createAuthorizationHeader(), observe: 'response'})
+    return this.http.patch(url, patchRequestObj, { headers: CoreUtil.createAuthorizationHeader(), observe: 'response' })
       .pipe(catchError(AppUtil.handleError));
   }
 }

@@ -108,7 +108,7 @@ export class AuthenticationService {
   public async getCurrentUser(): Promise<User> {
     const token: string = localStorage.getItem(AppConsts.KEY_USER_TOKEN);
     if (!token) {
-      AppUtil.showErrorMessage('Session expired please login again');
+      AppUtil.showErrorMessage(AppConsts.SESSION_EXPIRED_ERROR);
       this.logout();
       return Promise.reject(`Token should not be null`);
     }

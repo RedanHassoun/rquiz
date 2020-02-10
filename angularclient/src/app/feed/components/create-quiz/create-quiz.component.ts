@@ -73,7 +73,8 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
       this.userService.getAll()
         .subscribe((users: any[]) => {
           AppUtil.triggerLoadingIndicatorStop();
-          this.users = AppUtil.removeById(users, this.currentUser.id);
+          AppUtil.removeById(users, this.currentUser.id);
+          this.users = users;
         }, err => AppUtil.triggerLoadingIndicatorStop())
     );
   }

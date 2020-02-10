@@ -45,7 +45,7 @@ export class QuizItemComponent implements AfterContentInit, OnDestroy {
 
   showQuiz(): void {
     this.subscriptions.push(
-      this.navigationService.openDialog(ShowQuizComponent, undefined, this.quiz)
+      this.navigationService.openDialog(ShowQuizComponent, '90vh', this.quiz)
         .subscribe()
     );
   }

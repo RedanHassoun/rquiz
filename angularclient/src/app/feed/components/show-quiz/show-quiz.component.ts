@@ -38,9 +38,10 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.currentUser = await this.authenticationService.getCurrentUser();
-    this.currentUserAnswerForQuiz = await this.quizCrudService
-      .getUserAnswerForQuiz(this.quiz, this.currentUser.id, true);
-    this.selectedAnswerId =  this.currentUserAnswerForQuiz.answerId;
+    this.currentUserAnswerForQuiz = await this.quizCrudService.getUserAnswerForQuiz(this.quiz, this.currentUser.id, true);
+    if (this.currentUserAnswerForQuiz) {
+      this.selectedAnswerId = this.currentUserAnswerForQuiz.answerId;
+    }
   }
 
   ngOnDestroy(): void {
