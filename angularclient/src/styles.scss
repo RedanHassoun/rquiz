@@ -57,8 +57,16 @@ body {
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
+  margin-top: 10pt;
 }
 
 .quiz-list-item {
   width: 90%;
+}
+
+.page-title-medium {
+  font-size: $content-medium-font-size;
+  margin: 5pt;
+  margin-left: 15pt;
+  font-weight: bold;
 }

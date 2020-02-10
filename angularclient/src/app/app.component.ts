@@ -26,8 +26,8 @@ export class AppComponent implements OnInit {
   appPages = new Map<string, string>([
     ['home', 'Home'],
     ['profile', 'My profile'],
-    [this.appConsts.MY_QUIZ_LIST, 'My Quiz List'],
-    [this.appConsts.MY_ASSIGNED_QUIZ_LIST, 'Assigned To Me'],
+    [this.appConsts.MY_QUIZ_LIST, this.appConsts.MY_QUIZ_LIST_DISPLAY],
+    [this.appConsts.MY_ASSIGNED_QUIZ_LIST, this.appConsts.MY_ASSIGNED_QUIZ_LIST_DISPLAY],
     ['users', 'Users'],
     ['logout', 'Logout']
   ]);

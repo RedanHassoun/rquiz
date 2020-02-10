@@ -7,7 +7,9 @@ export class AppConsts {
 
     // Routes
     public static readonly MY_QUIZ_LIST = 'myquizlist';
+    public static readonly MY_QUIZ_LIST_DISPLAY = 'My Quiz List';
     public static readonly MY_ASSIGNED_QUIZ_LIST = 'my-assigned-quiz-list';
+    public static readonly MY_ASSIGNED_QUIZ_LIST_DISPLAY = 'Assigned To Me';
 
     // Error messages
     public static readonly SESSION_EXPIRED_ERROR = 'Session expired please login again';

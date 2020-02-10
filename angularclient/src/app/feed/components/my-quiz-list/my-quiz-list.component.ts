@@ -1,3 +1,4 @@
+import { AppConsts } from './../../../shared/util/app-consts';
 import { TOPIC_QUIZ_DELETED_UPDATE } from './../../../core/common/socket-consts';
 import { TOPIC_QUIZ_ANSWERS_UPDATE } from 'src/app/core/common/socket-consts';
 import { QuizCrudService } from './../../services/quiz-crud.service';
@@ -25,6 +26,7 @@ export class MyQuizListComponent implements OnInit {
   public quizList: Quiz[] = [];
   public currentUserId: string;
   public pagingStrategy: PagingDataFetchStrategy;
+  appConsts: any = AppConsts; // TODO: make this more elegant
 
   constructor(private pagingStrategyFactory: PagingStrategyFactory,
     private notificationService: NotificationService,
@@ -75,5 +77,9 @@ export class MyQuizListComponent implements OnInit {
       AppUtil.triggerLoadingIndicatorStop();
     }
     this.quizList = _.concat(this.quizList, newQuizList);
+  }
+
+  getPageTitle(): string {
+    return this.appConsts.MY_QUIZ_LIST_DISPLAY;
   }
 }
