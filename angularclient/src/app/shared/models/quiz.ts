@@ -72,4 +72,17 @@ export class Quiz {
         }
         return false;
     }
+
+    public getAnswerById(answerId: string): string {
+        const quizAnswers: QuizAnswer[] = this.answers;
+        if (!quizAnswers) {
+            return null;
+        }
+        for (const answer of quizAnswers) {
+          if (answer.id === answerId) {
+            return answer.content;
+          }
+        }
+        return null;
+      }
 }

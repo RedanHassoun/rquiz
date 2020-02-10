@@ -1,4 +1,3 @@
-import { QuizAnswer } from './../../models/quiz-answer';
 import { AppUtil } from '../../util/app-util';
 import { UserAnswer } from 'src/app/shared/models/user-answer';
 import { USER_ANSWERS_FOR_QUIZ } from '../../factories/paging-strategy-factory';
@@ -36,14 +35,8 @@ export class UserAnswersListComponent implements OnInit {
     this.userAnswersList = _.concat(this.userAnswersList, newQuizList);
   }
 
-  getAnswerById(answerId: string): string {
-    const quizAnswers: QuizAnswer[] = this.quiz.answers;
-    for (const answer of quizAnswers) {
-      if (answer.id === answerId) {
-        return answer.content;
-      }
-    }
-    return null;
+  getQuizAnswer(id: string): string {
+    return this.quiz.getAnswerById(id);
   }
 
   shouldShowList(): boolean {
