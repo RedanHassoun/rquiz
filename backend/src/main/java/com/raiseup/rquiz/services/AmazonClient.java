@@ -44,22 +44,16 @@ public class AmazonClient {
                 .build();
     }
 
-    public String uploadFile(MultipartFile multipartFile) {
-        File fileToUpload = null;
+    public String uploadFile(File fileToUpload) {
         String fileUrl = "";
 
         try {
-            fileToUpload = convertMultiPartToFile(multipartFile);
-            String fileName = generateFileName(multipartFile);
+            String fileName = generateFileName(fileToUpload);
             fileUrl = String.format("https://s3.%s.amazonaws.com/%s/%s", this.AWS_S3_REGION, this.bucketName, fileName);
             uploadFileTos3bucket(fileName, fileToUpload);
         } catch (Exception ex) {
-            final String fileName = multipartFile != null ? multipartFile.getOriginalFilename() : null;
+            final String fileName = fileToUpload != null ? fileToUpload.getName() : null;
             this.logger.error(String.format("Cannot upload file: %s to amazon s3", fileName), ex);
-        } finally {
-            if (fileToUpload != null) {
-                fileToUpload.delete();
-            }
         }
 
         return fileUrl;
@@ -75,18 +69,10 @@ public class AmazonClient {
         s3client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
     }
 
-    private File convertMultiPartToFile(MultipartFile multiPartFile) throws IOException {
-        File convertedFile = new File(multiPartFile.getOriginalFilename());
-        FileOutputStream fos = new FileOutputStream(convertedFile);
-        fos.write(multiPartFile.getBytes());
-        fos.close();
-        return convertedFile;
-    }
-
-    private String generateFileName(MultipartFile multiPart) {
+    private String generateFileName(File file) {
         return new Date().getTime() +
                     "-" +
-                    multiPart.getOriginalFilename().replace(" ", "_");
+                    file.getName().replace(" ", "_");
     }
 
     private void uploadFileTos3bucket(String fileName, File file) {
