@@ -30,7 +30,7 @@ export class PeopleListComponent implements OnInit {
       AppUtil.triggerLoadingIndicatorStop();
     }
 
-    this.users = _.concat(this.users, newUsers);
+    this.users = _.unionWith(this.users, newUsers, (user, otherUser) => user.username === otherUser.username );
   }
 
   async searchQueryChanged(searchQuery: string): Promise<void> {
