@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalOperationException(
                     "Cannot start users search, search query must be defined");
         }
-        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+)");
+        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(.*)");
         Matcher matcher = pattern.matcher(searchQuery);
         if (!matcher.find()) {
             throw new IllegalOperationException(
