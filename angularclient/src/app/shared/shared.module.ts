@@ -1,3 +1,5 @@
+import { UserItemComponent } from './../users/components/user-item/user-item.component';
+import { PeopleListComponent } from './../users/components/people-list/people-list.component';
 import { UserAnswersListComponent } from './components/user-answers-list/user-answers-list.component';
 import { CreateQuizComponent } from '../feed/components/create-quiz/create-quiz.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -19,12 +21,12 @@ import { ShowQuizComponent } from '../feed/components/show-quiz/show-quiz.compon
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { QuizItemComponent } from '../feed/components/quiz-item/quiz-item.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { UserNotificationsListComponent } from './components/user-notifications-list/user-notifications-list.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { PageableComponent } from './components/pageable/pageable.component';
+import { SearchComponent } from './components/search/search.component';
 
 @NgModule({
   declarations: [
@@ -32,11 +34,11 @@ import { PageableComponent } from './components/pageable/pageable.component';
     ConfirmationDialogComponent,
     CreateQuizComponent,
     ShowQuizComponent,
-    QuizItemComponent,
     EditProfileComponent,
     UserNotificationsListComponent,
     SpinnerComponent,
-    UserAnswersListComponent
+    UserAnswersListComponent,
+    SearchComponent
   ],
   imports: [
     CommonModule,
@@ -81,10 +83,10 @@ import { PageableComponent } from './components/pageable/pageable.component';
     MatCheckboxModule,
     MatTooltipModule,
     NgMultiSelectDropDownModule,
-    QuizItemComponent,
     MatBadgeModule,
     SpinnerComponent,
-    PageableComponent
+    PageableComponent,
+    SearchComponent
   ]
 })
 export class SharedModule { }

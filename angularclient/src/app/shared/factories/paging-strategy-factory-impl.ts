@@ -11,7 +11,7 @@ import { PagingStrategyFactory, MY_ASSIGNED_QUIZ_URL, MY_QUIZ_URL, Service, USER
 
 @Injectable()
 export class PagingStrategyFactoryImpl extends PagingStrategyFactory {
-
+    private static readonly DEFAULT_PAGE_SIZE = 50;
     constructor(private authService: AuthenticationService,
         private userService: UserService,
         private quizService: QuizService) {
@@ -21,7 +21,7 @@ export class PagingStrategyFactoryImpl extends PagingStrategyFactory {
     public async createCustomUrlStrategy(endpointUrl: string,
         urlParameters?: Map<string, string>,
         pageSize?: number): Promise<PagingDataFetchStrategy> {
-        const thePageSize: number = pageSize ? pageSize : QuizService.PAGE_SIZE;
+        const thePageSize: number = pageSize ? pageSize : PagingStrategyFactoryImpl.DEFAULT_PAGE_SIZE;
         switch (endpointUrl) {
             case MY_ASSIGNED_QUIZ_URL: {
                 this.validateParameters(urlParameters, ['currentUserId']);
@@ -85,6 +85,6 @@ export class PagingStrategyFactoryImpl extends PagingStrategyFactory {
         }
         return new ParameterFetchingStrategy(serviceForFetching,
             paramMap,
-            pageSize ? pageSize : QuizService.PAGE_SIZE);
+            pageSize ? pageSize : PagingStrategyFactoryImpl.DEFAULT_PAGE_SIZE);
     }
 }

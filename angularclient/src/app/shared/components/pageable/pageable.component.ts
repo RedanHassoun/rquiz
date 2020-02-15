@@ -13,6 +13,7 @@ import * as _ from 'lodash';
 })
 export class PageableComponent implements OnInit, OnChanges, OnDestroy {
   @Input() public pagingStrategy: PagingDataFetchStrategy;
+  @Input() public searchMode = false;
   @Output() public dataListChanged = new EventEmitter();
   private subscriptions: Subscription[] = [];
   totalItemsCount = 0;
@@ -29,6 +30,12 @@ export class PageableComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes.hasOwnProperty('pagingStrategy')) {
       return;
+    }
+
+    if (!!this.searchMode) {
+      this.page = 0;
+      this.totalItemsCount = 0;
+      this.finished = false;
     }
 
     if (this.page === 0 && this.totalItemsCount === 0) {

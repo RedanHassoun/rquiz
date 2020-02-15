@@ -1,3 +1,4 @@
+import { QuizItemComponent } from './feed/components/quiz-item/quiz-item.component';
 import { MyAssignedQuizComponent } from './feed/components/my-assigned-quiz/my-assigned-quiz.component';
 import { MyQuizListComponent } from './feed/components/my-quiz-list/my-quiz-list.component';
 import { QuizListComponent } from './feed/components/quiz-list/quiz-list.component';
@@ -22,7 +23,8 @@ import { PagingStrategyFactoryImpl } from './shared/factories/paging-strategy-fa
     NotFoundComponent,
     QuizListComponent,
     MyQuizListComponent, // TODO: check the lazy loading issue
-    MyAssignedQuizComponent
+    MyAssignedQuizComponent,
+    QuizItemComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,36 @@
+@import "~compass-mixins/lib/compass/css3";
+@import "./../../../variables.scss";
+
+$border-radius: 60px;
+$image-size: 10vh;
+
+.img-wrapper {
+  margin-right: 30px;
+  margin-left: 30px;
+  background-color: $image-background-color;
+  @include border-radius($border-radius);
+  padding: 10px;
+  background-color: $image-background-color;
+}
+
+.img-wrapper img {
+  width: $image-size;
+  @include border-radius($border-radius);
+}
+
+.content-wrapper {
+    margin-left: 10pt;
+    font-weight: bold;
+    font-size: $content-medium-font-size;
+}
+
+.user-item-container {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    margin-bottom: $margin-between-posts;
+    background-color: $quiz-background-color;
+    @include border-radius($border-radius);
+    text-overflow: ellipsis;
+  }
+  

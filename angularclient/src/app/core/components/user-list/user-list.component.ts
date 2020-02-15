@@ -1,3 +1,5 @@
+import { AppConsts } from './../../../shared/util/app-consts';
+import { ClientDataService } from './../../../shared/services/client-data.service';
 import { AppUtil } from './../../../shared/util/app-util';
 import { UserService } from '../../services/user-service.service';
 import { User } from '../../../shared/models/user';
@@ -28,6 +30,6 @@ export class UserListComponent implements OnInit {
       AppUtil.handleNullError('User');
     }
 
-    this.router.navigate(['users', user.id]);
+    this.router.navigate([AppConsts.PEOPLE_LIST, user.id]);
   }
 }

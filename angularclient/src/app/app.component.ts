@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
     ['profile', 'My profile'],
     [this.appConsts.MY_QUIZ_LIST, this.appConsts.MY_QUIZ_LIST_DISPLAY],
     [this.appConsts.MY_ASSIGNED_QUIZ_LIST, this.appConsts.MY_ASSIGNED_QUIZ_LIST_DISPLAY],
-    ['users', 'Users'],
+    [this.appConsts.PEOPLE_LIST, this.appConsts.PEOPLE_LIST_DISPLAY],
     ['logout', 'Logout']
   ]);
   myNotificationsCount: number;
@@ -94,7 +94,7 @@ export class AppComponent implements OnInit {
   async openCurrentUserProfile() {
     const user: User = await this.authService.getCurrentUser();
 
-    this.router.navigate(['users', user.id], { replaceUrl: true });
+    this.router.navigate([AppConsts.PEOPLE_LIST, user.id], { replaceUrl: true });
   }
 
   goToPage(pageName: string): void {
@@ -111,8 +111,8 @@ export class AppComponent implements OnInit {
       case AppConsts.MY_ASSIGNED_QUIZ_LIST:
         this.router.navigate([AppConsts.MY_ASSIGNED_QUIZ_LIST], { replaceUrl: true });
         break;
-      case 'users':
-        this.router.navigate(['users'], { replaceUrl: true });
+      case AppConsts.PEOPLE_LIST:
+        this.router.navigate([AppConsts.PEOPLE_LIST], { replaceUrl: true });
         break;
       case 'logout':
         this.navigationService

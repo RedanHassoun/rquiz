@@ -49,8 +49,27 @@ public class UserController {
     }
 
     @GetMapping("/api/v1/users/all")
-    public List<UserDto> getUsers() throws Exception {
+    public List<UserDto> getUsers(@RequestParam(required = false, value = "search") String search,
+                                  @RequestParam(required = false) Integer page,
+                                  @RequestParam(required = false) Integer size) throws Exception {
         try{
+            if(!AppUtils.isPaginationParamsValid(page, size)){
+                throw new IllegalOperationException(
+                        "In order to use pagination you must provide both page and size");
+            }
+            if (search != null) {
+                return this.usersService.search(search, size, page)
+                        .stream()
+                        .map(user -> this.dtoMapper.convertUserToDto(user))
+                        .collect(Collectors.toList());
+            }
+
+            if (page != null &&  size != null) {
+                return this.usersService.readAll(size, page)
+                        .stream()
+                        .map(user -> this.dtoMapper.convertUserToDto(user))
+                        .collect(Collectors.toList());
+            }
             return this.usersService.readAll()
                     .stream()
                     .map(user -> this.dtoMapper.convertUserToDto(user))

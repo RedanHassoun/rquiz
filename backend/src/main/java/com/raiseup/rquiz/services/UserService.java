@@ -9,7 +9,8 @@ public interface UserService {
     User create (User user) throws AppException;
     Optional<User> read(String id) throws AppException;
     Collection<User> readAll ();
-    Collection<User> readAll (int size, int page);
+    Collection<User> readAll (Integer size, Integer page);
+    Collection<User> search (String searchQuery, Integer size, Integer page) throws AppException;
     void update (User user) throws AppException;
     void delete (String id);
 }

@@ -10,6 +10,8 @@ export class AppConsts {
     public static readonly MY_QUIZ_LIST_DISPLAY = 'My Quiz List';
     public static readonly MY_ASSIGNED_QUIZ_LIST = 'my-assigned-quiz-list';
     public static readonly MY_ASSIGNED_QUIZ_LIST_DISPLAY = 'Assigned To Me';
+    public static readonly PEOPLE_LIST = 'people';
+    public static readonly PEOPLE_LIST_DISPLAY = 'People';
 
     // Error messages
     public static readonly SESSION_EXPIRED_ERROR = 'Session expired please login again';

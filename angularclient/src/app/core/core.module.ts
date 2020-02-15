@@ -21,8 +21,7 @@ import { FormInputComponent } from '../shared/components/form-input/form-input.c
   imports: [
     CommonModule,
     SharedModule,
-    AppJwtModule,
-    AppRoutingModule
+    AppJwtModule
   ]
 })
 export class CoreModule { }
