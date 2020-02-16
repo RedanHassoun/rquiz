@@ -1,6 +1,6 @@
 <div *ngIf="shouldShowList(); else no_answers">
   <div *ngFor="let answer of userAnswersList">
-    {{ answer.username }}: {{ getQuizAnswer(answer.answerId) }}
+    <span id="username">{{ answer.username }}:</span> {{ getQuizAnswer(answer.answerId) }}
   </div>
 </div>
 

@@ -13,8 +13,6 @@ import { FormInputComponent } from './../../../shared/components/form-input/form
 })
 export class RegisterComponent extends FormInputComponent implements OnInit {
   registerForm: FormGroup;
-  loading = false;
-  submitted = false;
 
   constructor(private authService: AuthenticationService,
     private formBuilder: FormBuilder,
@@ -46,18 +44,22 @@ export class RegisterComponent extends FormInputComponent implements OnInit {
     registerRequest.password = this.registerForm.value.password;
     registerRequest.email = this.registerForm.value.email;
 
-    this.loading = true;
+    AppUtil.triggerLoadingIndicator();
     this.authService.register(registerRequest).subscribe(response => {
-      this.loading = false;
+      AppUtil.triggerLoadingIndicatorStop();
       this.router.navigate(['/login']);
     }, (err) => {
-      this.loading = false;
+      AppUtil.triggerLoadingIndicatorStop();
       AppUtil.showError(err);
     });
   }
 
+  cancelRegister(): void {
+    this.router.navigate(['/login']);
+  }
+
   isRegisterButtonDisabled(): boolean {
-    return this.loading || this.registerForm.invalid;
+    return this.registerForm.invalid;
   }
 
   get form() {

@@ -33,10 +33,6 @@ public class UserNotificationServiceImpl implements UserNotificationService {
                     "Cannot save notification %s because the content is not defined", userNotification.getId()));
         }
 
-        final String content = userNotification.getContent();
-        final String contentMinified = content.replaceAll("[\\n\\t ]", "");
-        userNotification.setContent(contentMinified);
-
         return Optional.of(this.userNotificationRepository.save(userNotification));
     }
 
