@@ -27,6 +27,7 @@
     "bootstrap": "4.4.1",
     "compass-mixins": "0.12.10",
     "core-js": "^2.5.4",
+    "javascript-time-ago": "2.0.7",
     "net": "1.0.2",
     "ng-multiselect-dropdown": "0.2.5",
     "ngx-infinite-scroll": "7.1.0",

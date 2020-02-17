@@ -13,15 +13,17 @@
         <span *ngFor="let user of getAssignedUsers(); let isLast=last">
           <a (click)="showUser(user)">{{user.username}}{{isLast ? '' : ', '}}</a>
         </span>
+        <small class="text-secondary time-ago">({{ getTimeAgo() }})</small>
       </div>
 
       <ng-template #publicQuiz>
-        Public quiz posted by you
+        Public quiz posted by you  <small class="text-secondary time-ago">({{ getTimeAgo() }})</small>
       </ng-template>
     </div>
 
     <ng-template #createdByAnotherUser>
-      <div>Posted by: <a (click)="showUser(quiz.creator)">{{ quiz.creator.username }}</a></div>
+      <div>Posted by: <a (click)="showUser(quiz.creator)">{{ quiz.creator.username }}</a>
+        <small class="text-secondary time-ago">({{ getTimeAgo() }})</small> </div>
     </ng-template>
 
     <div class="action-btns-container">

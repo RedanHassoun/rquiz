@@ -41,6 +41,7 @@ export class PeopleListComponent implements OnInit {
       return;
     }
 
+    // TODO: don't use magic string (username)
     this.pagingStrategy = await this.searchService.createSearchPageableStrategy(
       Service.User, 'username', searchQuery);
   }

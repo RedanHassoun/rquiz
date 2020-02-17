@@ -1,6 +1,6 @@
 package com.raiseup.rquiz.models;
 
-public class UserAnswerDto {
+public class UserAnswerDto extends BaseDto {
     private String id;
     private String quizId;
     private String userId;

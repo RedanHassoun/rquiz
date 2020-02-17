@@ -8,6 +8,7 @@ import { PagingDataFetchStrategy } from '../../../core/strategies/paging-data-fe
 import { Subscription } from 'rxjs';
 import { Component, OnInit, Inject } from '@angular/core';
 import * as _ from 'lodash';
+import { TimeAgo } from 'javascript-time-ago';
 
 @Component({
   selector: 'app-user-answers-list',
@@ -42,5 +43,8 @@ export class UserAnswersListComponent implements OnInit {
   shouldShowList(): boolean {
     return this.userAnswersList && this.userAnswersList.length > 0;
   }
-}
 
+  getTimeAgo(userAnswer: UserAnswer): string {
+    return AppUtil.getTimeAgo(userAnswer);
+  }
+}

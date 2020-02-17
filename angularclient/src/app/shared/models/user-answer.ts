@@ -1,5 +1,6 @@
+import { BaseModel } from './base-model';
 
-export class UserAnswer {
+export class UserAnswer extends BaseModel {
     id: string;
     quizId: string;
     userId: string;

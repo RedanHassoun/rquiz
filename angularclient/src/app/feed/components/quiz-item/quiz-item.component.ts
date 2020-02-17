@@ -98,4 +98,8 @@ export class QuizItemComponent implements AfterContentInit, OnDestroy {
   ngOnDestroy(): void {
     AppUtil.releaseSubscriptions(this.subscriptions);
   }
+
+  getTimeAgo(): string {
+    return AppUtil.getTimeAgo(this.quiz);
+  }
 }

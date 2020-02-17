@@ -27,6 +27,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { PageableComponent } from './components/pageable/pageable.component';
 import { SearchComponent } from './components/search/search.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { SearchComponent } from './components/search/search.component';
     NgMultiSelectDropDownModule.forRoot(),
     MatSidenavModule,
     MatBadgeModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    MatDividerModule
   ],
   entryComponents: [
     UserNotificationsListComponent,

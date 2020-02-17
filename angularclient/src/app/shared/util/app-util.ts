@@ -1,3 +1,4 @@
+import { BaseModel } from './../models/base-model';
 import { TOPIC_USER_UPDATE } from './../../core/common/socket-consts';
 import { User } from './../models/user';
 import { AppNotificationMessage } from './../../core/common/socket-consts';
@@ -10,6 +11,11 @@ import { throwError } from 'rxjs';
 import * as _ from 'lodash';
 import { HttpErrorResponse } from '@angular/common/http';
 import { StopLoadingIndicator, StartLoadingIndicator } from '../decorators/spinner-decorators';
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en';
+
+TimeAgo.addLocale(en);
+const timeAgo = new TimeAgo('en-US');
 
 export class AppUtil {
     public static removeById(items: any[], id: string): void {
@@ -28,18 +34,18 @@ export class AppUtil {
         }
     }
 
-    public static handleError(error: HttpErrorResponse): Observable<never> {
-        const bodyContent: string = error.message;
+    public static handleError(errorResponse: HttpErrorResponse): Observable<never> {
+        const bodyContent: string = errorResponse.error.message;
 
-        if (error.status === 400) {
+        if (errorResponse.status === 400) {
             return throwError(new BadInputError(bodyContent));
         }
 
-        if (error.status === 404) {
+        if (errorResponse.status === 404) {
             return throwError(new NotFoundError(bodyContent));
         }
 
-        if (error.status === 403 || error.status === 401) {
+        if (errorResponse.status === 403 || errorResponse.status === 401) {
             return throwError(new AccessDeniedError(bodyContent));
         }
 
@@ -110,5 +116,14 @@ export class AppUtil {
 
     @StopLoadingIndicator
     public static triggerLoadingIndicatorStop() {
+    }
+
+    public static getTimeAgo(obj: BaseModel): string {
+        if (!obj || !obj.createdAt) {
+            return null;
+        }
+
+        const createdDate = new Date(obj.createdAt);
+        return timeAgo.format(createdDate.getTime());
     }
 }

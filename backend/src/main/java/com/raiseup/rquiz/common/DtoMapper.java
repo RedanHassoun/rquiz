@@ -23,6 +23,8 @@ public class DtoMapper {
 
     public QuizDto convertQuizToDto(Quiz quiz) {
         QuizDto quizDto = this.modelMapper.map(quiz, QuizDto.class);
+        quizDto.setCreatedAt(quiz.getCreatedAt());
+        quizDto.setUpdatedAt(quiz.getUpdatedAt());
         Set<QuizAnswerDto> answers = new HashSet<>();
 
         if(quiz.getAnswers() != null){
@@ -86,6 +88,8 @@ public class DtoMapper {
 
     public UserAnswerDto convertUserAnswerToDto(UserAnswer userAnswer) {
         UserAnswerDto userAnswerDto = new UserAnswerDto();
+        userAnswerDto.setCreatedAt(userAnswer.getCreatedAt());
+        userAnswerDto.setUpdatedAt(userAnswer.getUpdatedAt());
         userAnswerDto.setId(userAnswer.getId());
         userAnswerDto.setAnswerId(userAnswer.getQuizAnswer().getId());
         userAnswerDto.setUserId(userAnswer.getUser().getId());
@@ -117,6 +121,8 @@ public class DtoMapper {
 
     public UserDto convertUserToDto(User user){
         UserDto userDto = this.modelMapper.map(user, UserDto.class);
+        userDto.setCreatedAt(user.getCreatedAt());
+        userDto.setUpdatedAt(user.getUpdatedAt());
         return userDto;
     }
 

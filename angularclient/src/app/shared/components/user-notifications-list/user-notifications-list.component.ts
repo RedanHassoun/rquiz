@@ -71,7 +71,7 @@ export class UserNotificationsListComponent implements OnInit, OnDestroy {
   }
 
   shouldShowClearAllButton(): boolean {
-    return this.notifications && this.notifications.length > 1;
+    return this.notifications && this.notifications.length > 0;
   }
 
   ngOnDestroy(): void {

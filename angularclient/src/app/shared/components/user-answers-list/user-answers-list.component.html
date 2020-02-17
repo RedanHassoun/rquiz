@@ -1,6 +1,10 @@
 <div *ngIf="shouldShowList(); else no_answers">
-  <div *ngFor="let answer of userAnswersList">
-    <span id="username">{{ answer.username }}:</span> {{ getQuizAnswer(answer.answerId) }}
+  <div *ngFor="let answer of userAnswersList; let lastItem = last;">
+    <span id="username">{{ answer.username }}:</span> <br/>
+    <span class="answer-content">{{ getQuizAnswer(answer.answerId) }}</span>
+    <div class="text-secondary time-ago"><small>{{ getTimeAgo(answer) }}</small></div>
+
+    <mat-divider *ngIf="!lastItem"></mat-divider>
   </div>
 </div>
 

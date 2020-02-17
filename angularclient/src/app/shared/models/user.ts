@@ -1,4 +1,5 @@
-export class User {
+import { BaseModel } from './base-model';
+export class User extends BaseModel {
     id: string;
     username: string;
     email: string;
@@ -7,3 +8,4 @@ export class User {
     totalNumberOfAnswers: number;
     totalNumberOfCorrectAnswers: number;
 }
+

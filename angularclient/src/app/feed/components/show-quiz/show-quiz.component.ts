@@ -90,7 +90,7 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
 
   solve(): void {
     if (!this.selectedAnswerId) {
-      AppUtil.handleNullError('The selected answer ID');
+      AppUtil.showErrorMessage('Please choose an answer');
     }
 
     const answer: QuizAnswer = this.quiz.answers

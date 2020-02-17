@@ -2,13 +2,12 @@ package com.raiseup.rquiz.models;
 
 import java.util.Date;
 
-public class UserDto {
+public class UserDto extends BaseDto {
     private String id;
     private String username;
     private String email;
     private String imageUrl;
     private String about;
-    private Date createdAt;
     private Long totalNumberOfAnswers;
     private Long totalNumberOfCorrectAnswers;
 
@@ -50,14 +49,6 @@ public class UserDto {
 
     public void setAbout(String about) {
         this.about = about;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
     public Long getTotalNumberOfAnswers() {

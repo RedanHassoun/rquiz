@@ -113,7 +113,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     }
 
     if (!this.quiz.hasCorrectAnswer()) {
-      AppUtil.showWarningMessage('You must choose a correct answer');
+      AppUtil.showWarningMessage('Please choose a correct answer');
       return;
     }
 

@@ -1,10 +1,11 @@
+import { BaseModel } from './base-model';
 import { AlreadyExistError } from './../app-errors/already-exist-error';
 import { UserAnswer } from './user-answer';
 import { QuizAnswer } from './quiz-answer';
 import { User } from './user';
 import * as _ from 'lodash';
 
-export class Quiz {
+export class Quiz extends BaseModel {
     id: string;
     title: string;
     description: string;
