@@ -25,7 +25,6 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,8 +72,6 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistException(errorMsg);
         }
 
-        String id = UUID.randomUUID().toString();
-        user.setId(id);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         applicationUserRepository.save(user);
         return this.applicationUserRepository.findByUsername(user.getUsername());
@@ -150,31 +147,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(User user) throws AppException {
-        if(user == null || user.getId() == null) {
+    public void update(User userToUpdate) throws AppException {
+        if(userToUpdate == null || userToUpdate.getId() == null) {
             AppUtils.throwAndLogException(
                     new IllegalOperationException("Cannot update user, user must be defined and has an Id"));
         }
 
-        Optional<User> userFromDBOptional = this.applicationUserRepository.findById(user.getId());
-        if(!userFromDBOptional.isPresent()){
-            AppUtils.throwAndLogException(new UserNotFoundException(String.format(
-                    "Cannot update user %s because it is not found", user.getId())));
-        }
-        final User userFromDB = userFromDBOptional.get();
-        final String previousImageUrl = userFromDB.getImageUrl();
-        this.transactionTemplate.execute(status -> {
-            userFromDB.setImageUrl(user.getImageUrl());
-            userFromDB.setAbout(user.getAbout());
-            return this.applicationUserRepository.save(userFromDB);
+        User userBeforeUpdate = this.transactionTemplate.execute(status -> {
+            Optional<User> userFromDBOptional = this.applicationUserRepository.findById(userToUpdate.getId());
+            if(!userFromDBOptional.isPresent()){
+                return null;
+            }
+
+            final User userToReturn = new User(userFromDBOptional.get());
+            final User userToModify = userFromDBOptional.get();
+            userToModify.setImageUrl(userToUpdate.getImageUrl());
+            userToModify.setAbout(userToUpdate.getAbout());
+            this.applicationUserRepository.save(userToModify);
+            return userToReturn;
         });
+
+        if (userBeforeUpdate == null) {
+            AppUtils.throwAndLogException(new UserNotFoundException(String.format(
+                    "Cannot update user %s because it is not found", userToUpdate.getId())));
+        }
+
         try {
-            if (previousImageUrl != null) {
-                this.amazonClient.deleteFileFromS3Bucket(previousImageUrl);
+            if (userBeforeUpdate.getImageUrl() != null &&
+                    !userBeforeUpdate.getImageUrl().equals(userToUpdate.getImageUrl())) {
+                this.amazonClient.deleteFileFromS3Bucket(userBeforeUpdate.getImageUrl());
             }
         } catch (Exception ex) {
             this.logger.error(String.format("Cannot delete previous image URL for user: %s, image url: %s",
-                    userFromDB.getId(), previousImageUrl), ex);
+                    userBeforeUpdate.getId(), userBeforeUpdate.getImageUrl()), ex);
         }
     }
 

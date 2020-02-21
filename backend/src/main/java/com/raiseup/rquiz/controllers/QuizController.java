@@ -59,6 +59,7 @@ public class QuizController {
             Quiz quiz = this.dtoMapper.convertQuizDtoToEntity(quizDto);
 
             Quiz quizFromDB = this.quizService.create(quiz);
+            this.logger.debug(String.format("Created quiz: %s", quizFromDB.toString()));
             QuizDto quizToReturn = this.dtoMapper.convertQuizToDto(quizFromDB);
             return new ResponseEntity<>(quizToReturn, HttpStatus.CREATED);
         } catch (Exception ex){

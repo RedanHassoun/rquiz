@@ -14,7 +14,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
+import javax.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -26,16 +29,27 @@ public class QuizServiceImpl implements QuizService {
     private QuizRepository quizRepository;
     private UserAnswerService userAnswerService;
     private ApplicationUserRepository applicationUserRepository;
+    private TransactionTemplate transactionTemplate;
+    private PlatformTransactionManager transactionManager;
     private AmazonClient amazonClient;
 
     public QuizServiceImpl(QuizRepository quizRepository,
                            UserAnswerService userAnswerService,
                            ApplicationUserRepository applicationUserRepository,
-                           AmazonClient amazonClient){
+                           AmazonClient amazonClient,
+                           TransactionTemplate transactionTemplate,
+                           PlatformTransactionManager transactionManager){
         this.quizRepository = quizRepository;
         this.userAnswerService = userAnswerService;
         this.applicationUserRepository = applicationUserRepository;
         this.amazonClient = amazonClient;
+        this.transactionTemplate = transactionTemplate;
+        this.transactionManager = transactionManager;
+    }
+
+    @PostConstruct
+    private void initTransaction() {
+        this.transactionTemplate = new TransactionTemplate(this.transactionManager);
     }
 
     @Override
@@ -180,26 +194,30 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
-    @Transactional
     public void delete(String id) throws AppException {
-        Optional<Quiz> quizOptional = this.quizRepository.findById(id);
-        if(!quizOptional.isPresent()){
+        Quiz deletedQuiz = this.transactionTemplate.execute(status -> {
+            Optional<Quiz> quizOptional = this.quizRepository.findById(id);
+            if(!quizOptional.isPresent()){
+                return null;
+            }
+            Quiz quizFromDB = quizOptional.get();
+            this.quizRepository.delete(quizFromDB);
+            return quizFromDB;
+        });
+
+        if (deletedQuiz == null) {
             AppUtils.throwAndLogException(
                     new QuizNotFoundException(String.format(
                             "Cannot remove quiz %s because it doesn't exist", id)));
         }
 
-        Quiz quizFromDB = quizOptional.get();
-
-        if (quizFromDB.getImageUrl() != null) {
+        if (deletedQuiz.getImageUrl() != null) {
             try {
-                this.amazonClient.deleteFileFromS3Bucket(quizFromDB.getImageUrl());
+                this.amazonClient.deleteFileFromS3Bucket(deletedQuiz.getImageUrl());
             } catch (Exception ex) {
                 this.logger.error(String.format("Cannot delete image for quiz: %s. Image url: %s",
-                        quizFromDB.getId(), quizFromDB.getImageUrl()), ex);
+                        deletedQuiz.getId(), deletedQuiz.getImageUrl()), ex);
             }
         }
-
-        this.quizRepository.delete(quizFromDB);
     }
 }

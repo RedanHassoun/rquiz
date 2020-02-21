@@ -2,6 +2,7 @@ package com.raiseup.rquiz.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.raiseup.rquiz.common.AppConstants.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -15,6 +16,10 @@ import java.util.Set;
 @Access(AccessType.FIELD)
 public class User extends BaseModel{
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name=DBConsts.USER_ID)
     private String id;
 
@@ -52,6 +57,24 @@ public class User extends BaseModel{
     @OneToMany(mappedBy = DBConsts.QUIZ_CREATOR_FIELD)
     @JsonIgnore
     private Set<Quiz> ownedQuizList = new HashSet<>();
+
+    public User() {
+    }
+
+    public User(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("Cannot copy user object from null");
+        }
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.imageUrl = user.getImageUrl();
+        this.about = user.getAbout();
+        this.totalNumberOfAnswers = user.getTotalNumberOfAnswers();
+        this.totalNumberOfCorrectAnswers = user.getTotalNumberOfCorrectAnswers();
+
+    }
 
     public Set<UserAnswer> getUserAnswers() {
         return userAnswers;

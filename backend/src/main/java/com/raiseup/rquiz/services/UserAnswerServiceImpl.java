@@ -1,6 +1,5 @@
 package com.raiseup.rquiz.services;
 
-import com.raiseup.rquiz.common.AppConstants;
 import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.exceptions.*;
 import com.raiseup.rquiz.models.db.User;
@@ -105,9 +104,10 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     @Transactional(readOnly = true)
     public Optional<UserAnswer> getQuizAnswerForUser(String quizId, String userId) {
         if (userId == null || quizId == null) {
-            this.logger.error(String.format("Cannot get quiz answer for user %s", userId));
-            throw new IllegalArgumentException(
-                    "Cannot get quiz answer for user, userId and quizId must be defined");
+            final String errorMessage = String.format(
+                    "Cannot get quiz answer for user %s, userId and quizId must be defined", userId);
+            this.logger.error(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
         }
 
         List<UserAnswer> userAnswers = this.userAnswerRepository.find(quizId, userId);
