@@ -37,8 +37,8 @@ public class Quiz extends BaseModel{
     @ManyToMany
     @JoinTable(
             name = DBConsts.TABLE_USER_QUIZ_ASSIGNMENT,
-            joinColumns = @JoinColumn(name = DBConsts.QUIZ_ID),
-            inverseJoinColumns = @JoinColumn(name = DBConsts.USER_ID))
+            joinColumns = @JoinColumn(name = "quiz_" + DBConsts.QUIZ_ID),
+            inverseJoinColumns = @JoinColumn(name = "user_" + DBConsts.USER_ID))
     private Set<User> assignedUsers;
 
     @ManyToOne

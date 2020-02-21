@@ -34,7 +34,6 @@ public class UserServiceImpl implements UserService {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private ApplicationUserRepository applicationUserRepository;
-    private EntityManager entityManager;
     private PlatformTransactionManager transactionManager;
     private TransactionTemplate transactionTemplate;
     private AmazonClient amazonClient;
@@ -43,13 +42,11 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder,
                            ApplicationUserRepository applicationUserRepository,
                            PlatformTransactionManager transactionManager,
-                           EntityManager entityManager,
                            AmazonClient amazonClient,
                            UserAnswerRepository userAnswerRepository){
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.applicationUserRepository = applicationUserRepository;
         this.transactionManager = transactionManager;
-        this.entityManager = entityManager;
         this.amazonClient = amazonClient;
         this.userAnswerRepository = userAnswerRepository;
     }
