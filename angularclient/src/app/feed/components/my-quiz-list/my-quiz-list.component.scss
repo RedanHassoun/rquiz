@@ -1,17 +1,5 @@
 @import '~compass-mixins/lib/compass/css3';
-@import url(https://fonts.googleapis.com/css?family=Pacifico);
 @import './../../../variables.scss';
-
-$size:150px;
-$bg:#CDE;
-
-h1#header{
-  text-align: center;
-  padding:50px;
-  font-size: $rquiz-title-font-size;
-  font-family: "Pacifico";
-  @include text-shadow(0 2px 2px darken($bg,40%));
-}
 
 .feed-end-msg{
   text-align: center;

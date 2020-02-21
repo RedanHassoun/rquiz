@@ -2,7 +2,7 @@
 @import "./../../../variables.scss";
 
 $border-radius: 60px;
-$image-size: 10vh;
+$image-size: 15vh;
 
 .img-wrapper {
   margin-right: 30px;
@@ -15,6 +15,7 @@ $image-size: 10vh;
 
 .img-wrapper img {
   width: $image-size;
+  height: $image-size;
   @include border-radius($border-radius);
 }
 
