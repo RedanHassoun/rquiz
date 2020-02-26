@@ -38,6 +38,10 @@ export class QuizCrudService {
     }
 
     const quiz: Quiz = JSON.parse(message.content);
+    const quizFilterResult = quizList.filter(q => q.id === quiz.id);
+    if (quizFilterResult && quizFilterResult.length > 0) {
+      return;
+    }
     quizList.unshift(quiz);
   }
 

@@ -50,6 +50,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
 
   @StartLoadingIndicator
   async ngOnInit() {
+    this.dialogRef.disableClose = true;
     this.quiz = new Quiz();
     this.quiz.reset();
     this.addQuizForm = this.formBuilder.group({

@@ -6,4 +6,8 @@
 </div>
 <app-pageable [pagingStrategy]='pagingStrategy' (dataListChanged)="quizListChanged($event)">
 </app-pageable>
+
+<button mat-mini-fab class="fab-add-button" matTooltip="Add Quiz" color="primary"
+  (click)="openCreateQuizDialog()">+</button>
+
 <app-spinner></app-spinner>

@@ -1,5 +1,7 @@
+import { CreateQuizComponent } from './../create-quiz/create-quiz.component';
+import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
 import { AppConsts } from './../../../shared/util/app-consts';
-import { TOPIC_QUIZ_DELETED_UPDATE } from './../../../core/common/socket-consts';
+import { TOPIC_QUIZ_DELETED_UPDATE, TOPIC_QUIZ_ASSIGNED_TO_USER } from './../../../core/common/socket-consts';
 import { TOPIC_QUIZ_ANSWERS_UPDATE } from 'src/app/core/common/socket-consts';
 import { QuizCrudService } from './../../services/quiz-crud.service';
 import { filter } from 'rxjs/operators';
@@ -11,7 +13,7 @@ import { PagingStrategyFactory } from 'src/app/shared/factories/paging-strategy-
 import { AppUtil } from './../../../shared/util/app-util';
 import { Quiz } from './../../../shared/models/quiz';
 import { PagingDataFetchStrategy } from './../../../core/strategies/paging-data-fetch-strategy';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as _ from 'lodash';
 import { StartLoadingIndicator } from './../../../shared/decorators/spinner-decorators';
 import { Subscription } from 'rxjs';
@@ -21,7 +23,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './my-quiz-list.component.html',
   styleUrls: ['./my-quiz-list.component.scss']
 })
-export class MyQuizListComponent implements OnInit {
+export class MyQuizListComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   public quizList: Quiz[] = [];
   public currentUserId: string;
@@ -29,6 +31,7 @@ export class MyQuizListComponent implements OnInit {
   appConsts: any = AppConsts; // TODO: make this more elegant
 
   constructor(private pagingStrategyFactory: PagingStrategyFactory,
+    private navigationService: NavigationHelperService,
     private notificationService: NotificationService,
     private authService: AuthenticationService,
     private quizCrudService: QuizCrudService) {
@@ -51,6 +54,18 @@ export class MyQuizListComponent implements OnInit {
             console.error(`Cannot update quiz list, error: ${ex}`);
             return false;
           }
+        }))
+        .subscribe((message: AppNotificationMessage) => {
+          this.quizCrudService.handleAddedQuiz(message, this.quizList);
+        })
+    );
+
+    this.subscriptions.push(
+      this.notificationService.onMessage(TOPIC_QUIZ_ASSIGNED_TO_USER)
+        .pipe(filter((message: AppNotificationMessage) => {
+          const quiz: Quiz = JSON.parse(message.content);
+          Object.setPrototypeOf(quiz, Quiz.prototype);
+          return quiz.isCreatedByUser(this.currentUserId);
         }))
         .subscribe((message: AppNotificationMessage) => {
           this.quizCrudService.handleAddedQuiz(message, this.quizList);
@@ -81,5 +96,22 @@ export class MyQuizListComponent implements OnInit {
 
   getPageTitle(): string {
     return this.appConsts.MY_QUIZ_LIST_DISPLAY;
+  }
+
+  openCreateQuizDialog() {
+    if (this.navigationService.isMobileMode()) {
+      this.subscriptions.push(
+        this.navigationService.openDialog(CreateQuizComponent, '100vw', null, true).subscribe()
+      );
+    } else {
+      this.subscriptions.push(
+        this.navigationService.openDialog(CreateQuizComponent).subscribe()
+      );
+    }
+
+  }
+
+  ngOnDestroy(): void {
+    AppUtil.releaseSubscriptions(this.subscriptions);
   }
 }
