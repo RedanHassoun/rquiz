@@ -1,5 +1,6 @@
 import { BaseModel } from './base-model';
 export class User extends BaseModel {
+    public static readonly SEARCHABLE_FIELD_USERNAME = 'username';
     id: string;
     username: string;
     email: string;
@@ -8,4 +9,3 @@ export class User extends BaseModel {
     totalNumberOfAnswers: number;
     totalNumberOfCorrectAnswers: number;
 }
-

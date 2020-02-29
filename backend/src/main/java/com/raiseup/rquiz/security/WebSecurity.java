@@ -1,6 +1,5 @@
 package com.raiseup.rquiz.security;
 
-
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import com.raiseup.rquiz.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,9 +14,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.context.annotation.Bean;
-
 import java.util.Arrays;
-
 import static com.raiseup.rquiz.security.SecurityConstants.SIGN_UP_URL;
 
 
@@ -72,5 +69,4 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 }
