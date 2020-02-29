@@ -3,6 +3,12 @@ package com.raiseup.rquiz.common;
 public class AppConstants {
     public static final String ERROR_PAGINATION_PARAMS = "In order to use pagination you must provide both page and size";
 
+    // Security
+    public static final String TOKEN_PREFIX = "Bearer ";
+    public static final String HEADER_STRING = "Authorization";
+    public static final String SIGN_UP_URL = "/users/sign-up";
+    public static final int TOKEN_EXPIRATION_IN_DAYS = 30;
+
     public static class DBConsts {
         public static final String USERS_TABLE_NAME = "app_user";
         public static final String TABLE_USER_QUIZ_ASSIGNMENT = "user_quiz_assignment";

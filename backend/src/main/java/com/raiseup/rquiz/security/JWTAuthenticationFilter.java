@@ -1,6 +1,7 @@
 package com.raiseup.rquiz.security;
 
 import com.auth0.jwt.JWT;
+import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.models.db.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
@@ -16,11 +17,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
-import static com.raiseup.rquiz.security.SecurityConstants.*;
+import static com.raiseup.rquiz.common.AppConstants.HEADER_STRING;
+import static com.raiseup.rquiz.common.AppConstants.TOKEN_EXPIRATION_IN_DAYS;
+import static com.raiseup.rquiz.common.AppConstants.TOKEN_PREFIX;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
+    private String secret = AppUtils.getEnvironmentVariable("RQUIZ_TOKEN_SECRET");
+
     private AuthenticationManager authenticationManager;
     private ApplicationUserRepository applicationUserRepository;
 
@@ -53,12 +60,16 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse res,
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
-        String username = ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername();
+        if (this.secret == null) {
+            throw new NullPointerException(
+                    "RQUIZ_TOKEN_SECRET environment variable should be defined");
+        }
 
+        String username = ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername();
         String token = JWT.create()
                 .withSubject(this.buildTokenSubject(username))
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .sign(HMAC512(SECRET.getBytes()));
+                .withExpiresAt(this.addDaysFromNow(TOKEN_EXPIRATION_IN_DAYS))
+                .sign(HMAC512(this.secret.getBytes()));
 
         res.setHeader("Access-Control-Expose-Headers","Authorization");
         res.setHeader(HEADER_STRING, TOKEN_PREFIX + token);
@@ -73,5 +84,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         jsonUser.put("username", username);
 
         return jsonUser.toString();
+    }
+
+    private Date addDaysFromNow(int numOfDays) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, numOfDays);
+        return calendar.getTime();
     }
 }

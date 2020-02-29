@@ -15,8 +15,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.context.annotation.Bean;
 import java.util.Arrays;
-import static com.raiseup.rquiz.security.SecurityConstants.SIGN_UP_URL;
-
+import static com.raiseup.rquiz.common.AppConstants.SIGN_UP_URL;
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
