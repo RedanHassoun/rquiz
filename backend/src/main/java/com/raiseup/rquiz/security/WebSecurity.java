@@ -1,21 +1,21 @@
 package com.raiseup.rquiz.security;
 
-import com.raiseup.rquiz.repo.ApplicationUserRepository;
+import com.raiseup.rquiz.common.JwtHelper;
 import com.raiseup.rquiz.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.context.annotation.Bean;
 import java.util.Arrays;
-import static com.raiseup.rquiz.common.AppConstants.SIGN_UP_URL;
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
@@ -28,26 +28,28 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     private UserDetailsServiceImpl userDetailsService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private ApplicationUserRepository applicationUserRepository;
+    private JwtHelper jwtHelper;
 
     public WebSecurity(UserDetailsServiceImpl userDetailsService,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
-                       ApplicationUserRepository applicationUserRepository) {
+                       JwtHelper jwtHelper) {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.applicationUserRepository = applicationUserRepository;
+        this.jwtHelper = jwtHelper;
+    }
+
+    @Bean
+    public JWTAuthenticationFilter jWTAuthorizationFilter() {
+        return new JWTAuthenticationFilter(this.jwtHelper);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
-                .antMatchers( "/api/**").authenticated()
+                 .antMatchers( "/api/**").authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), applicationUserRepository))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
-                // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilterAfter(jWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
@@ -56,9 +58,14 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // This Origin header you can see that in Network tab
         configuration.setAllowedOrigins(Arrays.asList(this.serverAddress, this.clientAddress));
         configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("content-type", "Authorization"));

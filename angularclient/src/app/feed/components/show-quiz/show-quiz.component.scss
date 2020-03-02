@@ -11,7 +11,7 @@
 }
 
 .grid-container {
-  max-height: 88vh;
+  max-height: 85vh;
   display: grid;
   grid-gap: 5px;
   grid-template-columns: auto auto auto auto;
@@ -34,14 +34,16 @@
    grid-column: 1 / span 2;
    padding-left: 5px;
    padding-right: 5px;
-   margin-bottom: 10px;
+   padding-bottom: 5pt;
+   margin-bottom: 20pt;
 }
 
 .grid-item-solve {
    grid-column: 3 / span 2;
    padding-left: 5px;
    padding-right: 5px;
-   margin-bottom: 10px;
+   padding-bottom: 5pt;
+   margin-bottom: 20pt;
 }
 
 .quiz-image-display {

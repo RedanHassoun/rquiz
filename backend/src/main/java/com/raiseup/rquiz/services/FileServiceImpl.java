@@ -75,7 +75,7 @@ public class FileServiceImpl implements FileService {
         BufferedImage inputImage = ImageIO.read(imageFile);
         Dimension dimension = this.getProperImageDimensions(inputImage);
         BufferedImage outputImage = new BufferedImage(
-                (int) dimension.getWidth(), (int) dimension.getHeight(), inputImage.getType());
+                (int) dimension.getWidth(), (int) dimension.getHeight(), getImageType(inputImage));
 
         Graphics2D g2d = outputImage.createGraphics();
         g2d.drawImage(inputImage, 0, 0, (int) dimension.getWidth(), (int) dimension.getHeight(), null);
@@ -83,6 +83,18 @@ public class FileServiceImpl implements FileService {
 
         final String extension = FilenameUtils.getExtension(imageFile.getName());
         ImageIO.write(outputImage, extension, imageFile);
+    }
+
+    private Integer getImageType(BufferedImage inputImage) {
+        if (inputImage == null) {
+            return null;
+        }
+
+        if (inputImage.getType() == 0) {
+            return 5;
+        }
+
+        return inputImage.getType();
     }
 
     private Dimension getProperImageDimensions(BufferedImage image) {

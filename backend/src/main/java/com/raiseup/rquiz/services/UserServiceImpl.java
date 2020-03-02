@@ -1,10 +1,12 @@
 package com.raiseup.rquiz.services;
 
 import com.raiseup.rquiz.common.AppUtils;
+import com.raiseup.rquiz.common.JwtHelper;
 import com.raiseup.rquiz.exceptions.AppException;
 import com.raiseup.rquiz.exceptions.IllegalOperationException;
 import com.raiseup.rquiz.exceptions.UserAlreadyExistException;
 import com.raiseup.rquiz.exceptions.UserNotFoundException;
+import com.raiseup.rquiz.models.RegisterRequest;
 import com.raiseup.rquiz.models.db.User;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import com.raiseup.rquiz.repo.SearchCriteria;
@@ -16,39 +18,48 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import static com.raiseup.rquiz.common.AppConstants.TOKEN_SECRET_KEY;
 
 @Service
 public class UserServiceImpl implements UserService {
     private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
+    private String secret = AppUtils.getEnvironmentVariable(TOKEN_SECRET_KEY);
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private ApplicationUserRepository applicationUserRepository;
     private PlatformTransactionManager transactionManager;
     private TransactionTemplate transactionTemplate;
     private AmazonClient amazonClient;
     private UserAnswerRepository userAnswerRepository;
+    private AuthenticationManager authenticationManager;
+    private JwtHelper jwtHelper;
 
     public UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder,
                            ApplicationUserRepository applicationUserRepository,
                            PlatformTransactionManager transactionManager,
                            AmazonClient amazonClient,
-                           UserAnswerRepository userAnswerRepository){
+                           UserAnswerRepository userAnswerRepository,
+                           AuthenticationManager authenticationManager,
+                           JwtHelper jwtHelper){
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.applicationUserRepository = applicationUserRepository;
         this.transactionManager = transactionManager;
         this.amazonClient = amazonClient;
         this.userAnswerRepository = userAnswerRepository;
+        this.authenticationManager = authenticationManager;
+        this.jwtHelper = jwtHelper;
     }
 
     @PostConstruct
@@ -184,5 +195,32 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(String id) {
 
+    }
+
+    @Override
+    public String login(RegisterRequest loginRequest) throws AppException {
+        if (loginRequest == null ||
+                (loginRequest.getUsername() == null && loginRequest.getEmail() == null)) {
+            throw new IllegalOperationException(
+                    "Cannot login because user credentials are not provided");
+        }
+
+        if (loginRequest.getUsername() == null) {
+            User UserFromDB = this.applicationUserRepository.findByEmail(loginRequest.getEmail());
+            loginRequest.setUsername(UserFromDB.getUsername());
+        }
+
+        Authentication authentication = this.authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword(),
+                        new ArrayList<>())
+        );
+
+        if (!authentication.isAuthenticated()) {
+            return null;
+        }
+        User user = this.applicationUserRepository.findByUsername(loginRequest.getUsername());
+        return this.jwtHelper.generateJsonWebToken(user.getId(), user.getUsername());
     }
 }

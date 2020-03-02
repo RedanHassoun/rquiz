@@ -30,6 +30,23 @@ public class UserValidationServiceImpl implements UserValidationService {
     }
 
     @Override
+    public Optional<List<String>> validateLoginRequest(RegisterRequest registerRequest) {
+        if(registerRequest == null) {
+            return Optional.of(Collections.singletonList("Cannot login because the request is not defined"));
+        }
+
+        if(registerRequest.getPassword() == null) {
+            return Optional.of(Collections.singletonList("Cannot login, the password must be defined"));
+        }
+
+        if((registerRequest.getUsername() == null) && (registerRequest.getEmail() == null)) {
+            return Optional.of(Collections.singletonList("Cannot login, username\\email must be provided"));
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public String buildValidationMessage(List<String> validations) {
         if(validations == null){
             throw new NullPointerException("validations list cannot be null");

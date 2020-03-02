@@ -6,8 +6,10 @@ public class AppConstants {
     // Security
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
-    public static final String SIGN_UP_URL = "/users/sign-up";
+    public static final String REGISTER_URL = "/api/v1/users/sign-up";
+    public static final String LOGIN_URL = "/api/v1/users/login";
     public static final int TOKEN_EXPIRATION_IN_DAYS = 30;
+    public static final String TOKEN_SECRET_KEY = "RQUIZ_TOKEN_SECRET";
 
     public static class DBConsts {
         public static final String USERS_TABLE_NAME = "app_user";
