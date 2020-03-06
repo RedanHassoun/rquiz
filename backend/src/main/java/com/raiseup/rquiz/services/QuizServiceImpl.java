@@ -26,21 +26,19 @@ import java.util.Optional;
 @Service
 public class QuizServiceImpl implements QuizService {
     private Logger logger = LoggerFactory.getLogger(QuizServiceImpl.class);
+
     private QuizRepository quizRepository;
-    private UserAnswerService userAnswerService;
     private ApplicationUserRepository applicationUserRepository;
     private TransactionTemplate transactionTemplate;
     private PlatformTransactionManager transactionManager;
     private AmazonClient amazonClient;
 
     public QuizServiceImpl(QuizRepository quizRepository,
-                           UserAnswerService userAnswerService,
                            ApplicationUserRepository applicationUserRepository,
                            AmazonClient amazonClient,
                            TransactionTemplate transactionTemplate,
                            PlatformTransactionManager transactionManager){
         this.quizRepository = quizRepository;
-        this.userAnswerService = userAnswerService;
         this.applicationUserRepository = applicationUserRepository;
         this.amazonClient = amazonClient;
         this.transactionTemplate = transactionTemplate;

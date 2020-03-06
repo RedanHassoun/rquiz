@@ -1,0 +1,12 @@
+@import './../../../variables.scss';
+
+.content-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+.content {
+  color: $app-light-color;
+}

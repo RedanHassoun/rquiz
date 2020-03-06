@@ -1,10 +1,7 @@
 package com.raiseup.rquiz.services;
 
 import com.raiseup.rquiz.models.RegisterRequest;
-import com.raiseup.rquiz.models.UpdateUserRequestDto;
-import com.raiseup.rquiz.models.db.BaseModel;
 import org.springframework.stereotype.Service;
-
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -18,7 +15,6 @@ public class UserValidationServiceImpl implements UserValidationService {
 
     @Override
     public Optional<List<String>> validateRegisterRequest(RegisterRequest registerRequest) {
-        List<String> validationsList = new ArrayList<>();
         if(registerRequest == null) {
             return Optional.of(Collections.singletonList("Cannot register because the request is not defined"));
         }

@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = AppConstants.DBConsts.USER_NOTIFICATION_TABLE_NAME)
@@ -96,5 +97,19 @@ public class UserNotification extends BaseModel {
 
     public void setTargetUser(User targetUser) {
         this.targetUser = targetUser;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserNotification that = (UserNotification) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getContent(), that.getContent());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

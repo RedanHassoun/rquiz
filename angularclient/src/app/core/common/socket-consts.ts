@@ -12,6 +12,7 @@ export function textHandler(message: StompMessage): string {
     return message.body;
 }
 
+// TODO: move to separate file
 export class AppNotificationMessage {
     id: string;
     content: string;

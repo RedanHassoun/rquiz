@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Bean;
 import java.util.Arrays;
 
 @EnableWebSecurity
-public class WebSecurity extends WebSecurityConfigurerAdapter {
+public class RQuizSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${rquiz.serverAddress}")
     private String serverAddress;
@@ -30,9 +30,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private JwtHelper jwtHelper;
 
-    public WebSecurity(UserDetailsServiceImpl userDetailsService,
-                       BCryptPasswordEncoder bCryptPasswordEncoder,
-                       JwtHelper jwtHelper) {
+    public RQuizSecurityConfig(UserDetailsServiceImpl userDetailsService,
+                               BCryptPasswordEncoder bCryptPasswordEncoder,
+                               JwtHelper jwtHelper) {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtHelper = jwtHelper;

@@ -3,7 +3,6 @@ package com.raiseup.rquiz.services;
 import com.raiseup.rquiz.models.BaseDto;
 import com.raiseup.rquiz.models.QuizAnswerDto;
 import com.raiseup.rquiz.models.QuizDto;
-import com.raiseup.rquiz.models.db.QuizAnswer;
 import org.springframework.stereotype.Service;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

@@ -54,8 +54,13 @@ public class AppUtils {
     }
 
     public static String getEnvironmentVariable(String variableName) {
+        String variableValue = null;
         try{
-            return System.getenv(variableName);
+            variableValue = System.getenv(variableName);
+            if (variableValue == null) {
+                logger.error(String.format("Environment variable '%s' must be defined", variableName));
+            }
+            return variableValue;
         }catch (Exception ex) {
             logger.error(String.format("Cannot get variable %s from system environment",
                     variableName), ex);

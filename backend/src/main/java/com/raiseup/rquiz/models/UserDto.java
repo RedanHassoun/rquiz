@@ -1,7 +1,5 @@
 package com.raiseup.rquiz.models;
 
-import java.util.Date;
-
 public class UserDto extends BaseDto {
     private String id;
     private String username;

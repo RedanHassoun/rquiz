@@ -11,6 +11,11 @@ public class AppConstants {
     public static final int TOKEN_EXPIRATION_IN_DAYS = 30;
     public static final String TOKEN_SECRET_KEY = "RQUIZ_TOKEN_SECRET";
 
+    // Amazon AWS environment variable names
+    public static final String AWS_BUCKET_NAME = "S3_BUCKET_NAME";
+    public static final String AWS_ACCESS_KEY = "AWS_ACCESS_KEY_ID";
+    public static final String AWS_SECRET_KEY = "AWS_SECRET_ACCESS_KEY";
+
     public static class DBConsts {
         public static final String USERS_TABLE_NAME = "app_user";
         public static final String TABLE_USER_QUIZ_ASSIGNMENT = "user_quiz_assignment";

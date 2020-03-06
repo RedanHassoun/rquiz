@@ -51,7 +51,7 @@ public class DtoMapper {
         Quiz quiz = this.modelMapper.map(quizDto, Quiz.class);
         Set<QuizAnswerDto> quizAnswersDto = quizDto.getAnswers();
         List<QuizAnswer> quizAnswers = quizAnswersDto.stream()
-                .map(quizAnswerDto -> this.convertQuizAnswerDtoToEntity(quizAnswerDto))
+                .map(this::convertQuizAnswerDtoToEntity)
                 .collect(Collectors.toList());
 
         for(QuizAnswer quizAnswer : quizAnswers) {
@@ -60,7 +60,7 @@ public class DtoMapper {
 
         Set<UserDto> assignedUsers = quizDto.getAssignedUsers();
         Set<User> users = assignedUsers.stream()
-                .map(userDto -> this.convertUserDtoToEntity(userDto))
+                .map(this::convertUserDtoToEntity)
                 .collect(Collectors.toSet());
 
         User quizCreator = this.convertUserDtoToEntity(quizDto.getCreator());

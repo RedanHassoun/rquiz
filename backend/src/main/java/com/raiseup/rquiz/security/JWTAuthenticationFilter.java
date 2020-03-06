@@ -1,6 +1,7 @@
 package com.raiseup.rquiz.security;
 
 import com.raiseup.rquiz.common.JwtHelper;
+import com.raiseup.rquiz.exceptions.InvalidTokenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,6 +41,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+        } catch(InvalidTokenException ex) {
+            logger.info(String.format("Cannot parse token for request %s", req.getRequestURL()));
         } catch (Exception ex) {
             logger.error("Cannot authenticate user", ex);
         }

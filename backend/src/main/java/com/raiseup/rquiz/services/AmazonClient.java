@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.raiseup.rquiz.common.AppConstants;
 import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.controllers.QuizController;
 import com.raiseup.rquiz.exceptions.IllegalOperationException;
@@ -15,11 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Date;
 
 @Component
@@ -31,9 +29,9 @@ public class AmazonClient {
 
     private AmazonS3 s3client;
 
-    private String bucketName = AppUtils.getEnvironmentVariable("S3_BUCKET_NAME");
-    private String accessKey = AppUtils.getEnvironmentVariable("AWS_ACCESS_KEY_ID");
-    private String secretKey = AppUtils.getEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
+    private String bucketName = AppUtils.getEnvironmentVariable(AppConstants.AWS_BUCKET_NAME);
+    private String accessKey = AppUtils.getEnvironmentVariable(AppConstants.AWS_ACCESS_KEY);
+    private String secretKey = AppUtils.getEnvironmentVariable(AppConstants.AWS_SECRET_KEY);
 
     @PostConstruct
     private void initializeAmazon() {
