@@ -1,9 +1,10 @@
+import { AppNotificationMessage } from './../../models/app-notification-message';
 import { switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { FileUploadService } from './../../../core/services/file-upload.service';
 import { UpdateUserRequest } from './../../models/update-user-request';
 import { NotificationService } from './../../../core/services/notification.service';
-import { AppNotificationMessage, TOPIC_USER_UPDATE } from '../../../core/common/socket-consts';
+import { TOPIC_USER_UPDATE } from '../../util/socket-util';
 import { AppUtil } from './../../util/app-util';
 import { UserService } from './../../../core/services/user-service.service';
 import { User } from './../../models/user';

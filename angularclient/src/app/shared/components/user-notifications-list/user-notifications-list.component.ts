@@ -1,9 +1,10 @@
+import { AppNotificationMessage } from './../../models/app-notification-message';
 import { switchMap } from 'rxjs/operators';
 import { NavigationHelperService } from './../../services/navigation-helper.service';
 import { AppUtil } from './../../util/app-util';
 import { Router } from '@angular/router';
 import { NotificationService } from './../../../core/services/notification.service';
-import { AppNotificationMessage, createNotificationMessageText, createNotificationRouteUrl } from '../../../core/common/socket-consts';
+import { createNotificationMessageText, createNotificationRouteUrl } from '../../util/socket-util';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { Subscription, of } from 'rxjs';

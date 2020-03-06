@@ -1,10 +1,10 @@
+import { AppNotificationMessage } from './../../shared/index';
 import { QuizService } from './quiz.service';
 import { UserAnswer } from 'src/app/shared/models/user-answer';
 import { AlreadyExistError } from './../../shared/app-errors/already-exist-error';
 import { QuizAnswer } from './../../shared/models/quiz-answer';
 import { AppUtil } from './../../shared/util/app-util';
 import { Quiz } from './../../shared/models/quiz';
-import { AppNotificationMessage } from './../../core/common/socket-consts';
 import { Injectable } from '@angular/core';
 
 @Injectable({

@@ -1,7 +1,6 @@
 import { BaseModel } from './../models/base-model';
-import { TOPIC_USER_UPDATE } from './../../core/common/socket-consts';
+import { TOPIC_USER_UPDATE } from './socket-util';
 import { User } from './../models/user';
-import { AppNotificationMessage } from './../../core/common/socket-consts';
 import { AccessDeniedError } from './../app-errors/access-denied-error';
 import { NotFoundError } from './../app-errors/not-found-error';
 import { BadInputError } from './../app-errors/bad-input-error';
@@ -13,6 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { StopLoadingIndicator, StartLoadingIndicator } from '../decorators/spinner-decorators';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
+import { AppNotificationMessage } from '../models/app-notification-message';
 
 TimeAgo.addLocale(en);
 const timeAgo = new TimeAgo('en-US');

@@ -1,5 +1,5 @@
 import { AppUtil } from './shared/util/app-util';
-import { TOPIC_USER_UPDATE } from './core/common/socket-consts';
+import { TOPIC_USER_UPDATE } from './shared/util/socket-util';
 import { UserService } from './core/services/user-service.service';
 import { switchMap, filter } from 'rxjs/operators';
 import { ImageService } from './shared/services/image.service';

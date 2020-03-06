@@ -1,5 +1,7 @@
-import { AppConsts } from '../../shared/util/app-consts';
-import { Quiz } from '../../shared/models/quiz';
+import { AppConsts } from './app-consts';
+import { Quiz } from '../models/quiz';
+import { AppNotificationMessage } from '../models/app-notification-message';
+
 export enum SocketClientState {
     ATTEMPTING, CONNECTED, ERROR
 }
@@ -10,30 +12,6 @@ export interface StompMessage {
 
 export function textHandler(message: StompMessage): string {
     return message.body;
-}
-
-// TODO: move to separate file
-export class AppNotificationMessage {
-    id: string;
-    content: string;
-    topic: string;
-    userId: string;
-    username: string;
-    time: Date;
-    seen: boolean;
-    targetUserIds: string[];
-
-    constructor(data: any, topic: string, userId?: string, username?: string) {
-        if (typeof data !== 'string') {
-            data = JSON.stringify(data);
-        }
-
-        this.content = data;
-        this.userId = userId;
-        this.username = username;
-        this.topic = topic;
-        this.time = new Date();
-    }
 }
 
 export const TOPIC_QUIZ_LIST_UPDATE = '/quiz-list-update';

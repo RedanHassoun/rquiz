@@ -1,9 +1,9 @@
+import { AppNotificationMessage } from './../../../shared/index';
 import { AppUtil } from './../../../shared/util/app-util';
 import { QuizCrudService } from './../../services/quiz-crud.service';
-import { TOPIC_QUIZ_ASSIGNED_TO_USER } from '../../../core/common/socket-consts';
+import { TOPIC_QUIZ_ASSIGNED_TO_USER, TOPIC_QUIZ_LIST_UPDATE } from '../../../shared/util/socket-util';
 import { FileUploadService } from '../../../core/services/file-upload.service';
 import { take, switchMap } from 'rxjs/operators';
-import { AppNotificationMessage, TOPIC_QUIZ_LIST_UPDATE } from '../../../core/common/socket-consts';
 import { NotificationService } from '../../../core/services/notification.service';
 import { UserService } from '../../../core/services/user-service.service';
 import { User } from '../../../shared/models/user';

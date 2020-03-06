@@ -1,9 +1,9 @@
+import { AppNotificationMessage } from './../../../shared/index';
 import { AppConsts } from './../../../shared/util/app-consts';
-import { TOPIC_QUIZ_ANSWERS_UPDATE } from 'src/app/core/common/socket-consts';
-import { TOPIC_QUIZ_DELETED_UPDATE } from './../../../core/common/socket-consts';
+import { TOPIC_QUIZ_DELETED_UPDATE, TOPIC_QUIZ_ANSWERS_UPDATE, 
+         TOPIC_QUIZ_ASSIGNED_TO_USER } from '../../../shared/util/socket-util';
 import { QuizCrudService } from './../../services/quiz-crud.service';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
-import { TOPIC_QUIZ_ASSIGNED_TO_USER, AppNotificationMessage } from '../../../core/common/socket-consts';
 import { NotificationService } from './../../../core/services/notification.service';
 import { PagingStrategyFactory, MY_ASSIGNED_QUIZ_URL } from './../../../shared/factories/paging-strategy-factory';
 import { AppUtil } from './../../../shared/util/app-util';

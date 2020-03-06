@@ -1,3 +1,4 @@
+import { AppNotificationMessage } from './../../../shared/index';
 import { filter } from 'rxjs/operators';
 import { QuizCrudService } from './../../services/quiz-crud.service';
 import { Service } from './../../../shared/factories/paging-strategy-factory';
@@ -14,9 +15,9 @@ import * as _ from 'lodash';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
-  AppNotificationMessage, TOPIC_QUIZ_LIST_UPDATE,
+  TOPIC_QUIZ_LIST_UPDATE,
   TOPIC_QUIZ_ANSWERS_UPDATE, TOPIC_QUIZ_DELETED_UPDATE
-} from '../../../core/common/socket-consts';
+} from '../../../shared/util/socket-util';
 import { NotificationService } from './../../../core/services/notification.service';
 import { StartLoadingIndicator } from './../../../shared/decorators/spinner-decorators';
 

@@ -1,6 +1,7 @@
+import { AppNotificationMessage } from './../../shared/index';
 import { AppUtil } from './../../shared/util/app-util';
 import { CoreUtil } from './../common/core-util';
-import { SocketClientState } from './../common/socket-consts';
+import { SocketClientState } from '../../shared/util/socket-util';
 import { ClientDataService } from '../../shared/services/client-data.service';
 import { User } from './../../shared/models/user';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
@@ -10,7 +11,7 @@ import * as Stomp from 'stompjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { first, filter, switchMap, map, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { AppNotificationMessage, TOPIC_QUIZ_ANSWERS_UPDATE, TOPIC_QUIZ_ASSIGNED_TO_USER } from '../common/socket-consts';
+import { TOPIC_QUIZ_ANSWERS_UPDATE, TOPIC_QUIZ_ASSIGNED_TO_USER } from '../../shared/util/socket-util';
 import { AppConsts } from './../../shared/util/app-consts';
 
 

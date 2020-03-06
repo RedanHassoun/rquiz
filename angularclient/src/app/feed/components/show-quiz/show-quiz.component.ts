@@ -3,7 +3,7 @@ import { UserAnswersListComponent } from '../../../shared/components/user-answer
 import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
 import { AppUtil } from './../../../shared/util/app-util';
 import { UserAnswer } from './../../../shared/models/user-answer';
-import { AppNotificationMessage } from '../../../core/common/socket-consts';
+import { TOPIC_QUIZ_ANSWERS_UPDATE } from '../../../shared/util/socket-util';
 import { NotificationService } from '../../../core/services/notification.service';
 import { QuizAnswer } from '../../../shared/models/quiz-answer';
 import { Quiz } from '../../../shared/models/quiz';
@@ -14,8 +14,8 @@ import { Subscription } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { User } from '../../../shared/models/user';
-import { TOPIC_QUIZ_ANSWERS_UPDATE } from 'src/app/core/common/socket-consts';
 import { StopLoadingIndicator, StartLoadingIndicator } from '../../../shared/decorators/spinner-decorators';
+import { AppNotificationMessage } from './../../../shared/index';
 
 @Component({
   selector: 'app-show-quiz',

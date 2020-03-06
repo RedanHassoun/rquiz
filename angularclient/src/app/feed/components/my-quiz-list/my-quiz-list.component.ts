@@ -1,11 +1,11 @@
+import { AppNotificationMessage } from './../../../shared/index';
 import { CreateQuizComponent } from './../create-quiz/create-quiz.component';
 import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
 import { AppConsts } from './../../../shared/util/app-consts';
-import { TOPIC_QUIZ_DELETED_UPDATE, TOPIC_QUIZ_ASSIGNED_TO_USER } from './../../../core/common/socket-consts';
-import { TOPIC_QUIZ_ANSWERS_UPDATE } from 'src/app/core/common/socket-consts';
 import { QuizCrudService } from './../../services/quiz-crud.service';
 import { filter } from 'rxjs/operators';
-import { TOPIC_QUIZ_LIST_UPDATE, AppNotificationMessage } from '../../../core/common/socket-consts';
+import { TOPIC_QUIZ_LIST_UPDATE, TOPIC_QUIZ_ASSIGNED_TO_USER,
+         TOPIC_QUIZ_ANSWERS_UPDATE, TOPIC_QUIZ_DELETED_UPDATE } from '../../../shared/util/socket-util';
 import { NotificationService } from './../../../core/services/notification.service';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { MY_QUIZ_URL } from './../../../shared/factories/paging-strategy-factory';
