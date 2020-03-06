@@ -32,13 +32,9 @@ export class QuizItemComponent implements AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit(): void {
-    this.isOwnedByCurrentUser = this.isQuizOwnedByUser(this.quiz, this.currentUserId);
-  }
-
-  isQuizOwnedByUser(quiz: Quiz, userId: string): boolean {
     // TODO: use generics in rest services
-    quiz = Object.setPrototypeOf(quiz, Quiz.prototype);
-    return quiz.isCreatedByUser(userId);
+    this.quiz = Object.setPrototypeOf(this.quiz, Quiz.prototype);
+    this.isOwnedByCurrentUser = this.quiz.isCreatedByUser(this.currentUserId);
   }
 
   getQuizImage(): string {
