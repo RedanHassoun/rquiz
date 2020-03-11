@@ -39,8 +39,8 @@ public class RQuizSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JWTAuthenticationFilter jWTAuthorizationFilter() {
-        return new JWTAuthenticationFilter(this.jwtHelper);
+    public JWTAuthorizationFilter jWTAuthorizationFilter() {
+        return new JWTAuthorizationFilter(this.jwtHelper);
     }
 
     @Override

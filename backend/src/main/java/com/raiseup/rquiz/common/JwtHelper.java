@@ -62,7 +62,8 @@ public class JwtHelper {
                     .verify(token)
                     .getSubject();
         } catch (Exception ex) {
-            logger.error("An error occurred while parsing the token, returning null", ex);
+            logger.error(String.format(
+                    "An error occurred while parsing the token, returning null, Error: %s", ex.getMessage()));
             throw ex;
         }
     }
