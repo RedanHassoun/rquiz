@@ -21,7 +21,7 @@ export class AuthenticationService {
     private jwtService: JwtHelperService,
     private router: Router) {
     const token: string = localStorage.getItem(AppConsts.KEY_USER_TOKEN);
-    const user = this.tokenToUser(token);
+    const user: User = this.extractUserFromToken(token);
     this.currentUserSubject.next(user);
   }
 
@@ -75,11 +75,11 @@ export class AuthenticationService {
     }
 
     localStorage.setItem(AppConsts.KEY_USER_TOKEN, authorizationValue);
-    const user = this.tokenToUser(authorizationValue);
+    const user = this.extractUserFromToken(authorizationValue);
     this.currentUserSubject.next(user);
   }
 
-  private tokenToUser(token: string): User {
+  private extractUserFromToken(token: string): User {
     if (!token) {
       return null;
     }
@@ -113,7 +113,7 @@ export class AuthenticationService {
       return Promise.reject(`Token should not be null`);
     }
 
-    const user: User = this.tokenToUser(token);
+    const user: User = this.extractUserFromToken(token);
     return Promise.resolve(user);
   }
 }
