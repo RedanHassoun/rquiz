@@ -19,6 +19,10 @@ export const TOPIC_QUIZ_ANSWERS_UPDATE = '/quiz-answers-update';
 export const TOPIC_QUIZ_DELETED_UPDATE = '/quiz-deleted-update';
 export const TOPIC_QUIZ_ASSIGNED_TO_USER = '/quiz-assigned-to-user';
 export const TOPIC_USER_UPDATE = '/user-update';
+export const ACTIVE_TOPICS = [
+    TOPIC_QUIZ_LIST_UPDATE, TOPIC_QUIZ_ANSWERS_UPDATE, TOPIC_QUIZ_DELETED_UPDATE,
+    TOPIC_QUIZ_ASSIGNED_TO_USER, TOPIC_USER_UPDATE
+];
 
 export function createNotificationMessageText(notification: AppNotificationMessage): string {
     if (!notification) {

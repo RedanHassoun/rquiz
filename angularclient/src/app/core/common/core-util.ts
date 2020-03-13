@@ -8,4 +8,21 @@ export class CoreUtil {
         headers = headers.set('Authorization', authorizationToken);
         return headers;
     }
+
+    public static hasValue(obj: any): boolean {
+        if ((typeof (obj) !== 'undefined') && obj !== null) {
+            return true;
+        }
+        return false;
+    }
+
+    public static removePrefix(str: string, prefix: string): string {
+        if (!CoreUtil.hasValue(str)) {
+            return null;
+        }
+        if (!CoreUtil.hasValue(prefix) || prefix === '') {
+            return str;
+        }
+        return str.replace(prefix, '');
+    }
 }

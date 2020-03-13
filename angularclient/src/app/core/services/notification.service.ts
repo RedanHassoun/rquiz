@@ -1,17 +1,18 @@
+import {
+  ACTIVE_TOPICS, TOPIC_QUIZ_ASSIGNED_TO_USER, TOPIC_QUIZ_ANSWERS_UPDATE, SocketClientState
+} from './../../shared/util/socket-util';
 import { AppNotificationMessage } from './../../shared/index';
 import { AppUtil } from './../../shared/util/app-util';
 import { CoreUtil } from './../common/core-util';
-import { SocketClientState } from '../../shared/util/socket-util';
 import { ClientDataService } from '../../shared/services/client-data.service';
 import { User } from './../../shared/models/user';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError, of, Subject } from 'rxjs';
 import * as SockJS from 'sockjs-client';
 import * as Stomp from 'stompjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { first, filter, switchMap, map, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { TOPIC_QUIZ_ANSWERS_UPDATE, TOPIC_QUIZ_ASSIGNED_TO_USER } from '../../shared/util/socket-util';
 import { AppConsts } from './../../shared/util/app-consts';
 
 
@@ -27,10 +28,13 @@ export class NotificationService extends ClientDataService implements OnDestroy 
   private myNotificationsListSubject: BehaviorSubject<AppNotificationMessage[]>;
   private readonly URL_KEY_TARGET_USER = 'targetUserId';
   private readonly URL_KEY_SEEN = 'seen';
+  private readonly stompTopicSubscriptionSubjects = new Map<string, Subject<any>>();
 
   constructor(private authService: AuthenticationService, public http: HttpClient) {
     super(`${AppConsts.BASE_URL}/api/v1/notifications/`, http);
-
+    for (const topic of ACTIVE_TOPICS) {
+      this.stompTopicSubscriptionSubjects.set(topic, new Subject<any>());
+    }
     this.myNotificationsListSubject = new BehaviorSubject<AppNotificationMessage[]>([]);
     this.sockectState = new BehaviorSubject<SocketClientState>(SocketClientState.ATTEMPTING);
     this.initSocketConnection(NotificationService.URL);
@@ -39,28 +43,46 @@ export class NotificationService extends ClientDataService implements OnDestroy 
       .subscribe((user: User) => {
         this.currentUser = user;
         this.initMyNotifications();
-        this.listenToAllNotifications();
       }, (err: User) => {
         AppUtil.showErrorMessage(AppConsts.SESSION_EXPIRED_ERROR);
         this.authService.logout();
       });
+    this.listenToAllTopics();
+  }
+
+  private listenToAllTopics(): void {
+    this.connectToSocket()
+      .pipe(first())
+      .subscribe((stompClient: Stomp.Client) => {
+        const stompTopicsIterator = this.stompTopicSubscriptionSubjects.keys();
+        let currTopic: string = stompTopicsIterator.next().value;
+        while (CoreUtil.hasValue(currTopic)) {
+          const subscription: Stomp.Subscription = stompClient.subscribe(`/topic${currTopic}`, (message: Stomp.Message) => {
+            const messageDestination: string = message.headers['destination'];
+            const messageTopic: string = messageDestination ? CoreUtil.removePrefix(messageDestination, '/topic') : '';
+            const topicSubject: Subject<any> = this.stompTopicSubscriptionSubjects.get(messageTopic);
+            if (CoreUtil.hasValue(topicSubject)) {
+              topicSubject.next(message ? message.body : null);
+            }
+
+            try {
+              this.notificationsListMessageHandler.call(this, message ? message.body : null);
+            } catch (ex) { }
+          });
+          currTopic = stompTopicsIterator.next().value;
+        }
+      });
   }
 
   public onMessage(topic: string, messageHandler = this.jsonHandler): Observable<AppNotificationMessage> {
-    return this.connect()
-      .pipe(first())
-      .pipe(switchMap((client: Stomp.Client) => {
-        return Observable.create((observer) => {
-          const subscription: Stomp.Subscription = client.subscribe(`/topic${topic}`, (message: Stomp.Message) => {
-            observer.next(messageHandler.call(this, message ? message.body : null));
-            return () => client.unsubscribe(subscription.id);
-          });
-        });
-      }));
-  }
-
-  private listenToAllNotifications(): void {
-    this.onMessage('/*', this.notificationsListMessageHandler).subscribe();
+    const topicSubject: Subject<any> = this.stompTopicSubscriptionSubjects.get(topic);
+    if (!topicSubject) {
+      console.error(`Cannot find subscription for topic ${topic}`);
+      return null;
+    }
+    return topicSubject.asObservable().pipe(map((message: string) => {
+      return messageHandler.call(this, message);
+    }));
   }
 
   private jsonHandler(messageString: string): any {
@@ -115,15 +137,15 @@ export class NotificationService extends ClientDataService implements OnDestroy 
 
   public initMyNotifications(): void {
     this.getNotificaitonsListForUser(this.currentUser.id)
-    .subscribe((notificationsList: AppNotificationMessage[]) => {
-      this.addToMyNotifications(notificationsList);
-    }, (err: Error) => {
-      console.error('Cannot init notifications list');
-    });
+      .subscribe((notificationsList: AppNotificationMessage[]) => {
+        this.addToMyNotifications(notificationsList);
+      }, (err: Error) => {
+        console.error('Cannot init notifications list');
+      });
   }
 
   public send(message: AppNotificationMessage): void {
-    this.connect()
+    this.connectToSocket()
       .pipe(first())
       .subscribe(client => client.send(`/rquiz-socket${message.topic}`, {}, JSON.stringify(message)));
   }
@@ -150,19 +172,18 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     }, this.RECONNECT_DELAY_SECS * 1000);
   }
 
-  private connect(): Observable<Stomp.Client> {
-    return new Observable<Stomp.Client>(observer => {
-      this.sockectState.pipe(filter(state => state === SocketClientState.CONNECTED))
-        .subscribe(() => {
-          observer.next(this.stompClient);
-        });
-    });
+  private connectToSocket(): Observable<Stomp.Client> {
+    return this.sockectState
+      .pipe(filter(state => state === SocketClientState.CONNECTED))
+      .pipe(switchMap((state: SocketClientState) => {
+        return of(this.stompClient);
+      }));
   }
 
   ngOnDestroy(): void {
-    this.connect()
+    this.connectToSocket()
       .pipe(first())
-      .subscribe(client => client.disconnect(null));
+      .subscribe((client: Stomp.Client) => client.disconnect(null));
   }
 
   public getNotificaitonsListForUser(userId: string): Observable<AppNotificationMessage[]> {
