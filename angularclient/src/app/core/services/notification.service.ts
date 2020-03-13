@@ -117,6 +117,8 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     this.getNotificaitonsListForUser(this.currentUser.id)
     .subscribe((notificationsList: AppNotificationMessage[]) => {
       this.addToMyNotifications(notificationsList);
+    }, (err: Error) => {
+      console.error('Cannot init notifications list');
     });
   }
 
