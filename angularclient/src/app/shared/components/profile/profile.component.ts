@@ -1,6 +1,6 @@
 import { AppNotificationMessage } from './../../models/app-notification-message';
 import { ImageService } from './../../services/image.service';
-import { TOPIC_USER_UPDATE } from '../../util/socket-util';
+import { SocketTopics } from '../../util';
 import { NotificationService } from './../../../core/services/notification.service';
 import { EditProfileComponent } from './../edit-profile/edit-profile.component';
 import { NavigationHelperService } from './../../services/navigation-helper.service';
@@ -52,7 +52,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.push(
-      this.notificationService.onMessage(TOPIC_USER_UPDATE)
+      this.notificationService.onMessage(SocketTopics.TOPIC_USER_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
           if (message && message.content) {
             const userId = message.content;

@@ -1,5 +1,5 @@
 import { AppUtil } from './shared/util/app-util';
-import { TOPIC_USER_UPDATE } from './shared/util/socket-util';
+import { SocketTopics } from './shared/util';
 import { UserService } from './core/services/user-service.service';
 import { switchMap, filter } from 'rxjs/operators';
 import { ImageService } from './shared/services/image.service';
@@ -74,7 +74,7 @@ export class AppComponent implements OnInit {
   }
 
   private listenForUserNotifications(): void {
-    this.notificationService.onMessage(TOPIC_USER_UPDATE)
+    this.notificationService.onMessage(SocketTopics.TOPIC_USER_UPDATE)
       .pipe(filter(message => AppUtil.isNotificationForCurrentUserUpdate(message, this.currentUser)))
       .pipe(switchMap(message => {
         return this.usersService.get(message.content);

@@ -14,10 +14,7 @@ import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import {
-  TOPIC_QUIZ_LIST_UPDATE,
-  TOPIC_QUIZ_ANSWERS_UPDATE, TOPIC_QUIZ_DELETED_UPDATE
-} from '../../../shared/util/socket-util';
+import { SocketTopics } from '../../../shared/util';
 import { NotificationService } from './../../../core/services/notification.service';
 import { StartLoadingIndicator } from './../../../shared/decorators/spinner-decorators';
 
@@ -59,7 +56,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
       Service.Quiz, new Map<string, string>([['isPublic', 'true']]));
 
     this.subscriptions.push(
-      this.notificationService.onMessage(TOPIC_QUIZ_LIST_UPDATE)
+      this.notificationService.onMessage(SocketTopics.TOPIC_QUIZ_LIST_UPDATE)
         .pipe(filter((message: AppNotificationMessage) => {
           const quiz: Quiz = JSON.parse(message.content);
           return quiz.isPublic;
@@ -70,14 +67,14 @@ export class QuizListComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.push(
-      this.notificationService.onMessage(TOPIC_QUIZ_ANSWERS_UPDATE)
+      this.notificationService.onMessage(SocketTopics.TOPIC_QUIZ_ANSWERS_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
           this.quizCrudService.handleQuizAnswersUpdate(message, this.quizList);
         })
     );
 
     this.subscriptions.push(
-      this.notificationService.onMessage(TOPIC_QUIZ_DELETED_UPDATE)
+      this.notificationService.onMessage(SocketTopics.TOPIC_QUIZ_DELETED_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
           this.quizCrudService.handleQuizDeletedUpdate(message, this.quizList);
         })

@@ -3,7 +3,7 @@ import { AppConsts } from './../../../shared/util/app-consts';
 import { ImageService } from './../../../shared/services/image.service';
 import { Router } from '@angular/router';
 import { User } from '../../../shared/models/user';
-import { TOPIC_QUIZ_DELETED_UPDATE } from '../../../shared/util/socket-util';
+import { SocketTopics } from '../../../shared/util';
 import { NotificationService } from '../../../core/services/notification.service';
 import { QuizService } from '../../services/quiz.service';
 import { ShowQuizComponent } from '../show-quiz/show-quiz.component';
@@ -55,7 +55,7 @@ export class QuizItemComponent implements AfterContentInit, OnDestroy {
         if (res) {
           this.quizService.delete(quizId)
             .subscribe(() => {
-              const deletedQuizId = new AppNotificationMessage({ id: quizId }, TOPIC_QUIZ_DELETED_UPDATE);
+              const deletedQuizId = new AppNotificationMessage({ id: quizId }, SocketTopics.TOPIC_QUIZ_DELETED_UPDATE);
               this.notificationService.send(deletedQuizId);
             }, (err) => {
               AppUtil.showError(err);

@@ -1,6 +1,4 @@
-import {
-  ACTIVE_TOPICS, TOPIC_QUIZ_ASSIGNED_TO_USER, TOPIC_QUIZ_ANSWERS_UPDATE, SocketClientState
-} from './../../shared/util/socket-util';
+import { SocketTopics, SocketClientState } from './../../shared/util/socket-util';
 import { AppNotificationMessage } from './../../shared/index';
 import { AppUtil } from './../../shared/util/app-util';
 import { CoreUtil } from './../common/core-util';
@@ -32,8 +30,8 @@ export class NotificationService extends ClientDataService implements OnDestroy 
 
   constructor(private authService: AuthenticationService, public http: HttpClient) {
     super(`${AppConsts.BASE_URL}/api/v1/notifications/`, http);
-    for (const topic of ACTIVE_TOPICS) {
-      this.stompTopicSubscriptionSubjects.set(topic, new Subject<any>());
+    for (const topicKey of Object.keys(SocketTopics)) {
+      this.stompTopicSubscriptionSubjects.set(SocketTopics[topicKey], new Subject<any>());
     }
     this.myNotificationsListSubject = new BehaviorSubject<AppNotificationMessage[]>([]);
     this.sockectState = new BehaviorSubject<SocketClientState>(SocketClientState.ATTEMPTING);
@@ -78,7 +76,7 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     const topicSubject: Subject<any> = this.stompTopicSubscriptionSubjects.get(topic);
     if (!topicSubject) {
       console.error(`Cannot find subscription for topic ${topic}`);
-      return null;
+      return of(null);
     }
     return topicSubject.asObservable().pipe(map((message: string) => {
       return messageHandler.call(this, message);
@@ -128,8 +126,8 @@ export class NotificationService extends ClientDataService implements OnDestroy 
       console.error(`Notification ${appNotificationMessage.id} topic is undefined`);
       return false;
     }
-    if (topic.toLowerCase() === TOPIC_QUIZ_ANSWERS_UPDATE.toLowerCase() ||
-      topic.toLowerCase() === TOPIC_QUIZ_ASSIGNED_TO_USER.toLowerCase()) {
+    if (topic.toLowerCase() === SocketTopics.TOPIC_QUIZ_ANSWERS_UPDATE.toLowerCase() ||
+      topic.toLowerCase() === SocketTopics.TOPIC_QUIZ_ASSIGNED_TO_USER.toLowerCase()) {
       return true;
     }
     return false;

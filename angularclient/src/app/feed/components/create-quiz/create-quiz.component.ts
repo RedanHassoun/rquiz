@@ -1,7 +1,6 @@
 import { AppNotificationMessage } from './../../../shared/index';
 import { AppUtil } from './../../../shared/util/app-util';
 import { QuizCrudService } from './../../services/quiz-crud.service';
-import { TOPIC_QUIZ_ASSIGNED_TO_USER, TOPIC_QUIZ_LIST_UPDATE } from '../../../shared/util/socket-util';
 import { FileUploadService } from '../../../core/services/file-upload.service';
 import { take, switchMap } from 'rxjs/operators';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -19,6 +18,7 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import * as _ from 'lodash';
 import { FormInputComponent } from '../../../shared/components/form-input/form-input.component';
 import { StartLoadingIndicator, StopLoadingIndicator } from '../../../shared/decorators/spinner-decorators';
+import { SocketTopics } from './../../../shared/util';
 
 @Component({
   selector: 'app-create-quiz',
@@ -140,12 +140,12 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
   private handleSuccessResult(addedQuiz: Quiz): void {
     let addedQuizNotification = null;
     if (addedQuiz && addedQuiz.isPublic) {
-      addedQuizNotification = new AppNotificationMessage(addedQuiz, TOPIC_QUIZ_LIST_UPDATE);
+      addedQuizNotification = new AppNotificationMessage(addedQuiz, SocketTopics.TOPIC_QUIZ_LIST_UPDATE);
       this.notificationService.send(addedQuizNotification);
     } else {
       for (const assignedUser of addedQuiz.assignedUsers) {
         addedQuizNotification = new AppNotificationMessage(addedQuiz,
-          TOPIC_QUIZ_ASSIGNED_TO_USER,
+          SocketTopics.TOPIC_QUIZ_ASSIGNED_TO_USER,
           this.currentUser.id,
           this.currentUser.username);
         addedQuizNotification.targetUserIds = [assignedUser.id];

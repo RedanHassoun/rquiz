@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { FileUploadService } from './../../../core/services/file-upload.service';
 import { UpdateUserRequest } from './../../models/update-user-request';
 import { NotificationService } from './../../../core/services/notification.service';
-import { TOPIC_USER_UPDATE } from '../../util/socket-util';
+import { SocketTopics } from '../../util';
 import { AppUtil } from './../../util/app-util';
 import { UserService } from './../../../core/services/user-service.service';
 import { User } from './../../models/user';
@@ -70,7 +70,7 @@ export class EditProfileComponent extends FormInputComponent implements OnInit, 
 
   @StopLoadingIndicator
   private handleUpdateProfileSuccess() {
-    const updatedUser = new AppNotificationMessage(this.user.id, TOPIC_USER_UPDATE);
+    const updatedUser = new AppNotificationMessage(this.user.id, SocketTopics.TOPIC_USER_UPDATE);
     this.notificationService.send(updatedUser);
     this.dialogRef.close();
   }

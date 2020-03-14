@@ -3,7 +3,7 @@ import { UserAnswersListComponent } from '../../../shared/components/user-answer
 import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
 import { AppUtil } from './../../../shared/util/app-util';
 import { UserAnswer } from './../../../shared/models/user-answer';
-import { TOPIC_QUIZ_ANSWERS_UPDATE } from '../../../shared/util/socket-util';
+import { SocketTopics } from '../../../shared/util';
 import { NotificationService } from '../../../core/services/notification.service';
 import { QuizAnswer } from '../../../shared/models/quiz-answer';
 import { Quiz } from '../../../shared/models/quiz';
@@ -115,7 +115,7 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
   @StopLoadingIndicator
   private handleServerSuccess(quiz: Quiz): void {
     const solvedQuizNotification = new AppNotificationMessage(quiz,
-      TOPIC_QUIZ_ANSWERS_UPDATE,
+      SocketTopics.TOPIC_QUIZ_ANSWERS_UPDATE,
       this.currentUser.id,
       this.currentUser.username);
 

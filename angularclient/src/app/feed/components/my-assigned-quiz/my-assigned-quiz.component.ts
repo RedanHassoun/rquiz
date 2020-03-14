@@ -1,7 +1,6 @@
 import { AppNotificationMessage } from './../../../shared/index';
 import { AppConsts } from './../../../shared/util/app-consts';
-import { TOPIC_QUIZ_DELETED_UPDATE, TOPIC_QUIZ_ANSWERS_UPDATE, 
-         TOPIC_QUIZ_ASSIGNED_TO_USER } from '../../../shared/util/socket-util';
+import { SocketTopics } from '../../../shared/util';
 import { QuizCrudService } from './../../services/quiz-crud.service';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { NotificationService } from './../../../core/services/notification.service';
@@ -40,7 +39,7 @@ export class MyAssignedQuizComponent implements OnInit {
       MY_ASSIGNED_QUIZ_URL, new Map<string, string>([['currentUserId', this.currentUserId]]));
 
     this.subscriptions.push(
-      this.notificationService.onMessage(TOPIC_QUIZ_ASSIGNED_TO_USER)
+      this.notificationService.onMessage(SocketTopics.TOPIC_QUIZ_ASSIGNED_TO_USER)
         .pipe(filter((message: AppNotificationMessage) => {
           const quiz: Quiz = JSON.parse(message.content);
           return !quiz.isPublic;
@@ -51,14 +50,14 @@ export class MyAssignedQuizComponent implements OnInit {
     );
 
     this.subscriptions.push(
-      this.notificationService.onMessage(TOPIC_QUIZ_ANSWERS_UPDATE)
+      this.notificationService.onMessage(SocketTopics.TOPIC_QUIZ_ANSWERS_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
           this.quizCrudService.handleQuizAnswersUpdate(message, this.quizList);
         })
     );
 
     this.subscriptions.push(
-      this.notificationService.onMessage(TOPIC_QUIZ_DELETED_UPDATE)
+      this.notificationService.onMessage(SocketTopics.TOPIC_QUIZ_DELETED_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
           this.quizCrudService.handleQuizDeletedUpdate(message, this.quizList);
         })

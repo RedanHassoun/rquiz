@@ -1,5 +1,5 @@
 import { BaseModel } from './../models/base-model';
-import { TOPIC_USER_UPDATE } from './socket-util';
+import { SocketTopics } from './socket-util';
 import { User } from './../models/user';
 import { AccessDeniedError } from './../app-errors/access-denied-error';
 import { NotFoundError } from './../app-errors/not-found-error';
@@ -103,7 +103,7 @@ export class AppUtil {
         if (!message || !currentUser) {
             return false;
         }
-        if (message.topic !== TOPIC_USER_UPDATE) {
+        if (message.topic !== SocketTopics.TOPIC_USER_UPDATE) {
             return false;
         }
         const userId = message.content;
