@@ -9,7 +9,7 @@ import { BehaviorSubject, Observable, throwError, of, Subject } from 'rxjs';
 import * as SockJS from 'sockjs-client';
 import * as Stomp from 'stompjs';
 import { Injectable, OnDestroy } from '@angular/core';
-import { first, filter, switchMap, map, catchError } from 'rxjs/operators';
+import { first, filter, switchMap, map, catchError, take } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { AppConsts } from './../../shared/util/app-consts';
 
@@ -36,39 +36,22 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     this.myNotificationsListSubject = new BehaviorSubject<AppNotificationMessage[]>([]);
     this.sockectState = new BehaviorSubject<SocketClientState>(SocketClientState.ATTEMPTING);
     this.initSocketConnection(NotificationService.URL);
-
-    this.authService.currentUser$
-      .subscribe((user: User) => {
-        this.currentUser = user;
-        this.initMyNotifications();
-      }, (err: User) => {
-        AppUtil.showErrorMessage(AppConsts.SESSION_EXPIRED_ERROR);
-        this.authService.logout();
-      });
+    this.initNotificationsForCurrentUser();
     this.listenToAllTopics();
   }
 
-  private listenToAllTopics(): void {
-    this.connectToSocket()
-      .pipe(first())
-      .subscribe((stompClient: Stomp.Client) => {
-        const stompTopicsIterator = this.stompTopicSubscriptionSubjects.keys();
-        let currTopic: string = stompTopicsIterator.next().value;
-        while (CoreUtil.hasValue(currTopic)) {
-          const subscription: Stomp.Subscription = stompClient.subscribe(`/topic${currTopic}`, (message: Stomp.Message) => {
-            const messageDestination: string = message.headers['destination'];
-            const messageTopic: string = messageDestination ? CoreUtil.removePrefix(messageDestination, '/topic') : '';
-            const topicSubject: Subject<any> = this.stompTopicSubscriptionSubjects.get(messageTopic);
-            if (CoreUtil.hasValue(topicSubject)) {
-              topicSubject.next(message ? message.body : null);
-            }
-
-            try {
-              this.notificationsListMessageHandler.call(this, message ? message.body : null);
-            } catch (ex) { }
-          });
-          currTopic = stompTopicsIterator.next().value;
-        }
+  public initNotificationsForUser(userId: string): void {
+    this.resetMyNotifications();
+    if (!CoreUtil.hasValue(userId)) {
+      return;
+    }
+    this.getNotificaitonsListForUser(userId)
+      .pipe(take(1))
+      .subscribe((notificationsList: AppNotificationMessage[]) => {
+        this.addToMyNotifications(notificationsList);
+      }, (err: Error) => {
+        AppUtil.showErrorMessage(`Cannot load notifications list`);
+        this.authService.logout();
       });
   }
 
@@ -83,6 +66,67 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     }));
   }
 
+  private initNotificationsForCurrentUser(): void {
+    this.authService.currentUser$
+      .subscribe((user: User) => {
+        this.currentUser = user;
+        this.initNotificationsForUser(this.currentUser ? this.currentUser.id : null);
+      }, (err: User) => {
+        AppUtil.showErrorMessage(AppConsts.SESSION_EXPIRED_ERROR);
+        this.authService.logout();
+      });
+  }
+
+  private listenToAllTopics(): void {
+    this.connectToSocket()
+      .pipe(first())
+      .subscribe((stompClient: Stomp.Client) => {
+        const stompTopicsIterator = this.stompTopicSubscriptionSubjects.keys();
+        let currTopic: string = stompTopicsIterator.next().value;
+
+        while (CoreUtil.hasValue(currTopic)) {
+          const subscription: Stomp.Subscription = stompClient.subscribe(`/topic${currTopic}`, (message: Stomp.Message) => {
+            const messageDestination: string = message ? message.headers['destination'] : null;
+            const topic: string = messageDestination ? CoreUtil.removePrefix(messageDestination, '/topic') : '';
+            this.handleNotificationFromTopic(message ? message.body : null, topic);
+
+          });
+          currTopic = stompTopicsIterator.next().value;
+        }
+
+      });
+  }
+
+  private handleNotificationFromTopic(message: string, topic: string): void {
+    const topicSubject: Subject<any> = this.stompTopicSubscriptionSubjects.get(topic);
+    if (CoreUtil.hasValue(topicSubject)) {
+      topicSubject.next(message);
+    }
+
+    try {
+      const appNotificationMessage = message ? JSON.parse(message) as AppNotificationMessage : null;
+      Object.setPrototypeOf(appNotificationMessage, AppNotificationMessage.prototype);
+      this.updateCurrentUserNotificationsIfNecessary.call(this, appNotificationMessage);
+    } catch (ex) { }
+  }
+
+  private updateCurrentUserNotificationsIfNecessary(message: AppNotificationMessage): void {
+    try {
+      if (!message || !this.currentUser) {
+        return null;
+      }
+
+      if (message && message.targetUserIds && message.shouldAppearInUserNotifications(this.currentUser.id)) {
+        this.addToMyNotifications([message]);
+      }
+    } catch (ex) {
+      const messageToString = message.content ? JSON.stringify(message.content) : null;
+      console.error(
+        `An error ocurred while handling notification message: ${messageToString}. Error: ${ex.toString()}`);
+      throw ex;
+    }
+  }
+
   private jsonHandler(messageString: string): any {
     if (!messageString) {
       return null;
@@ -91,58 +135,10 @@ export class NotificationService extends ClientDataService implements OnDestroy 
     return JSON.parse(messageString);
   }
 
-  private notificationsListMessageHandler(messageString: string): any {
-    try {
-      if (!messageString) {
-        return null;
-      }
-
-      if (!this.currentUser) {
-        return null;
-      }
-      const message = JSON.parse(messageString) as AppNotificationMessage;
-      if (this.shouldNotificationAppearInUserNotifications(message)) {
-        if (message && message.targetUserIds) {
-          for (const targetUserId of message.targetUserIds) {
-            if (targetUserId === this.currentUser.id) {
-              this.addToMyNotifications([message]);
-            }
-          }
-        }
-      }
-      return JSON.parse(messageString);
-    } catch (ex) {
-      console.error(`An error ocurred while handling notification message: ${messageString}. Error: ${ex.toString()}`);
-      throw ex;
-    }
-  }
-
-  private shouldNotificationAppearInUserNotifications(appNotificationMessage: AppNotificationMessage): boolean {
-    if (!appNotificationMessage) {
-      return false;
-    }
-    const topic: string = appNotificationMessage.topic;
-    if (!topic) {
-      console.error(`Notification ${appNotificationMessage.id} topic is undefined`);
-      return false;
-    }
-    if (topic.toLowerCase() === SocketTopics.TOPIC_QUIZ_ANSWERS_UPDATE.toLowerCase() ||
-      topic.toLowerCase() === SocketTopics.TOPIC_QUIZ_ASSIGNED_TO_USER.toLowerCase()) {
-      return true;
-    }
-    return false;
-  }
-
-  public initMyNotifications(): void {
-    this.getNotificaitonsListForUser(this.currentUser.id)
-      .subscribe((notificationsList: AppNotificationMessage[]) => {
-        this.addToMyNotifications(notificationsList);
-      }, (err: Error) => {
-        console.error('Cannot init notifications list');
-      });
-  }
-
   public send(message: AppNotificationMessage): void {
+    if (!CoreUtil.hasValue(message.topic)) {
+      throw new Error('Cannot sent message because topic is not defined');
+    }
     this.connectToSocket()
       .pipe(first())
       .subscribe(client => client.send(`/rquiz-socket${message.topic}`, {}, JSON.stringify(message)));
