@@ -2,14 +2,18 @@ import { CoreUtil } from './../common/core-util';
 import { AppConsts } from './../../shared/util/app-consts';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, tap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { BadInputError } from 'src/app/shared/app-errors';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FileUploadService {
+  private static readonly MAX_IMAGE_SIZE_BYTES = 10485760;
+
   private readonly url = `${AppConsts.BASE_URL}/api/v1/storage`;
+
   constructor(private http: HttpClient) { }
 
   public upload(fileToUpload: File): Observable<string> {
@@ -36,7 +40,20 @@ export class FileUploadService {
       return of(defaultResult);
     }
 
+    if (imageToUpload.size > FileUploadService.MAX_IMAGE_SIZE_BYTES) {
+      return throwError(
+        new BadInputError(
+          `Cannot upload an image with more than ${this.byteToMegabyte(FileUploadService.MAX_IMAGE_SIZE_BYTES)} MB.`));
+    }
+
     return this.upload(imageToUpload);
   }
-}
 
+  private byteToMegabyte(numOfBytes: number): number {
+    if (!numOfBytes) {
+      return null;
+    }
+
+    return Math.floor(numOfBytes / 1048576);
+  }
+}
