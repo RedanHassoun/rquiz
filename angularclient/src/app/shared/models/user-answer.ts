@@ -7,4 +7,11 @@ export class UserAnswer extends BaseModel {
     username: string;
     answerId: string;
     correctAnswerId: string;
+
+    public isCorrect(): boolean {
+        if (!this.answerId) {
+            return false;
+        }
+        return this.answerId === this.correctAnswerId;
+    }
 }

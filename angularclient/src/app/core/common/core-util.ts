@@ -1,3 +1,4 @@
+import { AppUtil } from './../../shared/util/app-util';
 import { AppConsts } from './../../shared/util/app-consts';
 import { HttpHeaders } from '@angular/common/http';
 
@@ -9,18 +10,11 @@ export class CoreUtil {
         return headers;
     }
 
-    public static hasValue(obj: any): boolean {
-        if ((typeof (obj) !== 'undefined') && obj !== null) {
-            return true;
-        }
-        return false;
-    }
-
     public static removePrefix(str: string, prefix: string): string {
-        if (!CoreUtil.hasValue(str)) {
+        if (!AppUtil.hasValue(str)) {
             return null;
         }
-        if (!CoreUtil.hasValue(prefix) || prefix === '') {
+        if (!AppUtil.hasValue(prefix) || prefix === '') {
             return str;
         }
         return str.replace(prefix, '');

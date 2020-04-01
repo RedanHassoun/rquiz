@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { Component, OnInit, Inject } from '@angular/core';
 import * as _ from 'lodash';
 import { TimeAgo } from 'javascript-time-ago';
+import { QuizAnswer } from '../../models/quiz-answer';
 
 @Component({
   selector: 'app-user-answers-list',
@@ -37,7 +38,11 @@ export class UserAnswersListComponent implements OnInit {
   }
 
   getQuizAnswer(id: string): string {
-    return this.quiz.getAnswerById(id);
+    const quizAnswer: QuizAnswer = this.quiz.getAnswerById(id);
+    if (AppUtil.hasValue(quizAnswer)) {
+      return quizAnswer.content;
+    }
+    return null;
   }
 
   shouldShowList(): boolean {

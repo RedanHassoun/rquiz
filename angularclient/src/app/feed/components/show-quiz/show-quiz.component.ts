@@ -49,11 +49,7 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
   }
 
   isAlreadyAnswered(): boolean {
-    if (this.currentUserAnswerForQuiz) {
-      return true;
-    }
-
-    return false;
+    return AppUtil.hasValue(this.currentUserAnswerForQuiz);
   }
 
   shouldHideSolveButton(): boolean {
@@ -126,23 +122,21 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  getCurrentUserAnswer(): string {
-    const currentUserAnswerId: string = this.currentUserAnswerForQuiz.answerId;
-    const quizAnswerFilterResult: QuizAnswer[] = this.quiz.answers.filter(ans => ans.id === currentUserAnswerId);
-    return quizAnswerFilterResult[0].content;
-  }
+  getAnswerContent(answerId: string): string {
+    if (!answerId) {
+      return null;
+    }
 
-  getCorrectAnswer(): string {
-    const correctAnswerId: string = this.currentUserAnswerForQuiz.correctAnswerId;
-    const quizAnswerFilterResult: QuizAnswer[] = this.quiz.answers.filter(ans => ans.id === correctAnswerId);
-    return quizAnswerFilterResult[0].content;
+    const quizAnswer: QuizAnswer = this.quiz.getAnswerById(answerId);
+    if (!quizAnswer) {
+      return null;
+    }
+
+    return quizAnswer.content;
   }
 
   isUserAnswerCorrect(): boolean {
-    if (this.getCurrentUserAnswer() === this.getCorrectAnswer()) {
-      return true;
-    }
-    return false;
+    return this.currentUserAnswerForQuiz.isCorrect();
   }
 
   hasDescription(): boolean {

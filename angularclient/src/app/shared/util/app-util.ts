@@ -126,4 +126,11 @@ export class AppUtil {
         const createdDate = new Date(obj.createdAt);
         return timeAgo.format(createdDate.getTime());
     }
+
+    public static hasValue(obj: any): boolean {
+        if ((typeof (obj) !== 'undefined') && obj !== null) {
+            return true;
+        }
+        return false;
+    }
 }

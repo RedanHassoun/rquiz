@@ -83,6 +83,7 @@ export class QuizCrudService {
 
       if (userAnswerListResult && userAnswerListResult.length > 0) {
         const userAnswer: UserAnswer = userAnswerListResult[0];
+        Object.setPrototypeOf(userAnswer, UserAnswer.prototype);
         return userAnswer;
       }
 

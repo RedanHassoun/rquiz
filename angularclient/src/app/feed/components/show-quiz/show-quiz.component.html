@@ -22,8 +22,8 @@
         </div>
 
         <ng-template #wrongAnswer>
-          <p>Your answer: {{ getCurrentUserAnswer() }}</p>
-          <p>Correct answer: {{ getCorrectAnswer() }}</p>
+          <p>Your answer: {{ getAnswerContent(currentUserAnswerForQuiz.answerId) }}</p>
+          <p>Correct answer: {{ getAnswerContent(currentUserAnswerForQuiz.correctAnswerId) }}</p>
         </ng-template>
       </div>
 

@@ -42,7 +42,7 @@ export class NotificationService extends ClientDataService implements OnDestroy 
 
   public initNotificationsForUser(userId: string): void {
     this.resetMyNotifications();
-    if (!CoreUtil.hasValue(userId)) {
+    if (!AppUtil.hasValue(userId)) {
       return;
     }
     this.getNotificaitonsListForUser(userId)
@@ -84,7 +84,7 @@ export class NotificationService extends ClientDataService implements OnDestroy 
         const stompTopicsIterator = this.stompTopicSubscriptionSubjects.keys();
         let currTopic: string = stompTopicsIterator.next().value;
 
-        while (CoreUtil.hasValue(currTopic)) {
+        while (AppUtil.hasValue(currTopic)) {
           const subscription: Stomp.Subscription = stompClient.subscribe(`/topic${currTopic}`, (message: Stomp.Message) => {
             const messageDestination: string = message ? message.headers['destination'] : null;
             const topic: string = messageDestination ? CoreUtil.removePrefix(messageDestination, '/topic') : '';
@@ -99,7 +99,7 @@ export class NotificationService extends ClientDataService implements OnDestroy 
 
   private handleNotificationFromTopic(message: string, topic: string): void {
     const topicSubject: Subject<any> = this.stompTopicSubscriptionSubjects.get(topic);
-    if (CoreUtil.hasValue(topicSubject)) {
+    if (AppUtil.hasValue(topicSubject)) {
       topicSubject.next(message);
     }
 
@@ -136,7 +136,7 @@ export class NotificationService extends ClientDataService implements OnDestroy 
   }
 
   public send(message: AppNotificationMessage): void {
-    if (!CoreUtil.hasValue(message.topic)) {
+    if (!AppUtil.hasValue(message.topic)) {
       throw new Error('Cannot sent message because topic is not defined');
     }
     this.connectToSocket()

@@ -74,14 +74,14 @@ export class Quiz extends BaseModel {
         return false;
     }
 
-    public getAnswerById(answerId: string): string {
+    public getAnswerById(answerId: string): QuizAnswer {
         const quizAnswers: QuizAnswer[] = this.answers;
         if (!quizAnswers) {
             return null;
         }
         for (const answer of quizAnswers) {
           if (answer.id === answerId) {
-            return answer.content;
+            return answer;
           }
         }
         return null;
