@@ -28,6 +28,9 @@ export class QuizCrudService {
   }
 
   public handleQuizDeletedUpdate(message: AppNotificationMessage, quizList: Quiz[]): void {
+    if (!AppUtil.hasValue(message) || !AppUtil.hasValue(quizList)) {
+      return;
+    }
     const id: string = JSON.parse(message.content).id;
     AppUtil.removeById(quizList, id);
   }
@@ -93,6 +96,15 @@ export class QuizCrudService {
         AppUtil.triggerLoadingIndicatorStop();
       }
       throw ex;
+    }
+  }
+
+  public isPublicQuizMessage(message: AppNotificationMessage): boolean {
+    try {
+      const quiz: Quiz = JSON.parse(message.content);
+      return quiz.isPublic;
+    } catch (ex) {
+      return false;
     }
   }
 }

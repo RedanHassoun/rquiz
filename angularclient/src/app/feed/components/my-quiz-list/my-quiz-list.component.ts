@@ -62,9 +62,13 @@ export class MyQuizListComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.notificationService.onMessage(SocketTopics.TOPIC_QUIZ_ASSIGNED_TO_USER)
         .pipe(filter((message: AppNotificationMessage) => {
-          const quiz: Quiz = JSON.parse(message.content);
-          Object.setPrototypeOf(quiz, Quiz.prototype);
-          return quiz.isCreatedByUser(this.currentUserId);
+          try {
+            const quiz: Quiz = JSON.parse(message.content);
+            Object.setPrototypeOf(quiz, Quiz.prototype);
+            return quiz.isCreatedByUser(this.currentUserId);
+          } catch (ex) {
+            return false;
+          }
         }))
         .subscribe((message: AppNotificationMessage) => {
           this.quizCrudService.handleAddedQuiz(message, this.quizList);

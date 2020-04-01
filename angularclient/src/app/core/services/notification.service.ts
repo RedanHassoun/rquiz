@@ -55,15 +55,26 @@ export class NotificationService extends ClientDataService implements OnDestroy 
       });
   }
 
-  public onMessage(topic: string, messageHandler = this.jsonHandler): Observable<AppNotificationMessage> {
+  public onMessage(topic: string, messageHandler = this.jsonHandler, ignoreErrors = true): Observable<AppNotificationMessage> {
     const topicSubject: Subject<any> = this.stompTopicSubscriptionSubjects.get(topic);
     if (!topicSubject) {
       console.error(`Cannot find subscription for topic ${topic}`);
       return of(null);
     }
-    return topicSubject.asObservable().pipe(map((message: string) => {
-      return messageHandler.call(this, message);
-    }));
+    return topicSubject.asObservable()
+      .pipe(switchMap(message => {
+        return of(message)
+        .pipe(map((msg: string) => {
+          return messageHandler.call(this, msg);
+        }),
+        catchError(error => {
+          if (ignoreErrors === true) {
+            return of(null);
+          }
+          return throwError(error);
+        })
+        );
+      }));
   }
 
   private initNotificationsForCurrentUser(): void {

@@ -41,8 +41,7 @@ export class MyAssignedQuizComponent implements OnInit {
     this.subscriptions.push(
       this.notificationService.onMessage(SocketTopics.TOPIC_QUIZ_ASSIGNED_TO_USER)
         .pipe(filter((message: AppNotificationMessage) => {
-          const quiz: Quiz = JSON.parse(message.content);
-          return !quiz.isPublic;
+          return !this.quizCrudService.isPublicQuizMessage(message);
         }))
         .subscribe((message: AppNotificationMessage) => {
           this.quizCrudService.handleAddedQuiz(message, this.quizList);
