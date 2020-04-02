@@ -45,6 +45,10 @@ public class Quiz extends BaseModel{
     @JoinColumn(name=DBConsts.QUIZ_CREATOR_FIELD, nullable=false)
     private User creator;
 
+    @ManyToOne
+    @JoinColumn(name=DBConsts.QUIZ_CATEGORY_FIELD, nullable=false)
+    private QuizCategory category;
+
     @OneToMany(mappedBy = DBConsts.QUIZ_FIELD,
                cascade = CascadeType.ALL)
     private Set<QuizAnswer> answers = new HashSet<>();

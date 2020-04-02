@@ -23,12 +23,15 @@ public class AppConstants {
         public static final String QUIZ_TABLE_NAME = "quiz";
         public static final String USER_ANSWER_TABLE_NAME = "quiz_user_answer";
         public static final String USER_NOTIFICATION_TABLE_NAME = "user_notification";
+        public static final String QUIZ_CATEGORY_TABLE_NAME = "quiz_category";
+        public static final String COLUMN_NAME_ID = "id";
         public static final String USER_ID = "id";
         public static final String QUIZ_ID = "id";
         public static final String QUIZ_ANSWER_ID = "id";
 
         // Field names
         public static final String QUIZ_CREATOR_FIELD = "creator";
+        public static final String QUIZ_CATEGORY_FIELD = "category";
         public static final String QUIZ_FIELD = "quiz";
         public static final String QUIZ_ASSIGNED_USERS_FIELD = "assignedUsers";
         public static final String USER_FIELD = "user";
