@@ -84,7 +84,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
   get description() { return this.addQuizForm.controls.description; }
 
 
-  addAnswer(answerContent: string): void {
+  public addAnswer(answerContent: string): void {
     if (!answerContent) {
       return;
     }
@@ -92,11 +92,11 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     this.answerInput.nativeElement.value = '';
   }
 
-  publicChanged(isPublic: boolean): void {
+  public publicChanged(isPublic: boolean): void {
     this.quiz.isPublic = isPublic;
   }
 
-  attachAnImageChanged(attachAnImage: boolean): void {
+  public attachAnImageChanged(attachAnImage: boolean): void {
     this.attachAnImage = attachAnImage;
     if (attachAnImage === false) {
       this.imageToUpload = null;
@@ -107,7 +107,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     this.imageToUpload = files.item(0);
   }
 
-  addQuiz(): Promise<void> {
+  public addQuiz(): Promise<void> {
     if (this.quiz.answers.length < 2) {
       AppUtil.showWarningMessage('The quiz should have at least two answers');
       return;
@@ -160,11 +160,11 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     AppUtil.showError(error);
   }
 
-  setCorrect(answer: QuizAnswer): void {
+  public setCorrect(answer: QuizAnswer): void {
     this.quiz.setCorrectAnswer(answer);
   }
 
-  deleteAnswer(answer: QuizAnswer): void {
+  public deleteAnswer(answer: QuizAnswer): void {
     this.quiz.deleteAnswer(answer);
   }
 

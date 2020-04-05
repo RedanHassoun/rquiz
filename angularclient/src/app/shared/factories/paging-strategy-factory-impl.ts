@@ -87,4 +87,11 @@ export class PagingStrategyFactoryImpl extends PagingStrategyFactory {
             paramMap,
             pageSize ? pageSize : PagingStrategyFactoryImpl.DEFAULT_PAGE_SIZE);
     }
+
+    public async createSearchPageableStrategy(service: Service,
+        searchField: string, searchQuery: string): Promise<PagingDataFetchStrategy> {
+        const searchQueryValue = `${searchField}:${searchQuery}`;
+        const params = new Map<string, string>([['search', searchQueryValue]]);
+        return await this.createStrategyWithParams(service, params);
+    }
 }

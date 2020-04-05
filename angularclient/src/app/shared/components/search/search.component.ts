@@ -1,6 +1,5 @@
 import { AppUtil } from './../../util/app-util';
 import { Subscription } from 'rxjs';
-import { SearchService } from './../../services/search.service';
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged  } from 'rxjs/operators';
@@ -15,9 +14,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   @Output() searchQueryChanged = new EventEmitter();
   private subscriptions: Subscription[] = [];
   queryField: FormControl = new FormControl();
-
-  constructor(searchService: SearchService) {
-  }
 
   ngOnInit() {
     this.subscriptions.push(
