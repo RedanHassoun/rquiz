@@ -26,7 +26,7 @@ import { SocketTopics } from './../../../shared/util';
   styleUrls: ['./create-quiz.component.scss']
 })
 export class CreateQuizComponent extends FormInputComponent implements OnInit, OnDestroy {
-  @ViewChild('answerInput') answerInput: ElementRef;
+  @ViewChild('answerInput', { static: false }) answerInput: ElementRef;
   private subscriptions: Subscription[] = [];
   dropdownSettings: IDropdownSettings;
   quiz: Quiz;
