@@ -1,5 +1,5 @@
 @import "~compass-mixins/lib/compass/css3";
-@import './../../../variables.scss';
+@import "./../../../variables.scss";
 
 $size: 20vh;
 $border-radius: 60px;
@@ -38,12 +38,17 @@ $border-radius: 60px;
   display: flex;
   flex-flow: row nowrap;
   align-items: baseline;
+  margin-bottom: 6pt;
 }
 
 .title {
   color: $app-light-color;
   border-bottom: 2px solid $image-background-color;
   font-size: $title-medium-font-size;
+  word-break: break-word;
+}
+
+.description {
   word-break: break-word;
 }
 
@@ -56,7 +61,7 @@ $border-radius: 60px;
     width: 10vh;
     @include border-radius(40px);
   }
-  
+
   .img-wrapper {
     margin-top: 10px;
     margin-right: 10px;
