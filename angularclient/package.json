@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "exportSassVariables": "sass-export ./src/app/variables.scss -o ./src/app/exported-sass-variables.json -a",
+    "start": "npm run exportSassVariables && ng serve",
+    "build": "npm run exportSassVariables && ng build",
+    "build.prod": "npm run exportSassVariables && ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

@@ -1,3 +1,4 @@
+import { AppUtil } from './../util/app-util';
 import { BaseModel } from './base-model';
 import { AlreadyExistError } from './../app-errors/already-exist-error';
 import { UserAnswer } from './user-answer';
@@ -80,10 +81,17 @@ export class Quiz extends BaseModel {
             return null;
         }
         for (const answer of quizAnswers) {
-          if (answer.id === answerId) {
-            return answer;
-          }
+            if (answer.id === answerId) {
+                return answer;
+            }
         }
         return null;
-      }
+    }
+
+    public isSolved(): boolean {
+        if (!AppUtil.hasValue(this.totalNumberOfAnswers)) {
+            return false;
+        }
+        return this.totalNumberOfAnswers > 0;
+    }
 }

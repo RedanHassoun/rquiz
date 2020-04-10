@@ -1,3 +1,4 @@
+import { QuizStyleService } from './../../services/quiz-style.service';
 import { AppNotificationMessage } from './../../../shared/index';
 import { AppConsts } from './../../../shared/util/app-consts';
 import { ImageService } from './../../../shared/services/image.service';
@@ -21,20 +22,27 @@ import { Component, Input, OnDestroy, AfterContentInit } from '@angular/core';
 export class QuizItemComponent implements AfterContentInit, OnDestroy {
   @Input() public quiz: Quiz;
   @Input() currentUserId: string;
+  @Input() public changeBackgroundColorWhenSolved = true;
   isOwnedByCurrentUser: boolean;
   private subscriptions: Subscription[] = [];
+  public quizContainerBackgroundColor = QuizStyleService.QUIZ_BACKGROUND_COLOR_BASIC;
 
   constructor(private navigationService: NavigationHelperService,
     private quizService: QuizService,
     private notificationService: NotificationService,
     private router: Router,
-    private imageService: ImageService) {
+    private imageService: ImageService,
+    private quizStyleService: QuizStyleService) {
   }
 
-  ngAfterContentInit(): void {
+  async ngAfterContentInit() {
     // TODO: use generics in rest services
     this.quiz = Object.setPrototypeOf(this.quiz, Quiz.prototype);
     this.isOwnedByCurrentUser = this.quiz.isCreatedByUser(this.currentUserId);
+
+    if (!!this.changeBackgroundColorWhenSolved) {
+      this.quizContainerBackgroundColor = await this.quizStyleService.getQuizBackgroundColor(this.quiz);
+    }
   }
 
   getQuizImage(): string {

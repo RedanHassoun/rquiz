@@ -2,7 +2,7 @@
 
 <div class="quiz-list-container">
   <div class="quiz-list-item" *ngFor="let quiz of quizList">
-    <app-quiz-item [currentUserId]="currentUserId" [quiz]="quiz"></app-quiz-item>
+    <app-quiz-item [changeBackgroundColorWhenSolved]="false" [currentUserId]="currentUserId" [quiz]="quiz"></app-quiz-item>
   </div>
 </div>
 
