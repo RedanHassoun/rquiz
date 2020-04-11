@@ -8,6 +8,8 @@ class="search-bar">
     <div *ngFor="let user of users">
         <app-user-item [user]="user"></app-user-item>
     </div>
+
+    <app-spinner [loadingText]="" [showInfullScreen]="false"></app-spinner>
 </div>
 
 <app-pageable [searchMode]="true" [pagingStrategy]='pagingStrategy' (dataListChanged)="peopleListChanged($event)">

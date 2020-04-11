@@ -5,19 +5,21 @@ import { PagingDataFetchStrategy } from './../../../core/strategies/paging-data-
 import { User } from './../../../shared/models/user';
 import { UserService } from './../../../core/services/user-service.service';
 import * as _ from 'lodash';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { StartLoadingIndicator } from 'src/app/shared/decorators/spinner-decorators';
 
 @Component({
   selector: 'app-people-list',
   templateUrl: './people-list.component.html',
   styleUrls: ['./people-list.component.scss']
 })
-export class PeopleListComponent implements OnInit {
+export class PeopleListComponent implements OnInit, OnDestroy {
   users: User[] = [];
   pagingStrategy: PagingDataFetchStrategy;
 
   constructor(private userService: UserService, private pagingStrategyFactory: PagingStrategyFactory) { }
 
+  @StartLoadingIndicator
   async ngOnInit() {
     this.pagingStrategy = await this.pagingStrategyFactory.createStrategyWithParams(
       Service.User, null);
@@ -31,6 +33,7 @@ export class PeopleListComponent implements OnInit {
     this.users = _.unionWith(this.users, newUsers, (user, otherUser) => user.username === otherUser.username );
   }
 
+  @StartLoadingIndicator
   public async searchQueryChanged(searchQuery: string): Promise<void> {
     this.users = [];
     if (!searchQuery || searchQuery === '') {
@@ -41,5 +44,9 @@ export class PeopleListComponent implements OnInit {
 
     this.pagingStrategy = await this.pagingStrategyFactory.createSearchPageableStrategy(
       Service.User, User.SEARCHABLE_FIELD_USERNAME, searchQuery);
+  }
+
+  ngOnDestroy(): void {
+    AppUtil.triggerLoadingIndicatorStop();
   }
 }

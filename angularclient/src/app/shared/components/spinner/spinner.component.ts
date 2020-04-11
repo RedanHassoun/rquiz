@@ -12,11 +12,13 @@ import { isLoading$ } from '../../decorators/spinner-decorators';
 export class SpinnerComponent implements OnInit, OnDestroy {
   @Input() loadingText = 'Please wait...';
   @Input() showCancel = false;
+  @Input() showInfullScreen = true;
   @Output() cancelButtonClicked = new EventEmitter();
 
   private subscriptions: Subscription[] = [];
 
-  constructor(private spinner: NgxSpinnerService) { }
+  constructor(private spinner: NgxSpinnerService) {
+   }
 
   ngOnInit() {
     this.subscriptions.push(

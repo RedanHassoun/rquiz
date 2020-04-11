@@ -1,4 +1,4 @@
-<ngx-spinner bdColor="rgba(63,81,181,0.8)" size="medium" color="#fff" type="ball-scale-multiple">
+<ngx-spinner bdColor="rgba(63,81,181,0.8)" size="medium" color="#fff" type="ball-scale-multiple" [fullScreen]="showInfullScreen">
     <div class="loading">
         <p>{{ loadingText }}</p>
         <button *ngIf="showCancel" (click)="cancelClicked()">Cancel</button>
