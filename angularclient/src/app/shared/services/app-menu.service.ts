@@ -1,4 +1,4 @@
-import { NotificationService } from './../../core/services/notification.service';
+import { UserNotificationsService } from '../../core/services/user-notifications.service';
 import { User } from './../models/user';
 import { NavigationHelperService } from './navigation-helper.service';
 import { AuthenticationService } from './../../core/services/authentication.service';
@@ -16,7 +16,7 @@ export class AppMenuService {
   constructor(private router: Router,
     public authService: AuthenticationService,
     private navigationService: NavigationHelperService,
-    private notificationService: NotificationService) { }
+    private userNotificationsService: UserNotificationsService) { }
 
   public routeToPage(pageName: string): void {
     switch (pageName) {
@@ -72,6 +72,6 @@ export class AppMenuService {
     const targetRoute = `/${ROUTE_NAMES.QUIZ_LIST.name}`;
     this.router.navigate([targetRoute]);
     this.updateCurrentPage(ROUTE_NAMES.QUIZ_LIST.name);
-    this.notificationService.initNotificationsForUser(userId);
+    this.userNotificationsService.initNotificationsForUser(userId);
   }
 }

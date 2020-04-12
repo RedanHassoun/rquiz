@@ -1,19 +1,19 @@
-import { AppNotificationMessage } from './../../shared/index';
-import { AppUtil } from './../../shared/util/app-util';
-import { CoreUtil } from './../common/core-util';
+import { AppNotificationMessage } from '../../shared/index';
+import { AppUtil } from '../../shared/util/app-util';
+import { CoreUtil } from '../common/core-util';
 import { ClientDataService } from '../../shared/services/client-data.service';
-import { User } from './../../shared/models/user';
+import { User } from '../../shared/models/user';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { map, catchError, take } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { AppConsts } from './../../shared/util/app-consts';
+import { AppConsts } from '../../shared/util/app-consts';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NotificationService extends ClientDataService {
+export class UserNotificationsService extends ClientDataService {
   private currentUser: User;
   private myNotificationsListSubject = new BehaviorSubject<AppNotificationMessage[]>([]);
   private readonly URL_KEY_TARGET_USER = 'targetUserId';

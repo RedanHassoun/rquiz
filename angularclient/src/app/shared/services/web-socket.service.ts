@@ -1,5 +1,5 @@
 import { CoreUtil } from './../../core/common/core-util';
-import { NotificationService } from './../../core/services/notification.service';
+import { UserNotificationsService } from '../../core/services/user-notifications.service';
 import { AppUtil } from './../util/app-util';
 import { first, filter, switchMap, map, catchError, take } from 'rxjs/operators';
 import { Injectable, OnDestroy } from '@angular/core';
@@ -21,7 +21,7 @@ export class WebSocketService implements OnDestroy {
   private readonly RECONNECT_DELAY_SECS = 5;
   private readonly stompTopicSubscriptionSubjects = new Map<string, Subject<any>>();
 
-  constructor(private notificationService: NotificationService) {
+  constructor(private notificationService: UserNotificationsService) {
     for (const topicKey of Object.keys(SocketTopics)) {
       this.stompTopicSubscriptionSubjects.set(SocketTopics[topicKey], new Subject<any>());
     }

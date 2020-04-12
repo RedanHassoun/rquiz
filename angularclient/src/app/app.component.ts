@@ -13,7 +13,7 @@ import { AuthenticationService } from './core/services/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { NotificationService } from './core/services';
+import { UserNotificationsService } from './core/services';
 
 @Component({
   selector: 'app-root',
@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer,
     private navigationService: NavigationHelperService,
-    private notificationService: NotificationService,
+    private userNotificationsService: UserNotificationsService,
     private imageService: ImageService,
     private usersService: UserService,
     private scssStyleService: ScssStyleService,
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.initIcons();
-    this.notificationService.myNotificationsCount$.subscribe((notificationsCount: number) => {
+    this.userNotificationsService.myNotificationsCount$.subscribe((notificationsCount: number) => {
       this.myNotificationsCount = notificationsCount;
     });
 

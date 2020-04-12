@@ -16,7 +16,7 @@ import * as _ from 'lodash';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SocketTopics } from '../../../shared/util';
-import { NotificationService } from './../../../core/services/notification.service';
+import { UserNotificationsService } from '../../../core/services/user-notifications.service';
 import { StartLoadingIndicator } from './../../../shared/decorators/spinner-decorators';
 
 @Component({
@@ -33,7 +33,6 @@ export class QuizListComponent implements OnInit, OnDestroy {
   constructor(private navigationService: NavigationHelperService,
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer,
-    private notificationService: NotificationService,
     private authService: AuthenticationService,
     private pagingStrategyFactory: PagingStrategyFactory,
     private quizCrudService: QuizCrudService,

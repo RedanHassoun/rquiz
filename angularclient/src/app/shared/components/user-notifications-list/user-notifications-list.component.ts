@@ -3,7 +3,7 @@ import { switchMap } from 'rxjs/operators';
 import { NavigationHelperService } from './../../services/navigation-helper.service';
 import { AppUtil } from './../../util/app-util';
 import { Router } from '@angular/router';
-import { NotificationService } from './../../../core/services/notification.service';
+import { UserNotificationsService } from '../../../core/services/user-notifications.service';
 import { createNotificationMessageText, createNotificationRouteUrl } from '../../util/socket-util';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
@@ -18,7 +18,7 @@ export class UserNotificationsListComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   notifications: AppNotificationMessage[] = [];
 
-  constructor(private notificationService: NotificationService,
+  constructor(private notificationService: UserNotificationsService,
     public dialogRef: MatDialogRef<UserNotificationsListComponent>,
     private router: Router,
     private navigationService: NavigationHelperService) { }

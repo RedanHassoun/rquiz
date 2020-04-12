@@ -6,7 +6,6 @@ import { ImageService } from './../../../shared/services/image.service';
 import { Router } from '@angular/router';
 import { User } from '../../../shared/models/user';
 import { SocketTopics } from '../../../shared/util';
-import { NotificationService } from '../../../core/services/notification.service';
 import { QuizService } from '../../services/quiz.service';
 import { ShowQuizComponent } from '../show-quiz/show-quiz.component';
 import { AppUtil } from '../../../shared/util/app-util';
@@ -30,7 +29,6 @@ export class QuizItemComponent implements AfterContentInit, OnDestroy {
 
   constructor(private navigationService: NavigationHelperService,
     private quizService: QuizService,
-    private notificationService: NotificationService,
     private router: Router,
     private imageService: ImageService,
     private quizStyleService: QuizStyleService,
