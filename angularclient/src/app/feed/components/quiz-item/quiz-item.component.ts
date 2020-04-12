@@ -1,3 +1,4 @@
+import { WebSocketService } from './../../../shared/services/web-socket.service';
 import { QuizStyleService } from './../../services/quiz-style.service';
 import { AppNotificationMessage } from './../../../shared/index';
 import { ROUTE_NAMES } from './../../../shared/util';
@@ -32,7 +33,8 @@ export class QuizItemComponent implements AfterContentInit, OnDestroy {
     private notificationService: NotificationService,
     private router: Router,
     private imageService: ImageService,
-    private quizStyleService: QuizStyleService) {
+    private quizStyleService: QuizStyleService,
+    private webSocketService: WebSocketService) {
   }
 
   async ngAfterContentInit() {
@@ -64,7 +66,7 @@ export class QuizItemComponent implements AfterContentInit, OnDestroy {
           this.quizService.delete(quizId)
             .subscribe(() => {
               const deletedQuizId = new AppNotificationMessage({ id: quizId }, SocketTopics.TOPIC_QUIZ_DELETED_UPDATE);
-              this.notificationService.send(deletedQuizId);
+              this.webSocketService.send(deletedQuizId);
             }, (err) => {
               AppUtil.showError(err);
             });

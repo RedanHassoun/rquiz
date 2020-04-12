@@ -1,3 +1,4 @@
+import { WebSocketService } from './../../../shared/services/web-socket.service';
 import { AppNotificationMessage } from './../../../shared/index';
 import { filter } from 'rxjs/operators';
 import { QuizCrudService } from './../../services/quiz-crud.service';
@@ -35,7 +36,8 @@ export class QuizListComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private authService: AuthenticationService,
     private pagingStrategyFactory: PagingStrategyFactory,
-    private quizCrudService: QuizCrudService) {
+    private quizCrudService: QuizCrudService,
+    private webSocketService: WebSocketService) {
     this.iconRegistry.addSvgIcon( // TODO: make more general
       'done',
       this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/baseline-done-24px.svg'));
@@ -56,7 +58,7 @@ export class QuizListComponent implements OnInit, OnDestroy {
       Service.Quiz, new Map<string, string>([['isPublic', 'true']]));
 
     this.subscriptions.push(
-      this.notificationService.onMessage(SocketTopics.TOPIC_QUIZ_LIST_UPDATE)
+      this.webSocketService.onMessage(SocketTopics.TOPIC_QUIZ_LIST_UPDATE)
         .pipe(filter((message: AppNotificationMessage) => {
           return this.quizCrudService.isPublicQuizMessage(message);
         }))
@@ -66,14 +68,14 @@ export class QuizListComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.push(
-      this.notificationService.onMessage(SocketTopics.TOPIC_QUIZ_ANSWERS_UPDATE)
+      this.webSocketService.onMessage(SocketTopics.TOPIC_QUIZ_ANSWERS_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
           this.quizCrudService.handleQuizAnswersUpdate(message, this.quizList);
         })
     );
 
     this.subscriptions.push(
-      this.notificationService.onMessage(SocketTopics.TOPIC_QUIZ_DELETED_UPDATE)
+      this.webSocketService.onMessage(SocketTopics.TOPIC_QUIZ_DELETED_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
           this.quizCrudService.handleQuizDeletedUpdate(message, this.quizList);
         })

@@ -1,7 +1,7 @@
+import { WebSocketService } from './../../services/web-socket.service';
 import { AppNotificationMessage } from './../../models/app-notification-message';
 import { ImageService } from './../../services/image.service';
 import { SocketTopics } from '../../util';
-import { NotificationService } from './../../../core/services/notification.service';
 import { EditProfileComponent } from './../edit-profile/edit-profile.component';
 import { NavigationHelperService } from './../../services/navigation-helper.service';
 import { DomSanitizer } from '@angular/platform-browser'
@@ -31,8 +31,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer,
     private navigationService: NavigationHelperService,
-    private notificationService: NotificationService,
-    private imageService: ImageService) {
+    private imageService: ImageService,
+    private webSocketService: WebSocketService) {
     this.iconRegistry.addSvgIcon( // TODO: make more general
       'edit',
       this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/edit-24px.svg'));
@@ -52,7 +52,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.push(
-      this.notificationService.onMessage(SocketTopics.TOPIC_USER_UPDATE)
+      this.webSocketService.onMessage(SocketTopics.TOPIC_USER_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
           if (message && message.content) {
             const userId = message.content;

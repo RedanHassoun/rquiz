@@ -1,9 +1,9 @@
+import { WebSocketService } from './../../../shared/services/web-socket.service';
 import { AppNotificationMessage } from './../../../shared/index';
 import { AppConsts } from './../../../shared/util/app-consts';
 import { SocketTopics } from '../../../shared/util';
 import { QuizCrudService } from './../../services/quiz-crud.service';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
-import { NotificationService } from './../../../core/services/notification.service';
 import { PagingStrategyFactory, MY_ASSIGNED_QUIZ_URL } from './../../../shared/factories/paging-strategy-factory';
 import { AppUtil } from './../../../shared/util/app-util';
 import * as _ from 'lodash';
@@ -27,9 +27,9 @@ export class MyAssignedQuizComponent implements OnInit {
   appConsts: any = AppConsts; // TODO: make this more elegant
 
   constructor(private pagingStrategyFactory: PagingStrategyFactory,
-    private notificationService: NotificationService,
     public authService: AuthenticationService,
-    private quizCrudService: QuizCrudService) {
+    private quizCrudService: QuizCrudService,
+    private webSocketService: WebSocketService) {
   }
 
   @StartLoadingIndicator
@@ -39,7 +39,7 @@ export class MyAssignedQuizComponent implements OnInit {
       MY_ASSIGNED_QUIZ_URL, new Map<string, string>([['currentUserId', this.currentUserId]]));
 
     this.subscriptions.push(
-      this.notificationService.onMessage(SocketTopics.TOPIC_QUIZ_ASSIGNED_TO_USER)
+      this.webSocketService.onMessage(SocketTopics.TOPIC_QUIZ_ASSIGNED_TO_USER)
         .pipe(filter((message: AppNotificationMessage) => {
           return !this.quizCrudService.isPublicQuizMessage(message);
         }))
@@ -49,14 +49,14 @@ export class MyAssignedQuizComponent implements OnInit {
     );
 
     this.subscriptions.push(
-      this.notificationService.onMessage(SocketTopics.TOPIC_QUIZ_ANSWERS_UPDATE)
+      this.webSocketService.onMessage(SocketTopics.TOPIC_QUIZ_ANSWERS_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
           this.quizCrudService.handleQuizAnswersUpdate(message, this.quizList);
         })
     );
 
     this.subscriptions.push(
-      this.notificationService.onMessage(SocketTopics.TOPIC_QUIZ_DELETED_UPDATE)
+      this.webSocketService.onMessage(SocketTopics.TOPIC_QUIZ_DELETED_UPDATE)
         .subscribe((message: AppNotificationMessage) => {
           this.quizCrudService.handleQuizDeletedUpdate(message, this.quizList);
         })

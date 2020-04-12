@@ -1,10 +1,10 @@
+import { WebSocketService } from './../../../shared/services/web-socket.service';
 import { QuizCrudService } from './../../services/quiz-crud.service';
 import { UserAnswersListComponent } from '../../../shared/components/user-answers-list/user-answers-list.component';
 import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
 import { AppUtil } from './../../../shared/util/app-util';
 import { UserAnswer } from './../../../shared/models/user-answer';
 import { SocketTopics } from '../../../shared/util';
-import { NotificationService } from '../../../core/services/notification.service';
 import { QuizAnswer } from '../../../shared/models/quiz-answer';
 import { Quiz } from '../../../shared/models/quiz';
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
@@ -32,9 +32,9 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
     private quizService: QuizService,
     private authenticationService: AuthenticationService,
     private dialogRef: MatDialogRef<ShowQuizComponent>,
-    private notificationService: NotificationService,
     private navigationService: NavigationHelperService,
-    private quizCrudService: QuizCrudService) { }
+    private quizCrudService: QuizCrudService,
+    private webSocketService: WebSocketService) { }
 
   async ngOnInit() {
     this.currentUser = await this.authenticationService.getCurrentUser();
@@ -118,7 +118,7 @@ export class ShowQuizComponent implements OnInit, OnDestroy {
     const targetUserIds = [this.quiz.creator.id];
     solvedQuizNotification.targetUserIds = targetUserIds;
 
-    this.notificationService.send(solvedQuizNotification);
+    this.webSocketService.send(solvedQuizNotification);
     this.dialogRef.close();
   }
 

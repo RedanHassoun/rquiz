@@ -1,9 +1,9 @@
+import { WebSocketService } from './../../services/web-socket.service';
 import { AppNotificationMessage } from './../../models/app-notification-message';
 import { switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { FileUploadService } from './../../../core/services/file-upload.service';
 import { UpdateUserRequest } from './../../models/update-user-request';
-import { NotificationService } from './../../../core/services/notification.service';
 import { SocketTopics } from '../../util';
 import { AppUtil } from './../../util/app-util';
 import { UserService } from './../../../core/services/user-service.service';
@@ -31,8 +31,8 @@ export class EditProfileComponent extends FormInputComponent implements OnInit, 
     @Inject(MAT_DIALOG_DATA) private user: User,
     private userService: UserService,
     private dialogRef: MatDialogRef<EditProfileComponent>,
-    private notificationService: NotificationService,
-    private fileUploadService: FileUploadService) {
+    private fileUploadService: FileUploadService,
+    private webSocketService: WebSocketService) {
     super();
   }
 
@@ -71,7 +71,7 @@ export class EditProfileComponent extends FormInputComponent implements OnInit, 
   @StopLoadingIndicator
   private handleUpdateProfileSuccess() {
     const updatedUser = new AppNotificationMessage(this.user.id, SocketTopics.TOPIC_USER_UPDATE);
-    this.notificationService.send(updatedUser);
+    this.webSocketService.send(updatedUser);
     this.dialogRef.close();
   }
 

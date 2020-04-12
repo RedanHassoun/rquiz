@@ -1,3 +1,4 @@
+import { WebSocketService } from './shared/services/web-socket.service';
 import { AppMenuService } from './shared/services/app-menu.service';
 import { ScssStyleService } from './shared/services/scss-style.service';
 import { UserService } from './core/services/user-service.service';
@@ -34,7 +35,8 @@ export class AppComponent implements OnInit {
     private imageService: ImageService,
     private usersService: UserService,
     private scssStyleService: ScssStyleService,
-    private appMenuService: AppMenuService) {
+    private appMenuService: AppMenuService,
+    private webSocketService: WebSocketService) {
   }
 
   ngOnInit(): void {
@@ -62,7 +64,7 @@ export class AppComponent implements OnInit {
   }
 
   private listenForUserNotifications(): void {
-    this.notificationService.onMessage(SocketTopics.TOPIC_USER_UPDATE)
+    this.webSocketService.onMessage(SocketTopics.TOPIC_USER_UPDATE)
       .pipe(filter(message => AppUtil.isNotificationForCurrentUserUpdate(message, this.currentUser)))
       .pipe(switchMap(message => {
         return this.usersService.get(message.content);

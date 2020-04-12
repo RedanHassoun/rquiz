@@ -1,9 +1,9 @@
+import { WebSocketService } from './../../../shared/services/web-socket.service';
 import { AppNotificationMessage } from './../../../shared/index';
 import { AppUtil } from './../../../shared/util/app-util';
 import { QuizCrudService } from './../../services/quiz-crud.service';
 import { FileUploadService } from '../../../core/services/file-upload.service';
 import { take, switchMap } from 'rxjs/operators';
-import { NotificationService } from '../../../core/services/notification.service';
 import { UserService } from '../../../core/services/user-service.service';
 import { User } from '../../../shared/models/user';
 import { AuthenticationService } from '../../../core/services/authentication.service';
@@ -42,9 +42,9 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<CreateQuizComponent>,
     private userService: UserService,
-    private notificationService: NotificationService,
     private fileUploadService: FileUploadService,
-    private quizCrudService: QuizCrudService) {
+    private quizCrudService: QuizCrudService,
+    private webSocketService: WebSocketService) {
     super();
   }
 
@@ -141,7 +141,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     let addedQuizNotification = null;
     if (addedQuiz && addedQuiz.isPublic) {
       addedQuizNotification = new AppNotificationMessage(addedQuiz, SocketTopics.TOPIC_QUIZ_LIST_UPDATE);
-      this.notificationService.send(addedQuizNotification);
+      this.webSocketService.send(addedQuizNotification);
     } else {
       for (const assignedUser of addedQuiz.assignedUsers) {
         addedQuizNotification = new AppNotificationMessage(addedQuiz,
@@ -149,7 +149,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
           this.currentUser.id,
           this.currentUser.username);
         addedQuizNotification.targetUserIds = [assignedUser.id];
-        this.notificationService.send(addedQuizNotification);
+        this.webSocketService.send(addedQuizNotification);
       }
     }
     this.dialogRef.close();
