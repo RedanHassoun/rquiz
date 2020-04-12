@@ -11,7 +11,7 @@ import { ROUTE_NAMES } from './../util/app-consts';
   providedIn: 'root'
 })
 export class AppMenuService {
-  private currentPageSubject: BehaviorSubject<string> = new BehaviorSubject<string>(ROUTE_NAMES.LOGIN.name);
+  private currentPageSubject: BehaviorSubject<string> = new BehaviorSubject<string>(ROUTE_NAMES.QUIZ_LIST.name);
 
   constructor(private router: Router,
     public authService: AuthenticationService,

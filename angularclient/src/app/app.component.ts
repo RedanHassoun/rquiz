@@ -22,7 +22,7 @@ import { NotificationService } from './core/services';
 export class AppComponent implements OnInit {
   public drawerOpened = false;
   public routeNames: any = ROUTE_NAMES; // TODO: make this more elegant
-  public selectedPage = ROUTE_NAMES.QUIZ_LIST.name;
+  public selectedPage: string;
   public myNotificationsCount: number;
   public currentUser: User;
 
