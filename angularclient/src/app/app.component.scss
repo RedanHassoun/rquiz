@@ -38,3 +38,18 @@ h1.app-name {
   width: 5vh;
   height: 5vh;
 }
+
+.menu-list-item {
+  height: 6vh;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  padding-left: 5pt;
+  min-width: 80pt;
+}
+
+.menu-list-item a {
+  margin-left: 5pt;
+  margin-right: 15pt;
+}

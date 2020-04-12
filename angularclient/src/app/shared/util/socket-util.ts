@@ -1,4 +1,4 @@
-import { AppConsts } from './app-consts';
+import { ROUTE_NAMES } from './app-consts';
 import { Quiz } from '../models/quiz';
 import { AppNotificationMessage } from '../models/app-notification-message';
 
@@ -46,11 +46,11 @@ export function createNotificationRouteUrl(notification: AppNotificationMessage)
     }
 
     if (notification.topic.toLowerCase() === SocketTopics.TOPIC_QUIZ_ANSWERS_UPDATE.toLowerCase()) {
-        return AppConsts.MY_QUIZ_LIST;
+        return ROUTE_NAMES.MY_QUIZ_LIST.name;
     }
 
     if (notification.topic.toLowerCase() === SocketTopics.TOPIC_QUIZ_ASSIGNED_TO_USER.toLowerCase()) {
-        return AppConsts.MY_ASSIGNED_QUIZ_LIST;
+        return ROUTE_NAMES.MY_ASSIGNED_QUIZ_LIST.name;
     }
 
     return '/';

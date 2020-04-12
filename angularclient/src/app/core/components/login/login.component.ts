@@ -1,11 +1,10 @@
-import { NotificationService } from './../../services/notification.service';
+import { AppMenuService } from './../../../shared/services/app-menu.service';
 import { FormInputComponent } from './../../../shared/components/form-input/form-input.component';
 import { AccessDeniedError } from './../../../shared/app-errors/access-denied-error';
 import { LoginMessage } from '../../../shared/models/login-message';
 import { AppUtil } from '../../../shared/util/app-util';
 import { AuthenticationService } from '../../services/authentication.service';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
@@ -18,10 +17,9 @@ export class LoginComponent extends FormInputComponent implements OnInit {
   invalidLogin: boolean;
 
   constructor(
-    private router: Router,
     private authService: AuthenticationService,
     private formBuilder: FormBuilder,
-    private notificationService: NotificationService) {
+    private appMenuService: AppMenuService) {
     super();
   }
 
@@ -30,7 +28,7 @@ export class LoginComponent extends FormInputComponent implements OnInit {
       .subscribe(async (response) => {
         this.authService.persistTokenFromResponse(response);
         const currentUserId: string = (await this.authService.getCurrentUser()).id;
-        this.goToMainPage(currentUserId);
+        this.appMenuService.enterMainPage(currentUserId);
       }, (err: Error) => {
         if (err instanceof AccessDeniedError) {
           this.invalidLogin = true;
@@ -43,7 +41,7 @@ export class LoginComponent extends FormInputComponent implements OnInit {
   async ngOnInit() {
     if (this.authService.isLoggedIn()) {
       const currentUserId: string = (await this.authService.getCurrentUser()).id;
-      await this.goToMainPage(currentUserId);
+      this.appMenuService.enterMainPage(currentUserId);
       return;
     }
 
@@ -51,11 +49,6 @@ export class LoginComponent extends FormInputComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
-  }
-
-  private async goToMainPage(userId: string) {
-    this.router.navigate(['/quizList']);
-    this.notificationService.initNotificationsForUser(userId);
   }
 
   get username() { return this.loginForm.controls.username; }

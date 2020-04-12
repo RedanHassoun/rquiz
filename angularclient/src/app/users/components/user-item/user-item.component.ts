@@ -1,5 +1,4 @@
-import { AppConsts } from './../../../shared/util/app-consts';
-import { AppUtil } from './../../../shared/util/app-util';
+import { AppUtil, ROUTE_NAMES } from './../../../shared/util';
 import { ImageService } from './../../../shared/services/image.service';
 import { User } from './../../../shared/models/user';
 import { Component, OnInit, Input } from '@angular/core';
@@ -28,6 +27,6 @@ export class UserItemComponent implements OnInit {
       AppUtil.handleNullError('User');
     }
 
-    this.router.navigate([AppConsts.PEOPLE_LIST, user.id]);
+    this.router.navigate([ROUTE_NAMES.PEOPLE_LIST, user.id]);
   }
 }

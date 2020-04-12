@@ -1,7 +1,7 @@
 import { AppNotificationMessage } from './../../../shared/index';
 import { CreateQuizComponent } from './../create-quiz/create-quiz.component';
 import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
-import { AppConsts } from './../../../shared/util/app-consts';
+import { AppConsts, ROUTE_NAMES } from './../../../shared/util/app-consts';
 import { QuizCrudService } from './../../services/quiz-crud.service';
 import { filter } from 'rxjs/operators';
 import { SocketTopics } from '../../../shared/util';
@@ -98,7 +98,7 @@ export class MyQuizListComponent implements OnInit, OnDestroy {
   }
 
   getPageTitle(): string {
-    return this.appConsts.MY_QUIZ_LIST_DISPLAY;
+    return ROUTE_NAMES.MY_QUIZ_LIST.display;
   }
 
   openCreateQuizDialog() {

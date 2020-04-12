@@ -6,28 +6,46 @@
     <h1 class="app-name">RQuiz</h1>
     <div *ngIf="this.authService.isLoggedIn()" class="right-side-items">
       <ng-container *ngIf="currentUser">
-          <img id="user-image" src={{getUserImageUrl()}} alt="User image">
-          <div id="username">{{ currentUser.username }}</div>
+        <img id="user-image" src={{getUserImageUrl()}} alt="User image">
+        <div id="username">{{ currentUser.username }}</div>
       </ng-container>
-      <mat-icon id="notifications-bell" svgIcon="bell"
-        [matBadge]="myNotificationsCount" matBadgeColor="warn" (click)="openUserNotificationsListDialog()"></mat-icon>
+      <mat-icon id="notifications-bell" svgIcon="bell" [matBadge]="myNotificationsCount" matBadgeColor="warn"
+        (click)="openUserNotificationsListDialog()"></mat-icon>
     </div>
   </mat-toolbar>
 
   <mat-sidenav-container class="app-side-nav-container mat-app-background">
     <mat-sidenav #snav [mode]="'side'" [(opened)]="drawerOpened" fixedTopGap="56">
       <mat-nav-list>
-        <a mat-list-item (click)="goToPage('home')">{{ appPages.get('home') }}</a>
+        <a class="menu-list-item" mat-list-item (click)="goToPage(routeNames.QUIZ_LIST.name)" [ngStyle]="getListItemStyle(routeNames.QUIZ_LIST.name)">
+          <mat-icon>home</mat-icon>
+          <a> {{ getRouteDisplayName(routeNames.QUIZ_LIST.name) }} </a>
+        </a>
 
-        <a mat-list-item (click)="goToPage('profile')">{{ appPages.get('profile') }}</a>
+        <a class="menu-list-item" mat-list-item (click)="goToPage(routeNames.PROFILE.name)" [ngStyle]="getListItemStyle(routeNames.PROFILE.name)">
+          <mat-icon>person</mat-icon>
+          <a> {{ getRouteDisplayName(routeNames.PROFILE.name) }} </a>
+        </a>
 
-        <a mat-list-item (click)="goToPage(appConsts.MY_QUIZ_LIST)">{{ appPages.get(appConsts.MY_QUIZ_LIST) }}</a>
+        <a class="menu-list-item" mat-list-item (click)="goToPage(routeNames.MY_QUIZ_LIST.name)" [ngStyle]="getListItemStyle(routeNames.MY_QUIZ_LIST.name)">
+          <mat-icon>assignment</mat-icon>
+          <a>{{ getRouteDisplayName(routeNames.MY_QUIZ_LIST.name) }}</a>
+        </a>
 
-        <a mat-list-item (click)="goToPage(appConsts.MY_ASSIGNED_QUIZ_LIST)">{{ appPages.get(appConsts.MY_ASSIGNED_QUIZ_LIST) }}</a>
+        <a class="menu-list-item" mat-list-item (click)="goToPage(routeNames.MY_ASSIGNED_QUIZ_LIST.name)" [ngStyle]="getListItemStyle(routeNames.MY_ASSIGNED_QUIZ_LIST.name)">
+          <mat-icon>assignment_return</mat-icon>
+          <a> {{ getRouteDisplayName(routeNames.MY_ASSIGNED_QUIZ_LIST.name) }} </a>
+        </a>
 
-        <a mat-list-item (click)="goToPage(appConsts.PEOPLE_LIST)">{{ appPages.get(appConsts.PEOPLE_LIST) }}</a>
+        <a class="menu-list-item" mat-list-item (click)="goToPage(routeNames.PEOPLE_LIST.name)" [ngStyle]="getListItemStyle(routeNames.PEOPLE_LIST.name)">
+          <mat-icon>people</mat-icon>
+          <a> {{ getRouteDisplayName(routeNames.PEOPLE_LIST.name) }} </a>
+        </a>
 
-        <a mat-list-item (click)="goToPage('logout')">{{ appPages.get('logout') }}</a>
+        <a class="menu-list-item" mat-list-item (click)="goToPage(routeNames.LOGOUT.name)">
+          <mat-icon svgIcon="exit_to_app"></mat-icon>
+          <a> {{ getRouteDisplayName(routeNames.LOGOUT.name) }} </a>
+        </a>
 
       </mat-nav-list>
     </mat-sidenav>

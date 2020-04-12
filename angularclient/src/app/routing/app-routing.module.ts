@@ -11,17 +11,17 @@ import { NotFoundComponent } from '../core/components/not-found/not-found.compon
 import { LoginComponent } from '../core/components/login/login.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AppConsts } from '../shared/util/app-consts';
+import { ROUTE_NAMES } from '../shared/util';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'quizList', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'quizList', component: QuizListComponent, canActivate: [AuthGuard] },
-  { path:  AppConsts.MY_QUIZ_LIST, component: MyQuizListComponent, canActivate: [AuthGuard] },
-  { path:  AppConsts.MY_ASSIGNED_QUIZ_LIST, component: MyAssignedQuizComponent, canActivate: [AuthGuard] },
-  { path: `${AppConsts.PEOPLE_LIST}/:id`, component: ProfileComponent, canActivate: [AuthGuard] },
-  { path:  AppConsts.PEOPLE_LIST, component: PeopleListComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: ROUTE_NAMES.QUIZ_LIST.name, pathMatch: 'full' },
+  { path: ROUTE_NAMES.LOGIN.name, component: LoginComponent },
+  { path: ROUTE_NAMES.REGISTER.name, component: RegisterComponent },
+  { path: ROUTE_NAMES.QUIZ_LIST.name, component: QuizListComponent, canActivate: [AuthGuard] },
+  { path: ROUTE_NAMES.MY_QUIZ_LIST.name, component: MyQuizListComponent, canActivate: [AuthGuard] },
+  { path: ROUTE_NAMES.MY_ASSIGNED_QUIZ_LIST.name, component: MyAssignedQuizComponent, canActivate: [AuthGuard] },
+  { path: ROUTE_NAMES.PROFILE.name, component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: ROUTE_NAMES.PEOPLE_LIST.name, component: PeopleListComponent, canActivate: [AuthGuard] },
   { path: '**', component: NotFoundComponent }
 ];
 

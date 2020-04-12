@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormInputComponent } from './../../../shared/components/form-input/form-input.component';
+import { ROUTE_NAMES } from 'src/app/shared/util';
 
 @Component({
   selector: 'app-register',
@@ -23,7 +24,8 @@ export class RegisterComponent extends FormInputComponent implements OnInit {
 
   ngOnInit() {
     if (this.authenticationService.isLoggedIn()) {
-      this.router.navigate(['/quizList']);
+      const targetRoute = `/${ROUTE_NAMES.QUIZ_LIST.name}`;
+      this.router.navigate([targetRoute]);
     }
 
     this.registerForm = this.formBuilder.group({
@@ -47,7 +49,8 @@ export class RegisterComponent extends FormInputComponent implements OnInit {
     AppUtil.triggerLoadingIndicator();
     this.authService.register(registerRequest).subscribe(response => {
       AppUtil.triggerLoadingIndicatorStop();
-      this.router.navigate(['/login']);
+      const targetRoute = `/${ROUTE_NAMES.LOGIN.name}`;
+      this.router.navigate([targetRoute]);
     }, (err) => {
       AppUtil.triggerLoadingIndicatorStop();
       AppUtil.showError(err);
@@ -55,7 +58,8 @@ export class RegisterComponent extends FormInputComponent implements OnInit {
   }
 
   cancelRegister(): void {
-    this.router.navigate(['/login']);
+    const targetRoute = `/${ROUTE_NAMES.LOGIN.name}`;
+    this.router.navigate([targetRoute]);
   }
 
   isRegisterButtonDisabled(): boolean {

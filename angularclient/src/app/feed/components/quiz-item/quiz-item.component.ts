@@ -1,6 +1,6 @@
 import { QuizStyleService } from './../../services/quiz-style.service';
 import { AppNotificationMessage } from './../../../shared/index';
-import { AppConsts } from './../../../shared/util/app-consts';
+import { ROUTE_NAMES } from './../../../shared/util';
 import { ImageService } from './../../../shared/services/image.service';
 import { Router } from '@angular/router';
 import { User } from '../../../shared/models/user';
@@ -89,7 +89,7 @@ export class QuizItemComponent implements AfterContentInit, OnDestroy {
       AppUtil.handleNullError('User');
     }
 
-    this.router.navigate([AppConsts.PEOPLE_LIST, user.id]);
+    this.router.navigate([ROUTE_NAMES.PEOPLE_LIST.name, user.id]);
   }
 
   getAssignedUsers(): User[] {

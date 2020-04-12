@@ -1,14 +1,13 @@
-import { AppUtil } from './shared/util/app-util';
-import { SocketTopics } from './shared/util';
+import { AppMenuService } from './shared/services/app-menu.service';
+import { ScssStyleService } from './shared/services/scss-style.service';
 import { UserService } from './core/services/user-service.service';
 import { switchMap, filter } from 'rxjs/operators';
 import { ImageService } from './shared/services/image.service';
-import { AppConsts } from './shared/util/app-consts';
+import { ROUTE_NAMES, AppUtil, SocketTopics } from './shared/util';
 import { UserNotificationsListComponent } from './shared/components/user-notifications-list/user-notifications-list.component';
 import { of } from 'rxjs';
 import { NavigationHelperService } from './shared/services/navigation-helper.service';
 import { User } from './shared/models/user';
-import { Router } from '@angular/router';
 import { AuthenticationService } from './core/services/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -21,37 +20,25 @@ import { NotificationService } from './core/services';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  drawerOpened = false;
-  appConsts: any = AppConsts; // TODO: make this more elegant
-  appPages = new Map<string, string>([
-    ['home', 'Home'],
-    ['profile', 'My profile'],
-    [this.appConsts.MY_QUIZ_LIST, this.appConsts.MY_QUIZ_LIST_DISPLAY],
-    [this.appConsts.MY_ASSIGNED_QUIZ_LIST, this.appConsts.MY_ASSIGNED_QUIZ_LIST_DISPLAY],
-    [this.appConsts.PEOPLE_LIST, this.appConsts.PEOPLE_LIST_DISPLAY],
-    ['logout', 'Logout']
-  ]);
-  myNotificationsCount: number;
-  currentUser: User;
+  public drawerOpened = false;
+  public routeNames: any = ROUTE_NAMES; // TODO: make this more elegant
+  public selectedPage = ROUTE_NAMES.QUIZ_LIST.name;
+  public myNotificationsCount: number;
+  public currentUser: User;
 
   constructor(public authService: AuthenticationService,
-    private router: Router,
     private iconRegistry: MatIconRegistry,
     private sanitizer: DomSanitizer,
     private navigationService: NavigationHelperService,
     private notificationService: NotificationService,
     private imageService: ImageService,
-    private usersService: UserService) {
-    this.iconRegistry.addSvgIcon( // TODO: make more general
-      'menu',
-      this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/baseline-menu-24px.svg'));
-
-    this.iconRegistry.addSvgIcon( // TODO: make more general
-      'bell',
-      this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/notifications-24px.svg'));
+    private usersService: UserService,
+    private scssStyleService: ScssStyleService,
+    private appMenuService: AppMenuService) {
   }
 
   ngOnInit(): void {
+    this.initIcons();
     this.notificationService.myNotificationsCount$.subscribe((notificationsCount: number) => {
       this.myNotificationsCount = notificationsCount;
     });
@@ -71,6 +58,7 @@ export class AppComponent implements OnInit {
         });
 
     this.listenForUserNotifications();
+    this.appMenuService.currentPage$.subscribe((pageName: string) => this.selectedPage = pageName);
   }
 
   private listenForUserNotifications(): void {
@@ -91,47 +79,67 @@ export class AppComponent implements OnInit {
     return this.imageService.getImageUrlForUser(this.currentUser);
   }
 
-  async openCurrentUserProfile() {
-    const user: User = await this.authService.getCurrentUser();
-
-    this.router.navigate([AppConsts.PEOPLE_LIST, user.id], { replaceUrl: true });
-  }
-
-  goToPage(pageName: string): void {
-    switch (pageName) {
-      case 'home':
-        this.router.navigate(['quizList'], { replaceUrl: true });
-        break;
-      case 'profile':
-        this.openCurrentUserProfile();
-        break;
-      case AppConsts.MY_QUIZ_LIST:
-        this.router.navigate([AppConsts.MY_QUIZ_LIST], { replaceUrl: true });
-        break;
-      case AppConsts.MY_ASSIGNED_QUIZ_LIST:
-        this.router.navigate([AppConsts.MY_ASSIGNED_QUIZ_LIST], { replaceUrl: true });
-        break;
-      case AppConsts.PEOPLE_LIST:
-        this.router.navigate([AppConsts.PEOPLE_LIST], { replaceUrl: true });
-        break;
-      case 'logout':
-        this.navigationService
-          .openYesNoDialogNoCallback('Do you confirm logout?')
-          .subscribe(res => {
-            if (res) {
-              this.authService.logout();
-            }
-          });
-    }
-
+  public goToPage(pageName: string): void {
+    this.appMenuService.routeToPage(pageName);
     this.drawerOpened = false;
   }
 
-  public openUserNotificationsListDialog() {
+  public openUserNotificationsListDialog(): void {
     if (!this.myNotificationsCount) {
       return;
     }
 
     this.navigationService.openDialog(UserNotificationsListComponent).subscribe();
+  }
+
+  public getRouteDisplayName(routeName: string): string {
+    return this.appMenuService.getRouteDisplayName(routeName);
+  }
+
+  public getListItemStyle(page: string): any {
+    if (page === this.selectedPage) {
+      return {
+        color: this.scssStyleService.getVariableData('$app-primary-color'),
+        fontWeight: 'bold'
+      };
+    }
+    return {
+      color: 'black',
+      fontWeight: 'normal'
+    };
+  }
+
+  private initIcons(): void {
+    this.iconRegistry.addSvgIcon( // TODO: make more general
+      'menu',
+      this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/baseline-menu-24px.svg'));
+
+    this.iconRegistry.addSvgIcon( // TODO: make more general
+      'bell',
+      this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/notifications-24px.svg'));
+
+    this.iconRegistry.addSvgIcon( // TODO: make more general
+      'home',
+      this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/home-black-18dp.svg'));
+
+    this.iconRegistry.addSvgIcon( // TODO: make more general
+      'person',
+      this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/person-black-18dp.svg'));
+
+    this.iconRegistry.addSvgIcon( // TODO: make more general
+      'assignment_return',
+      this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/assignment_return-black-18dp.svg'));
+
+    this.iconRegistry.addSvgIcon( // TODO: make more general
+      'assignment',
+      this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/assignment-black-18dp.svg'));
+
+    this.iconRegistry.addSvgIcon( // TODO: make more general
+      'people',
+      this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/supervisor_account-black-18dp.svg'));
+
+    this.iconRegistry.addSvgIcon( // TODO: make more general
+      'exit_to_app',
+      this.sanitizer.bypassSecurityTrustResourceUrl('assets/img/exit_to_app-black-18dp.svg'));
   }
 }
