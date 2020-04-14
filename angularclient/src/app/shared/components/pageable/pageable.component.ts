@@ -14,6 +14,7 @@ import * as _ from 'lodash';
 export class PageableComponent implements OnInit, OnChanges, OnDestroy {
   @Input() public pagingStrategy: PagingDataFetchStrategy;
   @Input() public searchMode = false;
+  @Input() public shouldShowTotalItemsCount = true;
   @Output() public dataListChanged = new EventEmitter();
   private subscriptions: Subscription[] = [];
   totalItemsCount = 0;

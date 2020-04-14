@@ -1,6 +1,6 @@
 <div (click)="showUser(user)" class="user-item-container">
-    <div class="img-wrapper">
-      <img src={{getImageUrl()}} alt="" />
+    <div *ngIf="showImage" class="img-wrapper">
+      <img [ngStyle]="userImageStyle" id="user-image" src={{getImageUrl()}} alt="" />
     </div>
 
     <div class="content-wrapper">

@@ -1,3 +1,4 @@
+import { UserItemComponent } from './components/user-item/user-item.component';
 import { UserAnswersListComponent } from './components/user-answers-list/user-answers-list.component';
 import { CreateQuizComponent } from '../feed/components/create-quiz/create-quiz.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -25,6 +26,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { PageableComponent } from './components/pageable/pageable.component';
 import { SearchComponent } from './components/search/search.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { UsersChooserComponent } from './components/users-chooser/users-chooser.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -35,7 +38,9 @@ import { MatDividerModule } from '@angular/material/divider';
     UserNotificationsListComponent,
     SpinnerComponent,
     UserAnswersListComponent,
-    SearchComponent
+    SearchComponent,
+    UsersChooserComponent,
+    UserItemComponent
   ],
   imports: [
     CommonModule,
@@ -56,14 +61,16 @@ import { MatDividerModule } from '@angular/material/divider';
     MatSidenavModule,
     MatBadgeModule,
     NgxSpinnerModule,
-    MatDividerModule
+    MatDividerModule,
+    NgbModule
   ],
   entryComponents: [
     UserNotificationsListComponent,
     ConfirmationDialogComponent,
     CreateQuizComponent,
     EditProfileComponent,
-    UserAnswersListComponent
+    UserAnswersListComponent,
+    UsersChooserComponent
   ],
   exports: [
     FormsModule,
@@ -86,7 +93,8 @@ import { MatDividerModule } from '@angular/material/divider';
     SearchComponent,
     MatDividerModule,
     NgxSpinnerModule,
-    MatRadioModule
+    MatRadioModule,
+    UserItemComponent
   ]
 })
 export class SharedModule { }

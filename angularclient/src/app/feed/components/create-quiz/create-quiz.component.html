@@ -1,4 +1,4 @@
-<form *ngIf="addQuizForm && quiz" #theForm="ngForm" [formGroup]="addQuizForm">
+<form id="create-quiz-container" *ngIf="addQuizForm && quiz" #theForm="ngForm" [formGroup]="addQuizForm">
     <span class="centered-form-heading">Add a new quiz</span>
     <div class="grid-container">
         <div class="grid-item-full-width">
@@ -34,9 +34,12 @@
         </div>
         <div class="grid-item-full-width">
             <div *ngIf="!quiz.isPublic">
-                <ng-multiselect-dropdown [placeholder]="'Assign quiz to ...'" [data]="users" [(ngModel)]="selectedUsers"
-                    [ngModelOptions]="{standalone: true}" [settings]="dropdownSettings">
-                </ng-multiselect-dropdown>
+                <div id="user-selection-container" ngbDropdown>
+                    <button class="btn btn-outline-primary" ngbDropdownToggle>{{ getUserSelectionButtonText() }}</button>
+                    <div id="user-selection-dropdown" ngbDropdownMenu>
+                        <app-users-chooser (selectedUsersChanged)="updateSelectedUsers($event)"></app-users-chooser>
+                    </div>
+                </div>
             </div>
             <div *ngIf="!!attachAnImage">
                 <label for="image">Image</label>

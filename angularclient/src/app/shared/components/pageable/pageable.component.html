@@ -1,6 +1,6 @@
 <div infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="500"
   [fromRoot]="true" (scrolled)="onScroll()"></div>
 
-<div class="feed-end-msg alert alert-warning" *ngIf="finished">
+<div class="feed-end-msg alert alert-warning" *ngIf="finished && shouldShowTotalItemsCount">
   End of list. Total: {{ totalItemsCount }}
 </div>
