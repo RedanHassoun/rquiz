@@ -1,3 +1,4 @@
+import { UsersChooserDialogParameters } from './../../../shared/components/users-chooser-dialog/users-chooser-dialog-parameters';
 import { UsersChooserDialogComponent } from './../../../shared/components/users-chooser-dialog/users-chooser-dialog.component';
 import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
 import { WebSocketService } from './../../../shared/services/web-socket.service';
@@ -73,7 +74,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
   public publicChanged(isPublic: boolean): void {
     this.quiz.isPublic = isPublic;
     if (isPublic === false) {
-      this.selectedUsers = [];
+      this.updateSelectedUsers([]);
     }
   }
 
@@ -154,7 +155,7 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
   }
 
   openChooseUsersDialog() {
-    const usersChooserParams = { // TODO: make an interface\class for parameters
+    const usersChooserParams: UsersChooserDialogParameters = {
       title: 'Please choose users to assign to',
       selectedUsers: this.selectedUsers
     };

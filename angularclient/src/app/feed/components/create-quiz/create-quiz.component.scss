@@ -1,10 +1,5 @@
 @import './../../../variables.scss';
 
-#create-quiz-container {
-  padding: 6pt;
-  z-index: -1;
-}
-
 .header {
   text-align: center;
 }
@@ -87,14 +82,4 @@ mat-icon {
 
 #checkboxes-container * {
   margin: 8pt;
-}
-
-#user-selection-container {
-  z-index: 1000;
-}
-
-#user-selection-dropdown {
-  overflow-y: scroll;
-  width: 70vw;
-  z-index: 1000;
 }

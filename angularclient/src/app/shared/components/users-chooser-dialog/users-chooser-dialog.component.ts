@@ -1,3 +1,4 @@
+import { UsersChooserDialogParameters } from './users-chooser-dialog-parameters';
 import { User } from './../../models/user';
 import { UsersChooserComponent } from './../users-chooser/users-chooser.component';
 import { Component, OnInit, Inject } from '@angular/core';
@@ -9,10 +10,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
   styleUrls: ['./users-chooser-dialog.component.scss']
 })
 export class UsersChooserDialogComponent implements OnInit {
-  private selectedUsers: User[] = [];
-  private title: string;
+  public selectedUsers: User[] = [];
+  public title: string;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public usersChooserParams: any,
+  constructor(@Inject(MAT_DIALOG_DATA) public usersChooserParams: UsersChooserDialogParameters,
     private dialogRef: MatDialogRef<UsersChooserComponent>) {
       this.selectedUsers = usersChooserParams.selectedUsers;
       this.title = usersChooserParams.title;
