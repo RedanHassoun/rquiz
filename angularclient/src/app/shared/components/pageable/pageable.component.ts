@@ -14,8 +14,10 @@ import * as _ from 'lodash';
 export class PageableComponent implements OnInit, OnChanges, OnDestroy {
   @Input() public pagingStrategy: PagingDataFetchStrategy;
   @Input() public searchMode = false;
+  @Input() public scrollContainer;
   @Input() public shouldShowTotalItemsCount = true;
   @Output() public dataListChanged = new EventEmitter();
+
   private subscriptions: Subscription[] = [];
   totalItemsCount = 0;
   finished = false;
@@ -88,6 +90,14 @@ export class PageableComponent implements OnInit, OnChanges, OnDestroy {
   @StopLoadingIndicator
   private handleError(err: Error): void {
     AppUtil.showError(err);
+  }
+
+  public shouldListenToWindowScroll(): boolean {
+    if (AppUtil.hasValue(this.scrollContainer)) {
+      return false;
+    }
+
+    return true;
   }
 
   ngOnDestroy(): void {

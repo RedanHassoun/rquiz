@@ -1,24 +1,27 @@
 <div class="users-container">
-    <app-search searchPlaceHolder="Search For People ..." (searchQueryChanged)="searchQueryChanged($event)"
-        class="search-bar">
-    </app-search>
+    <div id="upper-side-container">
+        <app-search searchPlaceHolder="Search For People ..." (searchQueryChanged)="searchQueryChanged($event)"
+            class="search-bar">
+        </app-search>
+        <button class="btn btn-outline-primary" *ngIf="hasSelectedUsers()" id="clear-selection-button"
+            (click)="resetSelectedUsers()">Clear</button>
+    </div>
 
     <div *ngIf="showChoiceList" class="selected-users-list">
-        <span class="selected-users-list-item" *ngFor="let selectedUser of selectedUsers">{{ selectedUser.username }}</span>
+        <span class="selected-users-list-item"
+            *ngFor="let selectedUser of selectedUsers">{{ selectedUser.username }}</span>
     </div>
 
     <div class="no-users-found" *ngIf="users.length === 0">No users found.</div>
     <div *ngFor="let user of users">
         <mat-checkbox [checked]="isSelected(user)" (change)="onUserChoiceChange($event, user)">
-            <app-user-item [user]="user" [showImage]="showImage" [userImageStyle]="userImageStyle" [showUserOnClick]="false"></app-user-item>
+            <app-user-item [user]="user" [showImage]="showImage" [userImageStyle]="userImageStyle"
+                [showUserOnClick]="false"></app-user-item>
         </mat-checkbox>
-    </div>
-    <div id="buttons-container">
-        <button>Ok</button>
     </div>
     <app-spinner [loadingText]="" [showInfullScreen]="false"></app-spinner>
 </div>
 
 <app-pageable [searchMode]="true" [pagingStrategy]='pagingStrategy' (dataListChanged)="peopleListChanged($event)"
-    [shouldShowTotalItemsCount]="false">
+    [shouldShowTotalItemsCount]="false" [scrollContainer]="scrollContainer">
 </app-pageable>

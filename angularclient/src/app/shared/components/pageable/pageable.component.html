@@ -1,5 +1,5 @@
 <div infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="500"
-  [fromRoot]="true" (scrolled)="onScroll()"></div>
+  [fromRoot]="true" (scrolled)="onScroll()" [scrollWindow]="shouldListenToWindowScroll()" [infiniteScrollContainer]="scrollContainer"></div>
 
 <div class="feed-end-msg alert alert-warning" *ngIf="finished && shouldShowTotalItemsCount">
   End of list. Total: {{ totalItemsCount }}

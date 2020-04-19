@@ -1,3 +1,5 @@
+import { UsersChooserDialogComponent } from './../../../shared/components/users-chooser-dialog/users-chooser-dialog.component';
+import { NavigationHelperService } from './../../../shared/services/navigation-helper.service';
 import { WebSocketService } from './../../../shared/services/web-socket.service';
 import { AppNotificationMessage } from './../../../shared/index';
 import { AppUtil } from './../../../shared/util/app-util';
@@ -39,7 +41,8 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     private dialogRef: MatDialogRef<CreateQuizComponent>,
     private fileUploadService: FileUploadService,
     private quizCrudService: QuizCrudService,
-    private webSocketService: WebSocketService) {
+    private webSocketService: WebSocketService,
+    private navigationService: NavigationHelperService) {
     super();
   }
 
@@ -150,6 +153,37 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
     AppUtil.releaseSubscriptions(this.subscriptions);
   }
 
+  openChooseUsersDialog() {
+    const usersChooserParams = { // TODO: make an interface\class for parameters
+      title: 'Please choose users to assign to',
+      selectedUsers: this.selectedUsers
+    };
+
+    if (this.navigationService.isMobileMode()) {
+      this.subscriptions.push(
+        this.navigationService.openDialog(UsersChooserDialogComponent,
+          this.navigationService.getMediumDialogWidth(),
+          usersChooserParams,
+          true).subscribe((dialogSelectedUsers: User[]) => {
+            if (dialogSelectedUsers) {
+              this.updateSelectedUsers(dialogSelectedUsers);
+            }
+          })
+      );
+    } else {
+      this.subscriptions.push(
+        this.navigationService.openDialog(UsersChooserDialogComponent,
+          this.navigationService.getMediumDialogWidth(),
+          usersChooserParams)
+          .subscribe((dialogSelectedUsers: User[]) =>  {
+            if (dialogSelectedUsers) {
+              this.updateSelectedUsers(dialogSelectedUsers);
+            }
+          })
+      );
+    }
+  }
+
   public updateSelectedUsers(users: User[]): void {
     this.selectedUsers = users;
   }
@@ -159,10 +193,14 @@ export class CreateQuizComponent extends FormInputComponent implements OnInit, O
       return 'Please select users to assign to';
     }
 
-    if (this.selectedUsers.length === 1) {
-      return 'One user selected';
+    const extractUsername = (user: User) => user.username;
+    if (this.selectedUsers.length <= 3) {
+      return `Selected: ${this.selectedUsers.map(extractUsername).join(', ')}`;
     }
 
-    return `${this.selectedUsers.length} users selected`;
+    const copyOfSelectedUsers: User[] = [...this.selectedUsers];
+    const firstThreeElements: string[] = copyOfSelectedUsers.splice(0, 3).map(extractUsername);
+
+    return `Selected: ${firstThreeElements.join(', ')} + ${copyOfSelectedUsers.length}`;
   }
 }

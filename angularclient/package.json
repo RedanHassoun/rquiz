@@ -33,7 +33,7 @@
     "javascript-time-ago": "2.0.7",
     "net": "1.0.2",
     "ng-multiselect-dropdown": "0.2.5",
-    "ngx-infinite-scroll": "7.1.0",
+    "ngx-infinite-scroll": "8.0.0",
     "ngx-spinner": "8.1.0",
     "rxjs": "~6.5.5",
     "sockjs-client": "1.4.0",

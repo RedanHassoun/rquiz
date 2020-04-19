@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { Service } from './../../factories/paging-strategy-factory';
 import { PagingDataFetchStrategy } from './../../../core/strategies/paging-data-fetch-strategy';
 import { User } from './../../models/user';
-import { Component, OnInit, Output, EventEmitter, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy, Input, AfterContentInit } from '@angular/core';
 import { StartLoadingIndicator } from '../../decorators/spinner-decorators';
 import { PagingStrategyFactory } from '../../factories/paging-strategy-factory';
 import { AppUtil } from '../../util';
@@ -15,10 +15,13 @@ import { MatCheckboxChange } from '@angular/material';
   templateUrl: './users-chooser.component.html',
   styleUrls: ['./users-chooser.component.scss']
 })
-export class UsersChooserComponent implements OnInit, OnDestroy {
+export class UsersChooserComponent implements OnInit, OnDestroy, AfterContentInit {
   @Output() selectedUsersChanged: EventEmitter<User[]> = new EventEmitter();
+  @Input() public initialUsersList: User[];
   @Input() public showImage = true;
   @Input() public showChoiceList = true;
+  @Input() public scrollContainer = null;
+
   public users: User[] = [];
   public pagingStrategy: PagingDataFetchStrategy;
   public usersForm = new FormControl();
@@ -36,6 +39,14 @@ export class UsersChooserComponent implements OnInit, OnDestroy {
       width: '20pt',
       height: '20pt'
     };
+  }
+
+  ngAfterContentInit(): void {
+    if (AppUtil.hasValue(this.initialUsersList)) {
+      for (const user of this.initialUsersList) {
+        this.addToSelectedUsers(user);
+      }
+    }
   }
 
   public peopleListChanged(newUsers: User[]): void {
@@ -61,6 +72,7 @@ export class UsersChooserComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     AppUtil.triggerLoadingIndicatorStop();
+    this.selectedUsersChanged.complete();
   }
 
   public onUserChoiceChange(checkboxData: MatCheckboxChange, user: User): void {
@@ -98,5 +110,14 @@ export class UsersChooserComponent implements OnInit, OnDestroy {
     }
 
     return false;
+  }
+
+  public hasSelectedUsers(): boolean {
+    return this.selectedUsers && this.selectedUsers.length > 0;
+  }
+
+  public resetSelectedUsers(): void {
+    this.selectedUsers = [];
+    this.selectedUsersChanged.emit(this.selectedUsers);
   }
 }

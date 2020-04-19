@@ -35,10 +35,7 @@
         <div class="grid-item-full-width">
             <div *ngIf="!quiz.isPublic">
                 <div id="user-selection-container" ngbDropdown>
-                    <button class="btn btn-outline-primary" ngbDropdownToggle>{{ getUserSelectionButtonText() }}</button>
-                    <div id="user-selection-dropdown" ngbDropdownMenu>
-                        <app-users-chooser (selectedUsersChanged)="updateSelectedUsers($event)"></app-users-chooser>
-                    </div>
+                    <button (click)="openChooseUsersDialog()" class="btn btn-outline-primary">{{ getUserSelectionButtonText() }}</button>
                 </div>
             </div>
             <div *ngIf="!!attachAnImage">

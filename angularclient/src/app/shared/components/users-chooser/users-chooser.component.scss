@@ -6,7 +6,7 @@
 }
 
 .users-container {
-    height: 70vh;
+    height: 65vh;
 }
 
 .no-users-found {
@@ -29,9 +29,14 @@
     border-radius: 25px;
 }
 
-#buttons-container {
+#upper-side-container {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-end;
+    flex-flow: row nowrap;
+}
+
+#clear-selection-button {
+    margin-left: 20pt;
+    height: 30pt;
+    font-size: $content-small-font-size;
+    font-weight: bold;
 }

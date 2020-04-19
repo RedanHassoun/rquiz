@@ -28,6 +28,7 @@ import { SearchComponent } from './components/search/search.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { UsersChooserComponent } from './components/users-chooser/users-chooser.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UsersChooserDialogComponent } from './components/users-chooser-dialog/users-chooser-dialog.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     UserAnswersListComponent,
     SearchComponent,
     UsersChooserComponent,
-    UserItemComponent
+    UserItemComponent,
+    UsersChooserDialogComponent
   ],
   imports: [
     CommonModule,
@@ -70,7 +72,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     CreateQuizComponent,
     EditProfileComponent,
     UserAnswersListComponent,
-    UsersChooserComponent
+    UsersChooserDialogComponent
   ],
   exports: [
     FormsModule,

@@ -1,0 +1,10 @@
+<div class="container">
+    <span id="title" *ngIf="title">{{ title }}</span>
+
+    <app-users-chooser id="users-chooser" (selectedUsersChanged)="handleSelectionChange($event)"
+        [scrollContainer]="'#users-chooser'" [initialUsersList]="selectedUsers"></app-users-chooser>
+
+    <div id="buttons-container">
+        <button id="ok-button" class="btn btn-primary btn-block" (click)="handleOkClick()">Ok</button>
+    </div>
+</div>
