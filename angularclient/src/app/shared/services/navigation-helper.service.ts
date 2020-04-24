@@ -84,4 +84,11 @@ export class NavigationHelperService {
     }
     return false;
   }
+
+  public getMediumDialogWidth(): string {
+    if (this.isMobileMode()) {
+      return '100vw';
+    }
+    return '50vw';
+  }
 }

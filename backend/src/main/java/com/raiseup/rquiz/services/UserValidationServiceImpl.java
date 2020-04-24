@@ -9,7 +9,7 @@ import javax.validation.ValidatorFactory;
 import java.util.*;
 
 @Service
-public class UserValidationServiceImpl implements UserValidationService {
+public class UserValidationServiceImpl extends ValidationServiceImpl implements UserValidationService {
     private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private Validator validator = factory.getValidator();
 
@@ -37,31 +37,6 @@ public class UserValidationServiceImpl implements UserValidationService {
 
         if((registerRequest.getUsername() == null) && (registerRequest.getEmail() == null)) {
             return Optional.of(Collections.singletonList("Cannot login, username\\email must be provided"));
-        }
-
-        return Optional.empty();
-    }
-
-    @Override
-    public String buildValidationMessage(List<String> validations) {
-        if(validations == null){
-            throw new NullPointerException("validations list cannot be null");
-        }
-
-        return "Validation failed. errors: " +
-                String.join(" , ", validations);
-    }
-
-    @Override
-    public Optional<List<String>> validateObject(Object beanObject) {
-        Set<ConstraintViolation<Object>> violations = validator.validate(beanObject);
-
-        if(violations != null && violations.size() > 0) {
-            final List<String> validations = new ArrayList<>();
-            for (ConstraintViolation<Object> violation : violations) {
-                validations.add(violation.getMessage());
-            }
-            return Optional.of(validations);
         }
 
         return Optional.empty();

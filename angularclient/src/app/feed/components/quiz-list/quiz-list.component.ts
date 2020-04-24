@@ -84,11 +84,15 @@ export class QuizListComponent implements OnInit, OnDestroy {
   openCreateQuizDialog() {
     if (this.navigationService.isMobileMode()) {
       this.subscriptions.push(
-        this.navigationService.openDialog(CreateQuizComponent, '100vw', null, true).subscribe()
+        this.navigationService.openDialog(CreateQuizComponent,
+          this.navigationService.getMediumDialogWidth(),
+          null,
+          true).subscribe()
       );
     } else {
       this.subscriptions.push(
-        this.navigationService.openDialog(CreateQuizComponent).subscribe()
+        this.navigationService.openDialog(CreateQuizComponent,
+          this.navigationService.getMediumDialogWidth()).subscribe()
       );
     }
 

@@ -1,0 +1,28 @@
+@import './../../../variables.scss';
+
+#ok-button {
+    width: 90pt;
+    margin-top: 10pt;
+}
+
+#users-chooser {
+    height: 300pt;
+    overflow-y: scroll;
+}
+
+#buttons-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+}
+
+#title {
+    font-size: $title-small-font-size;
+    font-weight: bold;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+}

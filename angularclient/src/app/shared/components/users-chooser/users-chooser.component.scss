@@ -1,0 +1,42 @@
+@import './../../../../app/variables.scss';
+
+.search-bar {
+    width: 45vh;
+    margin-bottom: 20pt;
+}
+
+.users-container {
+    height: 65vh;
+}
+
+.no-users-found {
+    font-size: $content-medium-font-size;
+}
+
+.selected-users-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    margin: 5pt;
+}
+
+.selected-users-list-item {
+    margin: 5pt;
+    padding: 3pt;
+    background-color: $app-primary-color;
+    color: white;
+    border-radius: 25px;
+}
+
+#upper-side-container {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+#clear-selection-button {
+    margin-left: 20pt;
+    height: 30pt;
+    font-size: $content-small-font-size;
+    font-weight: bold;
+}

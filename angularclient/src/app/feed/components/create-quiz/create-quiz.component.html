@@ -34,9 +34,7 @@
         </div>
         <div class="grid-item-full-width">
             <div *ngIf="!quiz.isPublic">
-                <ng-multiselect-dropdown [placeholder]="'Assign quiz to ...'" [data]="users" [(ngModel)]="selectedUsers"
-                    [ngModelOptions]="{standalone: true}" [settings]="dropdownSettings">
-                </ng-multiselect-dropdown>
+                <button (click)="openChooseUsersDialog()" class="btn btn-outline-primary">{{ getUserSelectionButtonText() }}</button>
             </div>
             <div *ngIf="!!attachAnImage">
                 <label for="image">Image</label>

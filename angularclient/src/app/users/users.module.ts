@@ -5,12 +5,11 @@ import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PeopleListComponent } from './components/people-list/people-list.component';
-import { UserItemComponent } from './components/user-item/user-item.component';
+import { UserItemComponent } from '../shared/components/user-item/user-item.component';
 
 @NgModule({
   declarations: [
-    PeopleListComponent,
-    UserItemComponent
+    PeopleListComponent
   ],
   imports: [
     CommonModule,
@@ -18,7 +17,6 @@ import { UserItemComponent } from './components/user-item/user-item.component';
     CoreModule,
     SharedModule
   ], exports: [
-    UserItemComponent,
     PeopleListComponent
   ]
 })
