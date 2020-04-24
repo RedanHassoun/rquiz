@@ -10,9 +10,9 @@ import com.raiseup.rquiz.models.UserAnswerDto;
 import com.raiseup.rquiz.models.db.Quiz;
 import com.raiseup.rquiz.models.db.QuizAnswer;
 import com.raiseup.rquiz.models.db.UserAnswer;
+import com.raiseup.rquiz.services.QuizValidationService;
 import com.raiseup.rquiz.services.UserAnswerService;
 import com.raiseup.rquiz.services.QuizService;
-import com.raiseup.rquiz.services.ValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,25 +21,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 @RestController
 @RequestMapping("/api/v1/quiz")
 @CrossOrigin
 public class QuizController {
     private QuizService quizService;
     private UserAnswerService userAnswerService;
-    private ValidationService validationService;
+    private QuizValidationService quizValidationService;
     private DtoMapper dtoMapper;
 
     private Logger logger = LoggerFactory.getLogger(QuizController.class);
 
     public QuizController(QuizService quizService,
                           UserAnswerService userAnswerService,
-                          ValidationService validationService,
+                          QuizValidationService quizValidationService,
                           DtoMapper dtoMapper) {
         this.quizService = quizService;
         this.userAnswerService = userAnswerService;
-        this.validationService = validationService;
+        this.quizValidationService = quizValidationService;
         this.dtoMapper = dtoMapper;
     }
 
@@ -49,11 +48,11 @@ public class QuizController {
     public ResponseEntity<QuizDto> createQuiz(@RequestBody QuizDto quizDto) throws Exception {
         this.logger.debug(String.format("Creating quiz: %s", quizDto.toString()));
         try{
-            Optional<List<String>> validations = this.validationService.validateQuiz(quizDto);
+            Optional<List<String>> validations = this.quizValidationService.validateQuiz(quizDto);
 
             if(validations.isPresent()){
                 throw new IllegalOperationException(
-                        this.validationService.buildValidationMessage(validations.get()));
+                        this.quizValidationService.buildValidationMessage(validations.get()));
             }
 
             Quiz quiz = this.dtoMapper.convertQuizDtoToEntity(quizDto);
@@ -97,7 +96,7 @@ public class QuizController {
     public QuizDto findQuiz(@PathVariable("id") String quizId) throws Exception {
         try {
             this.logger.debug(String.format("Reading quiz: %s", quizId));
-            Optional<String> validation = this.validationService.validateString(quizId, "Quiz id");
+            Optional<String> validation = this.quizValidationService.validateString(quizId, "Quiz id");
 
             if(validation.isPresent()){
                 throw new IllegalOperationException(validation.get());
@@ -123,7 +122,7 @@ public class QuizController {
         this.logger.debug(String.format("Deleting quiz: %s", quizId));
 
         try{
-            Optional<String> validation = this.validationService.validateString(quizId, "Quiz id");
+            Optional<String> validation = this.quizValidationService.validateString(quizId, "Quiz id");
 
             if(validation.isPresent()){
                 throw new IllegalOperationException(validation.get());
@@ -146,10 +145,10 @@ public class QuizController {
                          @PathVariable("id") String quizId,
                          @RequestBody QuizAnswerDto quizAnswerDto) throws Exception {
         try {
-            Optional<List<String>> validations = this.validationService.validateUserAnswer(quizAnswerDto, quizId);
+            Optional<List<String>> validations = this.quizValidationService.validateUserAnswer(quizAnswerDto, quizId);
             if(validations.isPresent()){
                 throw new IllegalOperationException(
-                        this.validationService.buildValidationMessage(validations.get()));
+                        this.quizValidationService.buildValidationMessage(validations.get()));
             }
             QuizAnswer quizAnswer = this.dtoMapper.convertQuizAnswerDtoToEntity(quizAnswerDto);
 

@@ -1,3 +1,4 @@
+import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { ScssStyleService } from './../../services/scss-style.service';
 import * as _ from 'lodash';
 import { FormControl } from '@angular/forms';
@@ -21,14 +22,17 @@ export class UsersChooserComponent implements OnInit, OnDestroy, AfterContentIni
   @Input() public showImage = true;
   @Input() public showChoiceList = true;
   @Input() public scrollContainer = null;
+  @Input() public includeCurrentUser = true;
 
   public users: User[] = [];
   public pagingStrategy: PagingDataFetchStrategy;
   public usersForm = new FormControl();
   public selectedUsers: User[] = [];
   public userImageStyle: any = {};
+  private currentUser: User;
 
   constructor(private pagingStrategyFactory: PagingStrategyFactory,
+    private authenticationService: AuthenticationService,
     private scssStyleService: ScssStyleService) { }
 
   @StartLoadingIndicator
@@ -41,11 +45,14 @@ export class UsersChooserComponent implements OnInit, OnDestroy, AfterContentIni
     };
   }
 
-  ngAfterContentInit(): void {
-    if (AppUtil.hasValue(this.initialUsersList)) {
-      for (const user of this.initialUsersList) {
-        this.addToSelectedUsers(user);
-      }
+  async ngAfterContentInit(): Promise<void> {
+    this.currentUser = await this.authenticationService.getCurrentUser();
+    if (!AppUtil.hasValue(this.initialUsersList)) {
+      return;
+    }
+
+    for (const user of this.initialUsersList) {
+      this.addToSelectedUsers(user);
     }
   }
 
@@ -54,7 +61,8 @@ export class UsersChooserComponent implements OnInit, OnDestroy, AfterContentIni
       AppUtil.triggerLoadingIndicatorStop();
     }
 
-    this.users = _.unionWith(this.users, newUsers, (user, otherUser) => user.username === otherUser.username);
+    const usersToAdd: User[] = newUsers.filter(user => this.canAddToUsersList(user));
+    this.users = _.unionWith(this.users, usersToAdd, (user, otherUser) => user.username === otherUser.username);
   }
 
   @StartLoadingIndicator
@@ -85,6 +93,10 @@ export class UsersChooserComponent implements OnInit, OnDestroy, AfterContentIni
   }
 
   public addToSelectedUsers(user: User): void {
+    if (!this.canAddToUsersList(user)) {
+      return;
+    }
+
     for (const currSelectedUser of this.selectedUsers) {
       if (user.id === currSelectedUser.id) {
         return;
@@ -119,5 +131,9 @@ export class UsersChooserComponent implements OnInit, OnDestroy, AfterContentIni
   public resetSelectedUsers(): void {
     this.selectedUsers = [];
     this.selectedUsersChanged.emit(this.selectedUsers);
+  }
+
+  private canAddToUsersList(user: User): boolean {
+    return this.includeCurrentUser === true || user.id !== this.currentUser.id;
   }
 }
