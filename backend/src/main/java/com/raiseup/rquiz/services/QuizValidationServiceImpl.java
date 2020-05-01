@@ -59,7 +59,7 @@ public class QuizValidationServiceImpl extends ValidationServiceImpl implements 
             }
         }
 
-        if (validations.size() > 0) {
+        if (!validations.isEmpty()) {
             return Optional.of(validations);
         }
         return Optional.empty();
@@ -78,11 +78,11 @@ public class QuizValidationServiceImpl extends ValidationServiceImpl implements 
     }
 
     private boolean hasOneCorrectAnswer(QuizDto quiz){
-        Iterator answersIterator = quiz.getAnswers().iterator();
+        final Iterator<QuizAnswerDto> answersIterator = quiz.getAnswers().iterator();
 
         int correctCount = 0;
         while(answersIterator.hasNext()){
-            QuizAnswerDto q = (QuizAnswerDto) answersIterator.next();
+            QuizAnswerDto q = answersIterator.next();
             if(q.getIsCorrect()){
                 correctCount++;
             }

@@ -1,5 +1,6 @@
 package com.raiseup.rquiz.services;
 
+import com.raiseup.rquiz.common.AppConstants;
 import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.exceptions.*;
 import com.raiseup.rquiz.models.db.User;
@@ -79,7 +80,7 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         if (page != null && size != null) {
             this.logger.debug(String.format("Returning page: %d , size: %d", page, size));
             Pageable pageable = PageRequest.of(
-                    page, size, Sort.Direction.DESC, "createdAt");
+                    page, size, Sort.Direction.DESC, AppConstants.DBConsts.CREATED_AT);
             return this.userAnswerRepository.findByQuizId(quizId, pageable);
         }
 

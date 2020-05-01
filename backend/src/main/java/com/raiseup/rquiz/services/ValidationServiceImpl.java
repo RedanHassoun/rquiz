@@ -1,6 +1,5 @@
 package com.raiseup.rquiz.services;
 
-import com.raiseup.rquiz.models.BaseDto;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -15,7 +14,7 @@ public class ValidationServiceImpl implements ValidationService {
     public Optional<List<String>> validateObject(Object beanObject) {
         Set<ConstraintViolation<Object>> violations = validator.validate(beanObject);
 
-        if(violations != null && violations.size() > 0) {
+        if(violations != null && !violations.isEmpty()) {
             final List<String> validations = new ArrayList<>();
             for (ConstraintViolation<Object> violation : violations) {
                 validations.add(violation.getMessage());

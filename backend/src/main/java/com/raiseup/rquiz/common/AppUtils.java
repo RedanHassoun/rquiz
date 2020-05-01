@@ -6,9 +6,12 @@ import com.raiseup.rquiz.exceptions.AppException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.HashMap;
+import java.util.Map;
 
 public class AppUtils {
+    private AppUtils() {
+        throw new AssertionError("Cannot create an instance of the utility class");
+    }
     private static Logger logger = LoggerFactory.getLogger(AppUtils.class);
 
     public static String getUserIdFromAuthorizationHeader(String authorization){
@@ -16,7 +19,7 @@ public class AppUtils {
             throw new NullPointerException("Authorization string cannot be null");
         }
 
-        String arr[] = authorization.split(" ", 2);
+        String[] arr = authorization.split(" ", 2);
 
         if(arr.length != 2){
             throw new IllegalArgumentException("authorization section must start " +
@@ -58,7 +61,8 @@ public class AppUtils {
         try{
             variableValue = System.getenv(variableName);
             if (variableValue == null) {
-                logger.error(String.format("Environment variable '%s' must be defined", variableName));
+                logger.error(String.format(
+                        "Environment variable '%s' must be defined", variableName));
             }
             return variableValue;
         }catch (Exception ex) {
@@ -68,7 +72,7 @@ public class AppUtils {
         }
     }
 
-    public static String paramsMapToString(HashMap<String, Object> map) {
+    public static String paramsMapToString(Map<String, Object> map) {
         if (map == null) {
             return null;
         }

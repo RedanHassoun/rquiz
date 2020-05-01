@@ -2,7 +2,6 @@ package com.raiseup.rquiz.services;
 
 import com.raiseup.rquiz.models.RegisterRequest;
 import org.springframework.stereotype.Service;
-import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;

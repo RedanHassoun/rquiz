@@ -32,6 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 user.getUsername(),
                 user.getPassword(),
                 emptyList());
+        this.logger.debug(String.format("Returning user: %s", userDetailsFromDB.getUsername()));
         return userDetailsFromDB;
     }
 }

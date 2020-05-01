@@ -1,5 +1,6 @@
 package com.raiseup.rquiz.services;
 
+import com.raiseup.rquiz.common.AppConstants;
 import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.common.JwtHelper;
 import com.raiseup.rquiz.exceptions.AppException;
@@ -12,6 +13,7 @@ import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import com.raiseup.rquiz.repo.SearchCriteria;
 import com.raiseup.rquiz.repo.UserAnswerRepository;
 import com.raiseup.rquiz.repo.UserSearchSpecification;
+import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -117,7 +119,7 @@ public class UserServiceImpl implements UserService {
             this.logger.debug(String.format("Preparing page request for fetching users list. page=%d, size=%d",
                     page, size));
             pageable = PageRequest.of(page, size,
-                    Sort.Direction.DESC, "createdAt");
+                    Sort.Direction.DESC, AppConstants.DBConsts.CREATED_AT);
         }
 
         Collection<User> usersListToReturn = this.getUserList(pageable);
@@ -194,7 +196,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void delete(String id) {
-
+        throw new NotImplementedException("Delete user is not implemented yet");
     }
 
     @Override

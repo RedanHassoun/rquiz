@@ -20,6 +20,11 @@ public class JwtHelper {
     private final String secret = AppUtils.getEnvironmentVariable(TOKEN_SECRET_KEY);
 
     public String generateJsonWebToken(String userId, String username) throws AppException {
+        if (this.secret == null) {
+            throw new NullPointerException(String.format(
+                    "Cannot generate token because environment variable '%s' is not defined",
+                    TOKEN_SECRET_KEY));
+        }
         if (username == null) {
             throw new IllegalOperationException(
                     "Cannot generate token because username is not defined");
@@ -47,8 +52,9 @@ public class JwtHelper {
 
     public String extractSubjectFromAuthHeader(String authHeader) throws AppException {
         if (this.secret == null) {
-            throw new NullPointerException(
-                    "RQUIZ_TOKEN_SECRET environment variable should be defined");
+            throw new NullPointerException(String.format(
+                    "Cannot handle token because environment variable '%s' is not defined",
+                    TOKEN_SECRET_KEY));
         }
 
         String token = this.extractJsonWebToken(authHeader);

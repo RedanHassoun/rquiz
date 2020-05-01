@@ -1,5 +1,6 @@
 package com.raiseup.rquiz.services;
 
+import com.raiseup.rquiz.common.AppConstants;
 import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.exceptions.AppException;
 import com.raiseup.rquiz.exceptions.IllegalOperationException;
@@ -96,7 +97,7 @@ public class QuizServiceImpl implements QuizService {
             this.logger.debug(String.format("Preparing page request for fetching quiz list. page=%d, size=%d",
                     page, size));
             pageable = PageRequest.of(page, size,
-                    Sort.Direction.DESC, "createdAt");
+                    Sort.Direction.DESC, AppConstants.DBConsts.CREATED_AT);
         }
 
         Collection<Quiz> quizListToReturn = this.getQuizList(isPublic, pageable);
@@ -140,7 +141,7 @@ public class QuizServiceImpl implements QuizService {
         } else {
             this.logger.debug(String.format("Returning without pagination. page: %d, size: %d", page, size));
             quizList = this.quizRepository.findQuizListByParameters(filterParams,
-                    PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"));
+                    PageRequest.of(page, size, Sort.Direction.DESC, AppConstants.DBConsts.CREATED_AT));
         }
 
         this.logger.debug(String.format("Returning %d quiz", quizList.size()));
@@ -160,7 +161,7 @@ public class QuizServiceImpl implements QuizService {
             quizList = this.quizRepository.findByAssignedUsers_Id(userId, null);
         } else {
             quizList = this.quizRepository.findByAssignedUsers_Id(userId,
-                    PageRequest.of(page, size, Sort.Direction.DESC, "createdAt"));
+                    PageRequest.of(page, size, Sort.Direction.DESC, AppConstants.DBConsts.CREATED_AT));
         }
 
         this.logger.debug(String.format(
@@ -192,6 +193,7 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    @Transactional
     public void delete(String id) throws AppException {
         Quiz deletedQuiz = this.transactionTemplate.execute(status -> {
             Optional<Quiz> quizOptional = this.quizRepository.findById(id);

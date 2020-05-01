@@ -10,7 +10,6 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.raiseup.rquiz.common.AppConstants;
 import com.raiseup.rquiz.common.AppUtils;
-import com.raiseup.rquiz.controllers.QuizController;
 import com.raiseup.rquiz.exceptions.IllegalOperationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,7 @@ import java.util.Date;
 
 @Component
 public class AmazonClient {
-    private Logger logger = LoggerFactory.getLogger(QuizController.class);
+    private Logger logger = LoggerFactory.getLogger(AmazonClient.class);
 
     @Value("${rquiz.awsS3Region}")
     private String AWS_S3_REGION;

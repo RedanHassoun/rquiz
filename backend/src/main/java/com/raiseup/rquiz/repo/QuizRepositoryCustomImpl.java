@@ -38,9 +38,9 @@ public class QuizRepositoryCustomImpl implements QuizRepositoryCustom {
         // Add the parameters for the 'where' condition
         List<Predicate> predicates = new ArrayList<>();
 
-        Iterator itr = params.keySet().iterator();
+        final Iterator<String> itr = params.keySet().iterator();
         while (itr.hasNext()) {
-            String currFieldName = (String) itr.next();
+            String currFieldName = itr.next();
             Path<String> fieldPath = from.get(currFieldName);
             if(fieldPath == null){
                 final String errMsg = String.format("Field %s doesn't exist in the quiz object",
@@ -55,7 +55,7 @@ public class QuizRepositoryCustomImpl implements QuizRepositoryCustom {
         CriteriaQuery<Quiz> select = query.select(from)
                 .where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
 
-        select = this.HandleSortingParameters(cb, select, from, pageable);
+        select = this.handleSortingParameters(cb, select, from, pageable);
 
         TypedQuery<Quiz> typedQuery = this.entityManager.createQuery(select);
 
@@ -83,10 +83,10 @@ public class QuizRepositoryCustomImpl implements QuizRepositoryCustom {
      * @param from
      * @param pageable
      */
-    private CriteriaQuery<Quiz> HandleSortingParameters(CriteriaBuilder cb,
-                                         CriteriaQuery<Quiz> select,
-                                         Root<Quiz> from,
-                                         Pageable pageable){
+    private CriteriaQuery<Quiz> handleSortingParameters(CriteriaBuilder cb,
+                                                        CriteriaQuery<Quiz> select,
+                                                        Root<Quiz> from,
+                                                        Pageable pageable){
         if(pageable == null){
             return select;
         }

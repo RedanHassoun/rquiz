@@ -14,11 +14,9 @@ import java.util.stream.Collectors;
 public class DtoMapper {
     private Logger logger = LoggerFactory.getLogger(DtoMapper.class);
     private ModelMapper modelMapper;
-    private UserAnswerService userAnswerService;
 
-    public DtoMapper(ModelMapper modelMapper, UserAnswerService userAnswerService){
+    public DtoMapper(ModelMapper modelMapper){
         this.modelMapper = modelMapper;
-        this.userAnswerService = userAnswerService;
     }
 
     public QuizDto convertQuizToDto(Quiz quiz) {
@@ -82,8 +80,7 @@ public class DtoMapper {
     }
 
     public QuizAnswer convertQuizAnswerDtoToEntity(QuizAnswerDto quizDto) {
-        QuizAnswer quizAnswer = this.modelMapper.map(quizDto, QuizAnswer.class);
-        return quizAnswer;
+        return this.modelMapper.map(quizDto, QuizAnswer.class);
     }
 
     public UserAnswerDto convertUserAnswerToDto(UserAnswer userAnswer) {
