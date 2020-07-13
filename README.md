@@ -11,7 +11,7 @@ RQuiz is a small social networking service that allows registered members to sen
 - Postgresql DB
 - AWS S3 for file storage
 
-## Main features:
+## Main features
 * **Create quiz**<br/>
   The user can create quiz with multiple possible answers, the quiz can have an image and can be posted in the public feed or assigned to one or more users 
 * **See latest quiz feed**<br/>
