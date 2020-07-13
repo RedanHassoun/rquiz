@@ -12,16 +12,16 @@ RQuiz is a small social networking service that allows registered members to sen
 - AWS S3 for file storage
 
 ## Main features:
-* Create quiz
+* **Create quiz**<br/>
   The user can create quiz with multiple possible answers, the quiz can have an image and can be posted in the public feed or assigned to one or more users 
-* See latest quiz feed
+* **See latest quiz feed**<br/>
   All posted quiz are updated in real-time (using socket notifications) and shown in the app main page
-* See notifications for quiz updates
+* **See notifications for quiz updates**<br/>
   The user gets a notification when someone solves one of his posted quiz, or assigns him a quiz
-* See and track all posted quiz
+* **See and track all posted quiz**<br/>
   The user can see the list of all the quiz that he posted, and get instant updates
-* See and track assigned quiz
+* **See and track assigned quiz**<br/>
   The user can see the list of all the quiz assigned to him and have the ability to solve them
-* Search for people
+* **Search for people**<br/>
   The user can search for other people and see their profile details
 
