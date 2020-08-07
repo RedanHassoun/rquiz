@@ -2,7 +2,6 @@ package com.raiseup.rquiz.common;
 
 import com.raiseup.rquiz.models.*;
 import com.raiseup.rquiz.models.db.*;
-import com.raiseup.rquiz.services.UserAnswerService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

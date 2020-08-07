@@ -115,7 +115,7 @@ public class Quiz extends BaseModel{
     }
 
     public QuizAnswer getCorrectAnswer() {
-        if (this.getAnswers() == null || this.getAnswers().size() == 0) {
+        if (this.getAnswers() == null || this.getAnswers().isEmpty()) {
             return null;
         }
 
@@ -128,6 +128,14 @@ public class Quiz extends BaseModel{
             }
         }
         return null;
+    }
+
+    public boolean isCreatedBy(String userId) {
+        if (this.getCreator() == null) {
+            throw new NullPointerException(
+                    String.format("quiz %s creator is not defined", userId));
+        }
+        return this.getCreator().getId().equals(userId);
     }
 
     @Override
@@ -146,16 +154,16 @@ public class Quiz extends BaseModel{
 
     @Override
     public String toString(){
-        List<String> answers;
+        List<String> quizAnswers;
         try {
-            answers = Arrays.stream(this.answers.toArray())
+            quizAnswers = Arrays.stream(this.answers.toArray())
                     .map(item -> ((QuizAnswer)item).getContent())
                     .collect(Collectors.toList());
         }
         catch(LazyInitializationException ex){
-            answers = new ArrayList<>();
+            quizAnswers = new ArrayList<>();
         }
         return String.format("[ quiz id: %s , title: %s, creator id: %s, answers: %s]",
-                this.id,this.title,this.creator.getId(), String.join(",", answers));
+                this.id,this.title,this.creator.getId(), String.join(",", quizAnswers));
     }
 }
