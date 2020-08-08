@@ -12,7 +12,6 @@ import com.raiseup.rquiz.repo.QuizAnswerRepository;
 import com.raiseup.rquiz.repo.UserAnswerRepository;
 import com.raiseup.rquiz.repo.QuizRepository;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,7 +23,7 @@ import java.util.Set;
 
 @Service
 public class UserAnswerServiceImpl implements UserAnswerService {
-    private Logger logger = LoggerFactory.getLogger(UserAnswerServiceImpl.class);
+    private final Logger logger;
     private UserAnswerRepository userAnswerRepository;
     private QuizRepository quizRepository;
     private ApplicationUserRepository applicationUserRepository;
@@ -33,11 +32,13 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     public UserAnswerServiceImpl(UserAnswerRepository userAnswerRepository,
                                  QuizRepository quizRepository,
                                  ApplicationUserRepository applicationUserRepository,
-                                 QuizAnswerRepository quizAnswerRepository){
+                                 QuizAnswerRepository quizAnswerRepository,
+                                 Logger logger){
         this.userAnswerRepository = userAnswerRepository;
         this.quizRepository = quizRepository;
         this.applicationUserRepository = applicationUserRepository;
         this.quizAnswerRepository = quizAnswerRepository;
+        this.logger = logger;
     }
 
     @Override

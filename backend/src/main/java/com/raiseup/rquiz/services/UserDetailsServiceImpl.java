@@ -3,7 +3,6 @@ package com.raiseup.rquiz.services;
 import com.raiseup.rquiz.models.db.User;
 import com.raiseup.rquiz.repo.ApplicationUserRepository;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,11 +12,13 @@ import static java.util.Collections.emptyList;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
+    private final Logger logger;
     private ApplicationUserRepository applicationUserRepository;
 
-    public UserDetailsServiceImpl(ApplicationUserRepository applicationUserRepository){
+    public UserDetailsServiceImpl(ApplicationUserRepository applicationUserRepository,
+                                  Logger logger){
         this.applicationUserRepository = applicationUserRepository;
+        this.logger = logger;
     }
     @Override
     @Transactional(readOnly = true)

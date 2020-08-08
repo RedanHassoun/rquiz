@@ -11,11 +11,12 @@ import java.util.stream.Collectors;
 
 @Component
 public class DtoMapper {
-    private Logger logger = LoggerFactory.getLogger(DtoMapper.class);
+    private Logger logger;
     private ModelMapper modelMapper;
 
-    public DtoMapper(ModelMapper modelMapper){
+    public DtoMapper(ModelMapper modelMapper, Logger logger){
         this.modelMapper = modelMapper;
+        this.logger = logger;
     }
 
     public QuizDto convertQuizToDto(Quiz quiz) {

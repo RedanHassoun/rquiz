@@ -1,4 +1,4 @@
-package com.raiseup.rquiz;
+package com.raiseup.rquiz.tests.unittests;
 
 import com.raiseup.rquiz.exceptions.AppException;
 import com.raiseup.rquiz.exceptions.IllegalOperationException;
@@ -10,6 +10,7 @@ import com.raiseup.rquiz.repo.QuizRepository;
 import com.raiseup.rquiz.services.AmazonClient;
 import com.raiseup.rquiz.services.QuizServiceImpl;
 import org.junit.Test;
+import org.slf4j.Logger;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 import java.util.Optional;
@@ -23,6 +24,7 @@ public class TestQuizServiceImpl {
     private AmazonClient mockAmazonClient;
     private TransactionTemplate mockTransactionTemplate;
     private PlatformTransactionManager mockPlatformTransactionManager;
+    private Logger mockLogger;
 
     public TestQuizServiceImpl() {
         init();
@@ -34,6 +36,7 @@ public class TestQuizServiceImpl {
         this.mockAmazonClient = mock(AmazonClient.class);
         this.mockTransactionTemplate = mock(TransactionTemplate.class);
         this.mockPlatformTransactionManager = mock(PlatformTransactionManager.class);
+        this.mockLogger = mock(Logger.class);
     }
 
     @Test(expected = IllegalOperationException.class)
@@ -42,7 +45,8 @@ public class TestQuizServiceImpl {
         when(mockUserRepo.findById(anyString())).thenReturn(Optional.empty());
 
         QuizServiceImpl quizService = new QuizServiceImpl(this.mockQuizRepo, mockUserRepo,
-                this.mockAmazonClient, this.mockTransactionTemplate, this.mockPlatformTransactionManager);
+                this.mockAmazonClient, this.mockTransactionTemplate,
+                this.mockPlatformTransactionManager, this.mockLogger);
 
         final Quiz quiz = new Quiz();
         final User user = new User();
@@ -55,7 +59,8 @@ public class TestQuizServiceImpl {
     public void update_idIsNull_throwAnException() throws AppException {
         Quiz quizToUpdate = new Quiz();
         QuizServiceImpl quizService = new QuizServiceImpl(this.mockQuizRepo, this.mockUserRepo,
-                this.mockAmazonClient, this.mockTransactionTemplate, this.mockPlatformTransactionManager);
+                this.mockAmazonClient, this.mockTransactionTemplate,
+                this.mockPlatformTransactionManager, this.mockLogger);
 
         quizService.update(quizToUpdate);
     }
@@ -68,7 +73,8 @@ public class TestQuizServiceImpl {
         Quiz quizToUpdate = new Quiz();
         quizToUpdate.setId("test");
         QuizServiceImpl quizService = new QuizServiceImpl(mockQuizRepo, this.mockUserRepo,
-                this.mockAmazonClient, this.mockTransactionTemplate, this.mockPlatformTransactionManager);
+                this.mockAmazonClient, this.mockTransactionTemplate,
+                this.mockPlatformTransactionManager, this.mockLogger);
         quizService.update(quizToUpdate);
     }
 }

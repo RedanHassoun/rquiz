@@ -18,16 +18,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class QuizAssignmentServiceImpl implements QuizAssignmentService {
-    private Logger logger = LoggerFactory.getLogger(QuizAssignmentServiceImpl.class);
-
+    private final Logger logger;
     private ApplicationUserRepository applicationUserRepository;
     private QuizService quizService;
 
     public QuizAssignmentServiceImpl(ApplicationUserRepository applicationUserRepository,
-                                     QuizService quizService)
+                                     QuizService quizService,
+                                     Logger logger)
     {
         this.applicationUserRepository = applicationUserRepository;
         this.quizService = quizService;
+        this.logger = logger;
     }
 
     @Override

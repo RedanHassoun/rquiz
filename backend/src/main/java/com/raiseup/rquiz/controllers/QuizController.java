@@ -16,7 +16,6 @@ import com.raiseup.rquiz.services.QuizValidationService;
 import com.raiseup.rquiz.services.UserAnswerService;
 import com.raiseup.rquiz.services.QuizService;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,19 +31,20 @@ public class QuizController {
     private QuizValidationService quizValidationService;
     private QuizAssignmentService quizAssignmentService;
     private DtoMapper dtoMapper;
-
-    private Logger logger = LoggerFactory.getLogger(QuizController.class);
+    private Logger logger;
 
     public QuizController(QuizService quizService,
                           UserAnswerService userAnswerService,
                           QuizValidationService quizValidationService,
                           QuizAssignmentService quizAssignmentService,
-                          DtoMapper dtoMapper) {
+                          DtoMapper dtoMapper,
+                          Logger logger) {
         this.quizService = quizService;
         this.userAnswerService = userAnswerService;
         this.quizValidationService = quizValidationService;
         this.dtoMapper = dtoMapper;
         this.quizAssignmentService = quizAssignmentService;
+        this.logger = logger;
     }
 
     @PostMapping(path = "",

@@ -9,7 +9,6 @@ import com.raiseup.rquiz.services.UserService;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -20,10 +19,14 @@ import java.util.stream.Stream;
 @Configuration
 public class BeanConfiguration {
 
-    private Logger logger = LoggerFactory.getLogger(BeanConfiguration.class);
+    private final Logger logger;
 
     @Value("${rquiz.shouldSeedDatabase}")
     private boolean shouldSeedDatabase;
+
+    public BeanConfiguration(Logger logger) {
+        this.logger = logger;
+    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {

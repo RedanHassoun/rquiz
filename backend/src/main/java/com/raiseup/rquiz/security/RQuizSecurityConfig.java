@@ -2,6 +2,7 @@ package com.raiseup.rquiz.security;
 
 import com.raiseup.rquiz.common.JwtHelper;
 import com.raiseup.rquiz.services.UserDetailsServiceImpl;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -29,18 +30,21 @@ public class RQuizSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsServiceImpl userDetailsService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private JwtHelper jwtHelper;
+    private Logger logger;
 
     public RQuizSecurityConfig(UserDetailsServiceImpl userDetailsService,
                                BCryptPasswordEncoder bCryptPasswordEncoder,
-                               JwtHelper jwtHelper) {
+                               JwtHelper jwtHelper,
+                               Logger logger) {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtHelper = jwtHelper;
+        this.logger = logger;
     }
 
     @Bean
     public JWTAuthorizationFilter jWTAuthorizationFilter() {
-        return new JWTAuthorizationFilter(this.jwtHelper);
+        return new JWTAuthorizationFilter(this.jwtHelper, this.logger);
     }
 
     @Override

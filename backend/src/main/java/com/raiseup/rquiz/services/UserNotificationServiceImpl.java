@@ -5,7 +5,6 @@ import com.raiseup.rquiz.exceptions.IllegalOperationException;
 import com.raiseup.rquiz.models.db.UserNotification;
 import com.raiseup.rquiz.repo.UserNotificationRepository;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -13,12 +12,13 @@ import java.util.Optional;
 
 @Service
 public class UserNotificationServiceImpl implements UserNotificationService {
-    private Logger logger = LoggerFactory.getLogger(UserNotificationServiceImpl.class);
-
+    private final Logger logger;
     private UserNotificationRepository userNotificationRepository;
 
-    public UserNotificationServiceImpl(UserNotificationRepository userNotificationRepository) {
+    public UserNotificationServiceImpl(UserNotificationRepository userNotificationRepository,
+                                       Logger logger) {
         this.userNotificationRepository = userNotificationRepository;
+        this.logger = logger;
     }
 
     @Override

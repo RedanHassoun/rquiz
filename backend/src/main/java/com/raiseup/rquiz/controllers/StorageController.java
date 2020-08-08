@@ -14,12 +14,12 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/v1/storage")
 public class StorageController {
-    private Logger logger = LoggerFactory.getLogger(StorageController.class);
-
+    private Logger logger;
     private FileService fileService;
 
-    public StorageController(FileService fileService) {
+    public StorageController(FileService fileService, Logger logger) {
         this.fileService = fileService;
+        this.logger = logger;
     }
 
     @PostMapping("")

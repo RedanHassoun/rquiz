@@ -36,8 +36,7 @@ import static com.raiseup.rquiz.common.AppConstants.TOKEN_SECRET_KEY;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-
+    private final Logger logger;
     private String secret = AppUtils.getEnvironmentVariable(TOKEN_SECRET_KEY);
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private ApplicationUserRepository applicationUserRepository;
@@ -54,7 +53,8 @@ public class UserServiceImpl implements UserService {
                            AmazonClient amazonClient,
                            UserAnswerRepository userAnswerRepository,
                            AuthenticationManager authenticationManager,
-                           JwtHelper jwtHelper){
+                           JwtHelper jwtHelper,
+                           Logger logger){
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.applicationUserRepository = applicationUserRepository;
         this.transactionManager = transactionManager;
@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService {
         this.userAnswerRepository = userAnswerRepository;
         this.authenticationManager = authenticationManager;
         this.jwtHelper = jwtHelper;
+        this.logger = logger;
     }
 
     @PostConstruct
