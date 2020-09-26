@@ -9,6 +9,7 @@ import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { QuizAssignmentComponent } from './components/quiz-assignment/quiz-assignment.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MyQuizListComponent,
     MyAssignedQuizComponent,
     QuizItemComponent,
-    ShowQuizComponent
+    ShowQuizComponent,
+    QuizAssignmentComponent
   ],
   imports: [
     ReactiveFormsModule,

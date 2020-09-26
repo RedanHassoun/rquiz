@@ -14,7 +14,6 @@ import com.raiseup.rquiz.services.QuizService;
 import com.raiseup.rquiz.services.UserService;
 import com.raiseup.rquiz.services.UserValidationService;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +27,7 @@ import static com.raiseup.rquiz.common.AppConstants.TOKEN_PREFIX;
 @RestController
 @CrossOrigin
 public class UserController {
-    private Logger logger = LoggerFactory.getLogger(UserController.class);
-
+    private Logger logger;
     private UserService usersService;
     private QuizService quizService;
     private UserValidationService userValidationService;
@@ -38,11 +36,13 @@ public class UserController {
     public UserController(UserService usersService,
                           QuizService quizService,
                           UserValidationService userValidationService,
-                          DtoMapper dtoMapper) {
+                          DtoMapper dtoMapper,
+                          Logger logger) {
         this.usersService = usersService;
         this.quizService = quizService;
         this.dtoMapper = dtoMapper;
         this.userValidationService = userValidationService;
+        this.logger = logger;
     }
 
     @GetMapping("/api/v1/users/all")

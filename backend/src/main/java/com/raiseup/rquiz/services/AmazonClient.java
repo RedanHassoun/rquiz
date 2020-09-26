@@ -21,8 +21,7 @@ import java.util.Date;
 
 @Component
 public class AmazonClient {
-    private Logger logger = LoggerFactory.getLogger(AmazonClient.class);
-
+    private final Logger logger;
     @Value("${rquiz.awsS3Region}")
     private String AWS_S3_REGION;
 
@@ -31,6 +30,10 @@ public class AmazonClient {
     private String bucketName = AppUtils.getEnvironmentVariable(AppConstants.AWS_BUCKET_NAME);
     private String accessKey = AppUtils.getEnvironmentVariable(AppConstants.AWS_ACCESS_KEY);
     private String secretKey = AppUtils.getEnvironmentVariable(AppConstants.AWS_SECRET_KEY);
+
+    public AmazonClient(Logger logger) {
+        this.logger = logger;
+    }
 
     @PostConstruct
     private void initializeAmazon() {

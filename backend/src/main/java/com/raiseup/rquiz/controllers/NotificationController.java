@@ -18,15 +18,16 @@ import java.util.stream.Collectors;
 @RestController
 public class NotificationController {
 
-    private Logger logger = LoggerFactory.getLogger(NotificationController.class);
-
+    private Logger logger;
     private UserNotificationService userNotificationService;
     private DtoMapper dtoMapper;
 
     public NotificationController(UserNotificationService userNotificationService,
-                                  DtoMapper dtoMapper){
+                                  DtoMapper dtoMapper,
+                                  Logger logger){
         this.userNotificationService = userNotificationService;
         this.dtoMapper = dtoMapper;
+        this.logger = logger;
     }
 
     @MessageMapping("/quiz-list-update")

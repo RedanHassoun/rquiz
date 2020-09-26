@@ -26,8 +26,7 @@ import java.util.Optional;
 
 @Service
 public class QuizServiceImpl implements QuizService {
-    private Logger logger = LoggerFactory.getLogger(QuizServiceImpl.class);
-
+    private final Logger logger;
     private QuizRepository quizRepository;
     private ApplicationUserRepository applicationUserRepository;
     private TransactionTemplate transactionTemplate;
@@ -38,12 +37,14 @@ public class QuizServiceImpl implements QuizService {
                            ApplicationUserRepository applicationUserRepository,
                            AmazonClient amazonClient,
                            TransactionTemplate transactionTemplate,
-                           PlatformTransactionManager transactionManager){
+                           PlatformTransactionManager transactionManager,
+                           Logger logger){
         this.quizRepository = quizRepository;
         this.applicationUserRepository = applicationUserRepository;
         this.amazonClient = amazonClient;
         this.transactionTemplate = transactionTemplate;
         this.transactionManager = transactionManager;
+        this.logger = logger;
     }
 
     @PostConstruct

@@ -17,13 +17,14 @@ import java.util.Arrays;
 
 @Service
 public class FileServiceImpl implements FileService {
-    private final Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
+    private final Logger logger;
     private final int MAX_IMAGE_DIMENSION = 1200;
     private final String[] supportedImageTypes = new String[]{"png", "jpg", "jpeg", "bmp"};
 
     private AmazonClient amazonClient;
-    public FileServiceImpl(AmazonClient amazonClient) {
+    public FileServiceImpl(AmazonClient amazonClient, Logger logger) {
         this.amazonClient = amazonClient;
+        this.logger = logger;
     }
 
     @Override

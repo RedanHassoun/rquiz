@@ -1,4 +1,4 @@
-package com.raiseup.rquiz;
+package com.raiseup.rquiz.tests;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

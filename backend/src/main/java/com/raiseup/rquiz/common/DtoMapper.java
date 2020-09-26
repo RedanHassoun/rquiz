@@ -2,7 +2,6 @@ package com.raiseup.rquiz.common;
 
 import com.raiseup.rquiz.models.*;
 import com.raiseup.rquiz.models.db.*;
-import com.raiseup.rquiz.services.UserAnswerService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +11,12 @@ import java.util.stream.Collectors;
 
 @Component
 public class DtoMapper {
-    private Logger logger = LoggerFactory.getLogger(DtoMapper.class);
+    private Logger logger;
     private ModelMapper modelMapper;
 
-    public DtoMapper(ModelMapper modelMapper){
+    public DtoMapper(ModelMapper modelMapper, Logger logger){
         this.modelMapper = modelMapper;
+        this.logger = logger;
     }
 
     public QuizDto convertQuizToDto(Quiz quiz) {

@@ -5,16 +5,17 @@ import com.raiseup.rquiz.common.AppUtils;
 import com.raiseup.rquiz.common.DtoMapper;
 import com.raiseup.rquiz.exceptions.*;
 import com.raiseup.rquiz.models.QuizAnswerDto;
+import com.raiseup.rquiz.models.QuizAssignmentRequest;
 import com.raiseup.rquiz.models.QuizDto;
 import com.raiseup.rquiz.models.UserAnswerDto;
 import com.raiseup.rquiz.models.db.Quiz;
 import com.raiseup.rquiz.models.db.QuizAnswer;
 import com.raiseup.rquiz.models.db.UserAnswer;
+import com.raiseup.rquiz.services.QuizAssignmentService;
 import com.raiseup.rquiz.services.QuizValidationService;
 import com.raiseup.rquiz.services.UserAnswerService;
 import com.raiseup.rquiz.services.QuizService;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,25 +29,29 @@ public class QuizController {
     private QuizService quizService;
     private UserAnswerService userAnswerService;
     private QuizValidationService quizValidationService;
+    private QuizAssignmentService quizAssignmentService;
     private DtoMapper dtoMapper;
-
-    private Logger logger = LoggerFactory.getLogger(QuizController.class);
+    private Logger logger;
 
     public QuizController(QuizService quizService,
                           UserAnswerService userAnswerService,
                           QuizValidationService quizValidationService,
-                          DtoMapper dtoMapper) {
+                          QuizAssignmentService quizAssignmentService,
+                          DtoMapper dtoMapper,
+                          Logger logger) {
         this.quizService = quizService;
         this.userAnswerService = userAnswerService;
         this.quizValidationService = quizValidationService;
         this.dtoMapper = dtoMapper;
+        this.quizAssignmentService = quizAssignmentService;
+        this.logger = logger;
     }
 
     @PostMapping(path = "",
                 consumes = "application/json",
                 produces = "application/json")
     public ResponseEntity<QuizDto> createQuiz(@RequestBody QuizDto quizDto) throws Exception {
-        this.logger.debug(String.format("Creating quiz: %s", quizDto.toString()));
+        this.logger.debug(String.format("Creating quiz: %s", quizDto != null ? quizDto.toString() : null));
         try{
             Optional<List<String>> validations = this.quizValidationService.validateQuiz(quizDto);
 
@@ -194,6 +199,29 @@ public class QuizController {
                     .collect(Collectors.toList());
         } catch (Exception ex){
             this.logger.error(String.format("Cannot get user answers for quiz %s", quizId), ex);
+            throw ex;
+        }
+    }
+
+    @PostMapping(path = "/{quizId}/assigned-user/{userId}")
+    public void assignQuizToUser(@RequestHeader("Authorization") String authorization,
+                         @PathVariable("quizId") String quizId,
+                         @PathVariable("userId") String userId) throws Exception {
+        try {
+            String callerUserId = AppUtils.getUserIdFromAuthorizationHeader(authorization);
+            Optional<Quiz> quizFromDBOptional = this.quizService.read(quizId);
+            if (!quizFromDBOptional.isPresent()) {
+                throw new QuizNotFoundException(String.format("Quiz %s not found", quizId));
+            }
+            if (!callerUserId.equals(quizFromDBOptional.get().getCreator().getId())) {
+                throw new IllegalOperationException(
+                        String.format("Cannot assign quiz %s because you are not the creator", quizId));
+            }
+
+            this.quizAssignmentService.assignToUser(
+                    new QuizAssignmentRequest(quizId, userId, callerUserId));
+        } catch (Exception ex){
+            this.logger.error(String.format("Cannot quiz %s to user %s", quizId, userId), ex);
             throw ex;
         }
     }

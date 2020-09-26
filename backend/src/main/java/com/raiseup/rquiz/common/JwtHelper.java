@@ -16,8 +16,12 @@ import static com.raiseup.rquiz.common.AppConstants.*;
 
 @Component
 public class JwtHelper {
-    private static final Logger logger = LoggerFactory.getLogger(JwtHelper.class);
+    private final Logger logger;
     private final String secret = AppUtils.getEnvironmentVariable(TOKEN_SECRET_KEY);
+
+    public JwtHelper(Logger logger) {
+        this.logger = logger;
+    }
 
     public String generateJsonWebToken(String userId, String username) throws AppException {
         if (this.secret == null) {

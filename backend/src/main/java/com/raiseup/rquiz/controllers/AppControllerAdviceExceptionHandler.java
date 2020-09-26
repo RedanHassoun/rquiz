@@ -3,7 +3,6 @@ package com.raiseup.rquiz.controllers;
 import com.raiseup.rquiz.common.ErrorResponse;
 import com.raiseup.rquiz.exceptions.*;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,11 @@ import java.util.Date;
 @ControllerAdvice
 public class AppControllerAdviceExceptionHandler extends ResponseEntityExceptionHandler {
     private static String ERROR_DATE_FORMAT = "dd-MM-yyyy hh:mm:ss";
-    private Logger logger = LoggerFactory.getLogger(AppControllerAdviceExceptionHandler.class);
+    private Logger logger;
+
+    public AppControllerAdviceExceptionHandler(Logger logger) {
+        this.logger = logger;
+    }
 
     @ExceptionHandler(value = { IllegalOperationException.class })
     protected ResponseEntity<Object> handleIllegalOperation(

@@ -17,12 +17,13 @@ import java.util.ArrayList;
 import static com.raiseup.rquiz.common.AppConstants.HEADER_STRING;
 
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
-    private static final Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
+    private final Logger logger;
 
     private JwtHelper jwtHelper;
 
-    public JWTAuthorizationFilter(JwtHelper jwtHelper) {
+    public JWTAuthorizationFilter(JwtHelper jwtHelper, Logger logger) {
         this.jwtHelper = jwtHelper;
+        this.logger = logger;
     }
 
     @Override
@@ -42,9 +43,9 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch(InvalidTokenException ex) {
-            logger.info(String.format("Cannot parse token for request %s", req.getRequestURL()));
+            this.logger.info(String.format("Cannot parse token for request %s", req.getRequestURL()));
         } catch (Exception ex) {
-            logger.error(String.format("Cannot authenticate user, error: %s", ex.getMessage()));
+            this.logger.error(String.format("Cannot authenticate user, error: %s", ex.getMessage()));
         }
 
         filterChain.doFilter(req, res);

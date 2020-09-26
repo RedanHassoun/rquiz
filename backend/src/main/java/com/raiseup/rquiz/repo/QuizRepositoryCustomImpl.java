@@ -19,7 +19,11 @@ import java.util.List;
 
 @Repository
 public class QuizRepositoryCustomImpl implements QuizRepositoryCustom {
-    private Logger logger = LoggerFactory.getLogger(QuizRepositoryCustomImpl.class);
+    private Logger logger;
+
+    public QuizRepositoryCustomImpl(Logger logger) {
+        this.logger = logger;
+    }
 
     @PersistenceContext
     private EntityManager entityManager;
